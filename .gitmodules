@@ -1,0 +1,3 @@
+[submodule "qoob"]
+	path = qoob
+	url = https://github.com/maxazan/qoob.git

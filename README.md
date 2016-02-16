@@ -1,1 +1,2 @@
-# qoob.wordpress
+# qoob.wordpress 
+v.1.0
