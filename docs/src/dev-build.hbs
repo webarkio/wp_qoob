@@ -1,0 +1,90 @@
+---
+title: How to build and testing
+active_menu: How to build and testing
+main_menu: dev
+---
+
+<h1>Build information</h1>
+
+<h2>System Requirements</H2>
+<p>
+SmartBuilder has several dependencies on other software packages. Please make sure that you have these installed before build SmartBuilder.</p>
+<ul>
+<li><a href="http://php.net">PHP</a></li>
+<li><a href="https://nodejs.org/download/">Node.js</a></li>
+<li><a href="http://gruntjs.com/getting-started">Grunt</a></li>
+</ul>
+<p>Before use commands you need run <code>install</code> command:</p>
+<pre><code>npm install
+</code></pre><p>Now you can run commands</p>
+<h2>Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>grunt</td>
+<td>Build project</td>
+</tr>
+<tr>
+<td>grunt build</td>
+<td>Build project</td>
+</tr>
+<tr>
+<td>grunt release</td>
+<td>Create archive project: developer, stable and docs (all API docs)</td>
+</tr>
+<tr>
+<td>grunt docs</td>
+<td>Generate All API docs (PHP+JS) and documentation files</td>
+</tr>
+<tr>
+<td>grunt htmldocs</td>
+<td>Generate documentation files</td>
+</tr>
+<tr>
+<td>grunt phpapi</td>
+<td>Generate only PHP API docs</td>
+</tr>
+</tr>
+<tr>
+<td>grunt jsapi</td>
+<td>Generate only JS API docs</td>
+</tr>
+<tr>
+<td>grunt phpunit</td>
+<td>Run PHPUnit tests and generate reports</td>
+</tr>
+</tbody>
+</table>
+<h2>Testing</h2>
+<p>
+Before run test command you need prepare environment</p>
+<ol>
+<li>Create mock database <code>wp_builder</code>.</li>
+<li>Edit <code>dev\wp-tests-config.php</code> file for your database connection</li>
+</ol>
+<p>Command <code>grunt phpunit</code> will create test reports</p>
+<ol>
+<li><code>docs/report/index.html</code> - Code coverage information</li>
+<li><code>docs/result.html</code> - Tests results in HTML format</li>
+<li><code>docs/result.txt</code> - Tests results in TXT format</li>
+</ol>
+<h1>If you see next</h1>
+<pre><code>C:\webark\legal\wp\wp-content\plugins\builder&gt;grunt phpapi
+Running &quot;clean:phpapi&quot; (clean) task
+&gt;&gt; 0 paths cleaned.
+
+Running &quot;shell:phpapi&quot; (shell) task
+&quot;php&quot; ?? ?????? ???????? ??? ?????
+????????, ??????? ?????? ??? ???????? ????.
+Warning: Command failed: &quot;php&quot; ?? ?????? ???????? ??? ?????
+????????, ??????? ?????? ??? ???????? ????.
+ Use --force to continue.
+
+Aborted due to warnings.
+</code></pre><p>it means that you need to <a href="http://geekswithblogs.net/renso/archive/2009/10/21/how-to-set-the-windows-path-in-windows-7.aspx">add</a> your php dir to <code>path</code> variable</p>

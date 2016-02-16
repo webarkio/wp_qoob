@@ -1,0 +1,117 @@
+---
+title: How to create block
+active_menu: How to create block
+main_menu: dev
+---
+
+<h1>Creating block</h1>
+<p>Builder allows you to create, configure and add own blocks.</p>
+
+<h2>Where to</h2>
+<p>
+    Creating a block is very simple.
+    First - create a folder <code>qoob/blocks/name</code> where <code>name</code> - your block's name in lowercase.
+</p>
+
+<h2>Basic file structure</h2>
+<pre><code>template.hbs     //Handlebars file 
+settings.json   //Connection field for block
+preview.png     //preview image block
+</code></pre>
+
+<h2>Adding styling to your block on the frontend</h2>
+<p>
+    To customize styling for your block just add to file <code>wp-content/themes/pizza/css/main.css</code>
+    Place styling for your block in this file which would be used on the frontend.
+</p>
+
+<h2>File name/template.hbs</h2>
+
+<p>How to use the Handlebars a <a href="http://handlebarsjs.com/" target="_blank">source</a>.</p>
+
+<p>In file will be html your block:</p>
+
+<pre><xmp><div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>That's it!</h1>
+        </div>
+    </div>
+</div></xmp></pre>
+
+<h2>File name/settings.json</h2>
+<p>Each block should have json file. It describes type fields and other parameters. JSON array return an array of key=>value params.</p>
+
+<h3>List of keys</h3>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>the name attribute specifies the name of an &lt;input&gt; element.</td>
+</tr>
+<tr>
+<td>label</td>
+<td>String</td>
+<td>title field</td>
+</tr>
+<tr>
+<td>type</td>
+<td>String</td>
+<td>name of field, it is determined by field</td>
+</tr>
+<tr>
+<td>default</td>
+<td>String</td>
+<td>default parameter fields</td>
+</tr>
+<tr>
+<td>options</td>
+<td>Array\String</td>
+<td>default options fields, if need</td>
+</tr>
+<tr>
+<td>settings</td>
+<td>Array</td>
+<td>subfields of field</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Example</h3>
+<pre><code class="javascript">[{
+    "name": "header",
+    "label": "Header",
+    "type": "text",
+    "default": "contact us"
+},{
+    "name": "border_color",
+    "label": "Border color",
+    "type": "select",
+    "default": "green",
+    "options": [{
+            "id": "green", "val": "green", "select": "true"
+        }, {
+            "id": "yellow", "val": "yellow"
+        }]
+},{
+    "name": "text-btn",
+    "label": "Text button",
+    "type": "text",
+    "default": "sign in"
+}]</code></pre>
+
+<h3>if you need a new field</h2>
+<p>
+To watch and create block field structure jump to 'How to create field' tab menu and follow instructions.
+</p>
+
+<h2>File name/preview.png</h2>
+<p>This image is used in the category list</p>

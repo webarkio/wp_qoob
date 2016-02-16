@@ -1,0 +1,67 @@
+---
+title: How to create custom component
+active_menu: How to create custom component
+main_menu: dev
+---
+
+<h1>Creating Custom Smart Component</h1>
+<p>SmartComponent allows you to create, configure and add own components easily.</p>
+
+<h2>Where to</h2>
+<p>
+    Creating a custom component is very simple.
+    First - create a folder <code>builder/modules/components/modules/name</code> where <code>name</code> - your custom component's name in lowercase.
+</p>
+
+<h2>Basic file structure</h2>
+<p>
+    To watch and create basic component structure jump to 'Components' tab menu and follow instructions.
+</p>
+
+<h2>Assets</h2>
+<p>
+    Create <code>assets</code> folder. Place images, js files or css files accordingly to <code>assets/img</code> or <code>assets/js</code> or <code>assets/css</code> folders.
+</p>
+
+<h2>Adding styling to your component on the frontend</h2>
+<p>
+    To customize styling for your component just add next file structure to your component root folder <code>assets/css/frontend.css</code>
+    Place styling for your component in this file which would be automatically included and used on the frontend.
+</p>
+
+<p><strong>Notice:</strong> frontend.css files are all gathering in <code>builder/modules/components/templates/components.css.php</code> file:</p>
+<pre><code>foreach ($list_components as $component) {
+        $filename = $component->getPathAssets() . '/css/frontend.css';
+        $assets_path = $component->getUrlAssets();
+        if (file_exists($filename)) {
+            echo preg_replace('/\{\%assets_path\%\}/', $assets_path, file_get_contents($filename));
+        }
+    }
+</code></pre>
+<p>So all your urls in <code>frontend.css</code> should look like this</p>
+<pre><code>.some_class {
+        background-image: url('{%assets_path%}/path/to/needed/asset/from/assets/folder');
+    }
+</code></pre>
+<p>where <code>{%assets_path%}</code> is a pattern that would be replaced with url of your assets folder.</p>
+<p>That's it.</p>
+
+<h2>Alternative case</h2>
+<p><strong>Notice: </strong>If you want to separate your component's from builder plugin (to keep them save on updates) or you want to override existing ones, follow next instructions.</p>
+<p>
+    Go to your theme folder <code>wp-content/themes/your_theme</code>. Create such folder structure there: <code>subbuilder/modules</code>.
+    Now you can add your custom component's modules to the folder <code>modules</code>.
+</p>
+<p>To make it all work just place this peace of code in the <code>functions.php</code> file</p>
+<pre><code>if (file_exists(get_template_directory() . '/subbuilder/modules')) {
+        $submodules_path = get_template_directory() . '/subbuilder/modules';
+        $modules = dir($submodules_path);
+        while (false !== ($name = $modules->read())) {
+            if ($name != '.' && $name != '..' && $name != '' && file_exists($submodules_path . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . 'index.php')) {
+                require_once($submodules_path . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . 'index.php');
+            }
+        }
+    }
+</code></pre>
+<p>To override existing modules just use the same name for basic files and classes from overriding one.</p>
+<p>Here we are!</p>

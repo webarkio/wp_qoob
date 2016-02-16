@@ -1,0 +1,29 @@
+<phpunit 
+    bootstrap="tests/bootstrap.php"
+    backupGlobals="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    coverageHtml="out">
+    <testsuites>
+        <testsuite>
+            <directory>./tests/</directory>
+        </testsuite>
+ 
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./includes</directory>
+            <exclude>
+                <file>index.php</file>
+            </exclude>            
+        </whitelist>
+    </filter>
+<logging>
+    <log type="coverage-html" target="docs/tests/report" lowUpperBound="35" highLowerBound="70"/>
+    <log type="junit" target="docs/tests/results.xml" logIncompleteSkipped="false"/>
+    <log type="testdox-html" target="docs/tests/results.html"/>
+    <log type="testdox-text" target="docs/tests/results.txt"/>
+</logging>	
+</phpunit>

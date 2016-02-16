@@ -1,0 +1,25 @@
+[{
+    "title": "About the Theme",
+    "url": "user-about.html"
+},{
+    "title": "Downloading & Installation",
+    "submenu": [{
+        "title": "Theme Installation",
+        "url": "user-theme-installation.html"
+    },{
+        "title": "Plugin Installation",
+        "url": "user-plugin-installation.html"
+    }]
+},{
+    "title": "Demo content & Pre-Built Pages",
+    "url": "user-demo.html"
+},{
+    "title": "Actions",
+    "url": "user-actions.html"
+},{
+    "title": "FAQ",
+    "url": "user-faq.html"
+},{
+    "title": "Need Help ?",
+    "url": "user-help.html"
+}]

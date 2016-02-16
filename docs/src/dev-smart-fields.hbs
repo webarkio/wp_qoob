@@ -1,0 +1,1412 @@
+---
+title: Settings form fields
+active_menu: Settings form fields
+main_menu: dev
+---
+
+<h1>Forms</h1>
+<h2>List of field types</h2>
+<h3>radio</h3>
+<p>
+Simple radio button field</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>values</td>
+<td>required</td>
+<td>Array</td>
+<td>-</td>
+<td>Array with <code>value=&gt;label</code> params. Labels should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>tip</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Detailed information</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;radio&#39;,
+    &#39;name&#39; =&gt; &#39;type&#39;,
+    &#39;label&#39; =&gt; __(&#39;Style&#39;, &#39;row&#39;),
+    &#39;values&#39; =&gt; array(
+        &#39;fluid&#39; =&gt; __(&#39;Fluid&#39;, &#39;row&#39;),
+        &#39;boxed&#39; =&gt; __(&#39;Boxed&#39;, &#39;row&#39;))
+);
+</code></pre>
+<h3>checkbox</h3>
+<p>
+Simple checkbox field</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>tip</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Detailed information</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;checkbox&#39;,
+    &#39;name&#39; =&gt; &#39;inverse&#39;,
+    &#39;label&#39; =&gt; __(&#39;Inverse&#39;, &#39;component&#39;) // Label for checkbox
+)
+</code></pre>
+<h3>color</h3>
+<p>
+ Color Picker</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>tip</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Detailed information</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;color&#39;,
+    &#39;name&#39; =&gt; &#39;color&#39;,
+    &#39;label&#39; =&gt; __(&#39;Text color&#39;, &#39;component&#39;), // Label for color picker
+    &#39;default&#39; =&gt; &#39;#fff&#39;
+)
+</code></pre>
+<h3>datepicker</h3>
+<p>
+ The datepicker is tied to a standard form input field. Use this field to unobtrusively add choice of date</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>tip</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Detailed information</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;datepicker&#39;,
+    &#39;name&#39; =&gt; &#39;date&#39;,
+    &#39;label&#39; =&gt; __(&#39;Date&#39;, &#39;component&#39;),
+    &#39;default&#39; =&gt; &#39;$date->format('m/d/Y')&#39;
+)
+</code></pre>
+<h3>datetimepicker</h3>
+<p>
+ The datetimepicker is tied to a standard form input field. Use this field to unobtrusively add choice of time</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>tip</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Detailed information</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;datetimepicker&#39;,
+    &#39;name&#39; =&gt; &#39;time&#39;,
+    &#39;label&#39; =&gt; __(&#39;Time&#39;, &#39;component&#39;),
+    &#39;default&#39; =&gt; &#39;16:00&#39;
+)
+</code></pre>
+<h3>gallery</h3>
+<p>
+ The gallery is button. Use this field to add choice of images for gallery component e.t.c.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>btn_value</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Value text for button</td>
+</tr>
+<tr>
+<td>btndel_value</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Value text for button delete</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>tip</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Detailed information</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;gallery&#39;,
+    &#39;name&#39; =&gt; &#39;ids&#39;,
+    &#39;label&#39; =&gt; __(&#39;Gallery&#39;, &#39;component&#39;),
+    &#39;btn_value&#39; =&gt; __(&#39;Select images&#39;, &#39;component&#39;),
+    &#39;btndel_value&#39; =&gt; __(&#39;Delete images&#39;, &#39;component&#39;),
+    &#39;default&#39; =&gt; &#39;16:00&#39;
+)
+</code></pre>
+<h3>hiddeninput</h3>
+<p>Simple input field with type hidden</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;hiddeninput&#39;,
+    &#39;name&#39; =&gt; &#39;anchor&#39;,
+    &#39;default&#39; =&gt; &#39;&#39;
+)
+</code></pre>
+<h3>input</h3>
+<p>Simple input field with type text</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;hiddeninput&#39;,
+    &#39;name&#39; =&gt; &#39;anchor&#39;,
+    &#39;default&#39; =&gt; &#39;&#39;
+)
+</code></pre>
+<h3>image</h3>
+<p>Use this field to add choice of only one image. For choice several images use field gallery</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>btn_value</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Value text for button</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;image&#39;,
+    &#39;name&#39; =&gt; &#39;image&#39;,
+    &#39;label&#39; =&gt; __(&#39;Image&#39;, &#39;component&#39;),
+    &#39;btn_value&#39; =&gt; __(&#39;Select images&#39;, &#39;component&#39;),
+    &#39;default&#39; =&gt; &#39;/img/thumbnail_preview.jpg&#39;
+)
+</code></pre>
+<h3>inputlink</h3>
+<p>Simple input field with type text. When text input is in state focus will bring up a box where you can enter the URL</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;inputlink&#39;,
+    &#39;name&#39; =&gt; &#39;url&#39;,
+    &#39;label&#39; =&gt; __(&#39;Image&#39;, &#39;component&#39;),
+    &#39;rule&#39; =&gt; array(
+        &#39;show&#39; =&gt; array(&#39;action_image&#39; =&gt; [&#39;link&#39;,&#39;zoom&#39;])
+    ),    
+    &#39;default&#39; =&gt; &#39;&#39;
+)
+</code></pre>
+<h3>Number</h3>
+<p>Simple input field with type text. You can use this field when you need enter only number</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;number&#39;,
+    &#39;name&#39; =&gt; &#39;number&#39;,
+    &#39;label&#39; =&gt; __(&#39;Count image&#39;, &#39;component&#39;),
+    &#39;default&#39; =&gt; &#39;&#39;
+)
+</code></pre>
+<h3>list</h3>
+<p>Field that contains shortcode text of the components which are components of more complicated ones. For example: tabs, accrodion</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>type</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>It is the name of the component that contains this list</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;list&#39;,
+    &#39;name&#39; =&gt; &#39;content&#39;,
+    &#39;label&#39; =&gt; __(&#39;Count image&#39;, &#39;component&#39;),
+    &#39;type&#39; =&gt; &#39;tabs&#39;,
+    &#39;default&#39; =&gt; &#39;&#39;
+)
+</code></pre>
+<h3>postlist</h3>
+<p>List of the custom checkboxes for custom posts</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>type</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>It is the name of the component that contains this list</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>post_type</td>
+<td>required</td>
+<td>String</td>
+<td>null</td>
+<td>Post types that should be presented in the list</td>
+</tr>
+<tr>
+<td>post_type_add</td>
+<td>required</td>
+<td>String</td>
+<td>null</td>
+<td>Post type for the new post that can be created by clicking &#39;add_post&#39; link</td>
+</tr>
+<tr>
+<td>label_btn</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for the link that leads to postcreation page</td>
+</tr>
+<tr>
+<td>label_refresh_link</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for the button, refreshing existing posts</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;postlist&#39;,
+    &#39;name&#39; =&gt; &#39;ids&#39;,
+    &#39;label&#39; =&gt; __(&#39;Portfolio list&#39;, &#39;component&#39;),
+    &#39;post_type&#39; =&gt; &#39;portfolio&#39;,
+    &#39;post_type_add&#39; =&gt; &#39;portfolio&#39;,
+    &#39;label_btn&#39; =&gt; __(&#39;add portfolio&#39;, &#39;component&#39;),
+    &#39;label_refresh_link&#39; =&gt; __(&#39;refresh&#39;, &#39;component&#39;),
+    &#39;default&#39; =&gt; &#39;&#39;
+)
+</code></pre>
+<h3>radiocustom</h3>
+<p>
+Custom radio buttons. Each radio has background image.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>tip</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Detailed information</td>
+</tr>
+<tr>
+<td>values</td>
+<td>required</td>
+<td>Array</td>
+<td>-</td>
+<td>Array with <code>value=&gt;label</code> params. Labels should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;radiocustom&#39;,
+    &#39;name&#39; =&gt; &#39;type&#39;,
+    &#39;label&#39; =&gt; __(&#39;Type&#39;, &#39;component&#39;),
+    &#39;values&#39; =&gt; array(&#39;icon_top&#39; =&gt; &#39;&#39;, &#39;icon_left&#39; =&gt; &#39;&#39;, &#39;icon_right&#39; =&gt; &#39;&#39;, &#39;icon_center&#39; =&gt; &#39;&#39;),
+)
+</code></pre>
+<h3>range</h3>
+<p>
+Range field. Defines range of the numbers.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>tip</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Detailed information</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value (Write 2 numbers with coma, which would limit the range)</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;range&#39;,
+    &#39;name&#39; =&gt; &#39;range&#39;,
+    &#39;label&#39; =&gt; __(&#39;Range&#39;, &#39;component&#39;), 
+    &#39;default&#39; =&gt; &#39;0, 17&#39;
+)
+</code></pre>
+<h3>select</h3>
+<p>
+Simple select field.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>tip</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Detailed information</td>
+</tr>
+<tr>
+<td>values</td>
+<td>required</td>
+<td>Array</td>
+<td>-</td>
+<td>Array with <code>value=&gt;label</code> params. Labels should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;select&#39;,
+    &#39;name&#39; =&gt; &#39;type&#39;,
+    &#39;label&#39; =&gt; __(&#39;Type&#39;, &#39;component&#39;), 
+    &#39;values&#39; =&gt; array(&#39;icon_top&#39; =&gt; &#39;&#39;, &#39;icon_left&#39; =&gt; &#39;&#39;, &#39;icon_right&#39; =&gt; &#39;&#39;, &#39;icon_center&#39; =&gt; &#39;&#39;),
+    &#39;default&#39; =&gt; &#39;icon_top&#39;
+)
+</code></pre>
+<h3>slider</h3>
+<p>The basic slider is horizontal and has a single handle that can be moved with the mouse or by using the arrow keys.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>tip</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Detailed information</td>
+</tr>
+<tr>
+<td>type</td>
+<td>required</td>
+<td>String</td>
+<td>basic</td>
+<td>2 types of slider <code>basic</code> or <code>opacity</code></td>
+</tr>
+<tr>
+<td>min</td>
+<td>required when type basic</td>
+<td>Integer</td>
+<td>0</td>
+<td>The minimum value of the slider.</td>
+</tr>
+<tr>
+<td>max</td>
+<td>required when type basic</td>
+<td>Integer</td>
+<td>100</td>
+<td>The maximum value of the slider.</td>
+</tr>
+<tr>
+<td>step</td>
+<td>optional when type basic</td>
+<td>Integer</td>
+<td>1</td>
+<td>Determines the size or amount of each interval or step the slider takes between the min and max. The full specified value range of the slider (max - min) should be evenly divisible by the step.</td>
+</tr>
+<tr>
+<td>input_id</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>input id where saves slider value</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;slider&#39;,
+    &#39;name&#39; =&gt; &#39;bg_opacity&#39;,
+    &#39;type&#39; =&gt; &#39;opacity&#39;,
+    &#39;input_id&#39; =&gt; &#39;sl-input&#39;,
+    &#39;label&#39; =&gt; __(&#39;Background opacity&#39;, &#39;component&#39;),
+    &#39;default&#39; =&gt; &#39;1&#39;
+)
+</code></pre>
+<h3>iconlib</h3>
+<p></p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>tip</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Detailed information</td>
+</tr>
+<tr>
+<tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;iconlib&#39;,
+    &#39;name&#39; =&gt; &#39;iconlib&#39;,
+    &#39;label&#39; =&gt; __(&#39;Icon&#39;, &#39;component&#39;),
+    &#39;default&#39; =&gt; &#39;glyphicon glyphicon-asterisk&#39;
+)
+</code></pre>
+<h3>textarea</h3>
+<p>
+Field with tinymce plugin text editor.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>tip</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Detailed information</td>
+</tr>
+<tr>
+<td>tinymceSettings</td>
+<td>required</td>
+<td>Array</td>
+<td>array(&#39;editor_class&#39; =&gt; &#39;component&#39;)</td>
+<td>Array with parameters for the tinymce plugin editor</td>
+</tr>
+<tr>
+<td>default</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Default value</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;textarea&#39;,
+    &#39;name&#39; =&gt; &#39;content&#39;,
+    &#39;label&#39; =&gt; __(&#39;Content&#39;, &#39;component&#39;),
+    &#39;tinymceSettings&#39; =&gt; array(&#39;editor_class&#39; =&gt; &#39;component_param&#39;, basic), //&#39;basic&#39; class shows is this field required or not
+)
+</code></pre>
+<h3>spiner</h3>
+<p>
+Field with number input and arrows to control (increase or decrease) this number.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Required</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>field</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>Field type</td>
+</tr>
+<tr>
+<td>name</td>
+<td>required</td>
+<td>String</td>
+<td>-</td>
+<td>This name will be used for shortcode attribute and <code>name</code> param in form</td>
+</tr>
+<tr>
+<td>label</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Label for Form field. Label should be wraped by <code>__()</code> method for translation</td>
+</tr>
+<tr>
+<td>rule</td>
+<td>optional</td>
+<td>Array</td>
+<td>array()</td>
+<td>From what field depends on</td>
+</tr>
+<tr>
+<td>tip</td>
+<td>optional</td>
+<td>String</td>
+<td>null</td>
+<td>Detailed information</td>
+</tr>
+<tr>
+<td>min</td>
+<td>required</td>
+<td>Integer</td>
+<td>array()</td>
+<td>Miniimum limit of the number</td>
+</tr>
+<tr>
+<td>max</td>
+<td>required</td>
+<td>Integer</td>
+<td>null</td>
+<td>Maximum limit of the number</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code class="php">array(
+    &#39;field&#39; =&gt; &#39;spiner&#39;,
+    &#39;name&#39; =&gt; &#39;position_y&#39;,
+    &#39;label&#39; =&gt; __(&#39;Position image y&#39;, &#39;component&#39;),
+    &#39;min&#39; =&gt; 0,
+    &#39;max&#39; =&gt; 10,
+)
+</code></pre>

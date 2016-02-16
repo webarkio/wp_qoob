@@ -1,0 +1,62 @@
+---
+title: How to create field
+active_menu: How to create field
+main_menu: dev
+---
+
+<h1>Creating fields</h1>
+
+<p>
+    Create a file javascript <code>qoob/assets/js/fields/field-name.js</code> where <code>name</code> - your field's name in lowercase.
+</p>
+
+<h1>Example code</h1>
+<pre><code class="javascript">var Fields = Fields || {};
+Fields.example = Backbone.View.extend(
+/** @lends Fields.text.prototype */{
+    className: "settings-item",
+    events: {
+        'keyup input': 'changeInput'
+    },
+    /**
+     * View field example
+     * @class Fields.example
+     * @augments Backbone.View
+     * @constructs
+     */
+    initialize: function () {
+    },
+    /**
+     * Event change input
+     * @param {Object} evt
+     */
+    changeInput: function (evt) {
+        var target = jQuery(evt.target);
+        this.model.set(target.attr('name'), target.val());
+    },
+    /**
+     * Get value field example
+     * @returns {String}
+     */
+    getValue: function () {
+        return this.model.get(this.config.name) || this.config.default;
+    },
+    /**
+     * Create filed example
+     * @returns {String}
+     */
+    create: function () {
+        return '<div class="title">'+this.config.label+'</div>' + '&lt;input class="input-text" type="text" name="' + this.config.name + '" value="' + this.getValue() + '" placeholder="'+ this.config.placeholder +'">&gt;';
+    },
+    /**
+     * Render filed example
+     * @returns {Object}
+     */
+    render: function () {
+        if (typeof (this.config.show) == "undefined" || this.config.show(this.model)) {
+            this.$el.html(this.create());
+        }
+        return this;
+    }
+});
+</code></pre>

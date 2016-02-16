@@ -1,2 +1,2 @@
-# qoob.wordpress 
-v.1.0
+# qoob
+qoob builder

@@ -1,0 +1,40 @@
+[{
+    "title": "Basics",
+    "url": "dev-basics.html"
+}, {
+    "title": "Actions and filteres",
+    "url": "dev-filteres.html"
+}, {
+    "title": "Components",
+    "url": "dev-smart-components.html"
+}, {
+    "title": "Settings form fields",
+    "url": "dev-smart-fields.html"
+}, {
+    "title": "How to build and testing",
+    "url": "dev-build.html"
+}, {
+    "title": "Documenting",
+    "url": "dev-documenting.html"
+}, {
+    "title": "Coding Standarts",
+    "url": "dev-coding.html"
+}, {
+    "title": "PHP API",
+    "url": "phpapi/index.html"
+}, {
+    "title": "JS API",
+    "url": "jsapi/index.html"
+}, {
+    "title": "Test coverage",
+    "url": "tests/report/index.html"
+}, {
+    "title": "How to create custom component",
+    "url": "dev-create-component.html"
+}, {
+    "title": "How to create block",
+    "url": "dev-create-block.html"
+}, {
+    "title": "How to create field",
+    "url": "dev-create-field.html"
+}]
