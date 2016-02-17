@@ -103,14 +103,14 @@ module.exports = function(grunt) {
                 separator: ';'
             },
             dist: {
-                src: ['assets/js/*.js', 'assets/js/libs/*.js', 'assets/js/fields/*.js'],
-                dest: 'assets/js/min/<%= pkg.name %>.js'
+                src: ['qoob/js/*.js', 'qoob/js/libs/*.js', 'qoob/js/fields/*.js'],
+                dest: 'qoob/js/min/<%= pkg.name %>.js'
             }
         },
         uglify: {
             dist: {
                 files: {
-                    'assets/js/min/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
+                    'qoob/js/min/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
                 }
             }
         },

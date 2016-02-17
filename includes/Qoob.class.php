@@ -87,10 +87,8 @@ class Qoob {
      * very useful method, because smartbuilder can work the same as plugin and 
      * as part of theme. 
      * 
-     * <pre><code>global $smart;
-     * $path = $smart->getPath(); //Get path of core module
-     * 
-     * $path = $smart->module('SmartComponentRow')->getPath(); //Get path of row component
+     * <pre><code>$qoob = new Qoob();
+     * $path = $qoob->getPath(); //Get path of core module
      * </code></pre>
      * 
      * @return String Path to root of current module
@@ -107,10 +105,8 @@ class Qoob {
      * plugin and as part of theme. If your module has different assets 
      * directory, method getPathAssets() should be overwritten.
      * 
-     * <pre><code>global $smart;
-     * $path = $smart->getPathAssets(); //Get assets path of core module
-     * 
-     * $path = $smart->module('SmartComponentRow')->getPathAssets(); //Get assets path of row component
+     * <pre><code>$qoob = new Qoob();
+     * $path = $qoob->getPathAssets(); //Get assets path of core module
      * </code></pre>
      * 
      * @return String Path to assets direcroty
@@ -126,10 +122,8 @@ class Qoob {
      * very useful method, because smartbuilder can work the same as plugin and 
      * as part of theme. 
      * 
-     * <pre><code>global $smart;
-     * $url = $smart->getUrlAssets(); //Get assets Url with path ABSPATH
-     * $url = $smart->getUrlAssets(true); //Get assets Url with path $_SERVER['DOCUMENT_ROOT']
-     * 
+     * <pre><code>$qoob = new Qoob();
+     * $url = $qoob->getUrlAssets(); //Get assets Url with path ABSPATH
      * wp_enqueue_script("somefile", $url . "/js/somefile.js"); //add core script
      * 
      * </code></pre>
@@ -137,8 +131,39 @@ class Qoob {
      * @return String Url to assets directory of current module
      */
     public function getUrlAssets() {
-
         return SmartUtils::getUrlFromPath($this->getPathAssets());
+    }
+    
+    /**
+     * Get path to current module qoob dir
+     * 
+     * This method is easiest way to find out where is module qoob located.
+     * 
+     * <pre><code>$qoob = new Qoob();
+     * $path = $qoob->getPathQoob(); //Get qoob path of core module
+     * </code></pre>
+     * 
+     * @return String Path to qoob direcroty
+     */
+    public function getPathQoob() {
+        return $this->getPath() . "qoob" . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Get current module qoob directory URL
+     * 
+     * This method is easiest way to make link to qoob file in module.
+     * 
+     * <pre><code>$qoob = new Qoob();
+     * $url = $qoob->getUrlQoob(); //Get assets Url with path ABSPATH
+     * wp_enqueue_script("somefile", $url . "/js/somefile.js"); //add core script
+     * 
+     * </code></pre>
+     * 
+     * @return String Url to assets directory of current module
+     */
+    public function getUrlQoob() {
+        return SmartUtils::getUrlFromPath($this->getPathQoob());
     }
 
     /**
@@ -388,10 +413,10 @@ class Qoob {
      */
     public function frontend_scripts() {
         // Load style
-        wp_enqueue_style('builder.qoob.iframe', $this->getUrlAssets() . "css/iframe-builder.css");
+        wp_enqueue_style('builder.qoob.iframe', $this->getUrlQoob() . "css/iframe-builder.css");
 
         // Load js
-        wp_enqueue_script('control.edit.page.iframe', $this->getUrlAssets() . 'js/control-edit-page-iframe.js', array('jquery'), '', true);
+        wp_enqueue_script('control.edit.page.iframe', $this->getUrlQoob() . 'js/control-edit-page-iframe.js', array('jquery'), '', true);
     }
 
     /**
@@ -400,12 +425,10 @@ class Qoob {
      */
     public function admin_scripts() {
         if (get_post_type() == 'page') {
-            wp_enqueue_script('builder.admin', $this->getUrlAssets() . 'js/builder-admin.js', array('jquery'), '', true);
-            wp_enqueue_script('waves.min', $this->getUrlAssets() . 'js/libs/waves.min.js', array('builder.admin'), '', true);
-            wp_enqueue_style('waves.min', $this->getUrlAssets() . "css/waves.min.css");
-            wp_enqueue_style('builder.qoob.iframe', $this->getUrlAssets() . "css/builder-admin.css");
-            
-            
+            wp_enqueue_script('builder.admin', $this->getUrlQoob() . 'js/builder-admin.js', array('jquery'), '', true);
+            wp_enqueue_script('waves.min', $this->getUrlQoob() . 'js/libs/waves.min.js', array('builder.admin'), '', true);
+            wp_enqueue_style('waves.min', $this->getUrlQoob() . "css/waves.min.css");
+            wp_enqueue_style('builder.qoob.iframe', $this->getUrlQoob() . "css/builder-admin.css");   
         }
     }
 
@@ -431,39 +454,39 @@ class Qoob {
         wp_enqueue_script('jquery-touch-punch');
         wp_enqueue_script('underscore');
         wp_enqueue_script('backbone');
-        wp_enqueue_script('handlebars', $this->getUrlAssets() . 'js/libs/handlebars.js', array('jquery'), '', true);
-        wp_enqueue_script('handlebars-helper', $this->getUrlAssets() . 'js/libs/handlebars-helper.js', array('jquery'), '', true);
-        wp_enqueue_script('jquery-ui-droppable-iframe', $this->getUrlAssets() . 'js/libs/jquery-ui-droppable-iframe.js', array('jquery'), '', true);
-        wp_enqueue_script('perfect-scrollbar', $this->getUrlAssets() . 'js/libs/perfect-scrollbar.jquery.js', array('jquery'), '', true);
+        wp_enqueue_script('handlebars', $this->getUrlQoob() . 'js/libs/handlebars.js', array('jquery'), '', true);
+        wp_enqueue_script('handlebars-helper', $this->getUrlQoob() . 'js/libs/handlebars-helper.js', array('jquery'), '', true);
+        wp_enqueue_script('jquery-ui-droppable-iframe', $this->getUrlQoob() . 'js/libs/jquery-ui-droppable-iframe.js', array('jquery'), '', true);
+        wp_enqueue_script('perfect-scrollbar', $this->getUrlQoob() . 'js/libs/perfect-scrollbar.jquery.js', array('jquery'), '', true);
 
         // Application scripts
-        wp_enqueue_script('block-view', $this->getUrlAssets() . 'js/block-view.js', array('jquery'), '', true);
-        wp_enqueue_script('field-text', $this->getUrlAssets() . 'js/fields/field-text.js', array('jquery'), '', true);
-        wp_enqueue_script('field-checkbox', $this->getUrlAssets() . 'js/fields/field-checkbox.js', array('jquery'), '', true);
-        wp_enqueue_script('field-select', $this->getUrlAssets() . 'js/fields/field-select.js', array('jquery'), '', true);
-        wp_enqueue_script('field-texarea', $this->getUrlAssets() . 'js/fields/field-texarea.js', array('jquery'), '', true);
-        wp_enqueue_script('field-slider', $this->getUrlAssets() . 'js/fields/field-slider.js', array('jquery'), '', true);
-        wp_enqueue_script('field-image', $this->getUrlAssets() . 'js/fields/field-image.js', array('jquery'), '', true);
-        wp_enqueue_script('field-accordion', $this->getUrlAssets() . 'js/fields/field-accordion.js', array('jquery'), '', true);
-        wp_enqueue_script('field-accordion-item', $this->getUrlAssets() . 'js/fields/field-accordion-item.js', array('jquery'), '', true);
-        wp_enqueue_script('field-devices', $this->getUrlAssets() . 'js/fields/field-devices.js', array('jquery'), '', true);
-        wp_enqueue_script('settings-view', $this->getUrlAssets() . 'js/settings-view.js', array('jquery'), '', true);
+        wp_enqueue_script('block-view', $this->getUrlQoob() . 'js/block-view.js', array('jquery'), '', true);
+        wp_enqueue_script('field-text', $this->getUrlQoob() . 'js/fields/field-text.js', array('jquery'), '', true);
+        wp_enqueue_script('field-checkbox', $this->getUrlQoob() . 'js/fields/field-checkbox.js', array('jquery'), '', true);
+        wp_enqueue_script('field-select', $this->getUrlQoob() . 'js/fields/field-select.js', array('jquery'), '', true);
+        wp_enqueue_script('field-texarea', $this->getUrlQoob() . 'js/fields/field-texarea.js', array('jquery'), '', true);
+        wp_enqueue_script('field-slider', $this->getUrlQoob() . 'js/fields/field-slider.js', array('jquery'), '', true);
+        wp_enqueue_script('field-image', $this->getUrlQoob() . 'js/fields/field-image.js', array('jquery'), '', true);
+        wp_enqueue_script('field-accordion', $this->getUrlQoob() . 'js/fields/field-accordion.js', array('jquery'), '', true);
+        wp_enqueue_script('field-accordion-item', $this->getUrlQoob() . 'js/fields/field-accordion-item.js', array('jquery'), '', true);
+        wp_enqueue_script('field-devices', $this->getUrlQoob() . 'js/fields/field-devices.js', array('jquery'), '', true);
+        wp_enqueue_script('settings-view', $this->getUrlQoob() . 'js/settings-view.js', array('jquery'), '', true);
 
         // builder scripts
-        wp_enqueue_script('builder-loader', $this->getUrlAssets() . 'js/builder-loader.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-wordpress_driver', $this->getUrlAssets() . 'js/builder-wordpress-driver.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-toolbar', $this->getUrlAssets() . 'js/builder-toolbar.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-iframe', $this->getUrlAssets() . 'js/builder-iframe.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-menu', $this->getUrlAssets() . 'js/builder-menu.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-viewport', $this->getUrlAssets() . 'js/builder-viewport.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-qoob', $this->getUrlAssets() . 'js/builder.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-loader', $this->getUrlQoob() . 'js/builder-loader.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-wordpress_driver', $this->getUrlQoob() . 'js/builder-wordpress-driver.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-toolbar', $this->getUrlQoob() . 'js/builder-toolbar.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-iframe', $this->getUrlQoob() . 'js/builder-iframe.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-menu', $this->getUrlQoob() . 'js/builder-menu.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-viewport', $this->getUrlQoob() . 'js/builder-viewport.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-qoob', $this->getUrlQoob() . 'js/builder.js', array('jquery'), '', true);
 
         // page edit script
         wp_enqueue_script('control_edit_page', $this->getUrlAssets() . 'js/control-edit-page.js', array('builder-qoob'), '', true);
 
         // style
-        wp_enqueue_style('perfect-scrollbar', $this->getUrlAssets() . "css/perfect-scrollbar.min.css");
-        wp_enqueue_style('builder.qoob', $this->getUrlAssets() . "css/builder.css");
+        wp_enqueue_style('perfect-scrollbar', $this->getUrlQoob() . "css/perfect-scrollbar.min.css");
+        wp_enqueue_style('builder.qoob', $this->getUrlQoob() . "css/builder.css");
     }
 
     /**
