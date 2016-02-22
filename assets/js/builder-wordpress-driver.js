@@ -17,6 +17,23 @@ WordpressDriver.prototype.getIframePageUrl = function (pageId) {
     return '/?page_id=' + postId + '&qoob=true';
 };
 
+/**
+ * Go to the admin view of the edited page
+ * 
+ * @returns {String}
+ */
+WordpressDriver.prototype.exit = function (pageId) {
+    if (!jQuery('.autosave input').prop("checked")) {
+        var alert_exit = confirm("Are you sure you want to exit without save?");
+        if (!alert_exit) {
+            return false;
+        }
+    }
+
+    var url = '/wp-admin/post.php?post=' + jQuery('#post_ID').val() + '&action=edit';
+    window.location.href = url;
+};
+
 /** 
  * @callback savePageDataCallback
  */
