@@ -53,9 +53,10 @@ class Qoob {
         // Load js in frame
         if (isset($_GET['qoob']) && $_GET['qoob'] == true) {
             add_filter('the_title', array($this, 'setDefaultTitle'));
-            add_action('wp_enqueue_scripts', array($this, 'frontend_scripts'));
+            add_action('wp_enqueue_scripts', array($this, 'iframe_scripts'));
         }
-
+        add_action('wp_enqueue_scripts', array($this, 'frontend_scripts'));
+        
         // Registration ajax
         add_action('wp_ajax_load_page_data', array($this, 'loadPageData'));
         add_action('wp_ajax_load_builder_data', array($this, 'loadBuilderData'));
@@ -383,7 +384,9 @@ class Qoob {
             return $this->addMainBuilderBlock();
         } else {
             $block = $this->getBlock($atts['id']);
-            return stripslashes($block->html);
+            $preload_script = '<script src="' . SmartUtils::getUrlFromPath($this->getPathQoob() . 'js/builder-preloader.js') . '"></script>';
+            $html = $preload_script . stripslashes($block->html);
+            return $html;
         }
     }
 
@@ -413,12 +416,19 @@ class Qoob {
     /**
      * Load javascript and css on iframe
      */
-    public function frontend_scripts() {
+    public function iframe_scripts() {
         // Load style
         wp_enqueue_style('builder.qoob.iframe', $this->getUrlQoob() . "css/iframe-builder.css");
 
         // Load js
         wp_enqueue_script('control.edit.page.iframe', $this->getUrlQoob() . 'js/control-edit-page-iframe.js', array('jquery'), '', true);
+    }
+    
+    /**
+     * Load js and css on frontend pages
+     */
+    function frontend_scripts() {
+        wp_enqueue_style('builder.qoob.preloader', $this->getUrlQoob() . "css/builder-preloader.css");
     }
 
     /**
