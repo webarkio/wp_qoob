@@ -17,22 +17,15 @@
 // });
 
 var assert = require('assert');
-var loader = require('../assets/js/builder-loader');
-var builder = require('../assets/js/builder');
-
+var loader = require('../assets/js/builder-wordpress-driver');
 console.log(loader);
-console.log(builder);
 
-describe('#Builder create()', function () {
-	it('Initialize page builder', function () {
-		
+describe('#getIframePageUrl()', function () {
+	it('should return url', function () {
 
-		var load = new loader.BuilderLoader();
-		console.log(load);
+		//var qoob = new loader();
+		assert.equal(getIframePageUrl('12'),'');
 
-		var qoob = new builder.Builder();
-		console.log(qoob);
-		assert.equal(qbs,"3");
 
 	});
 });
