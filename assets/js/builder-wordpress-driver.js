@@ -4,6 +4,7 @@
  * @version 0.0.1
  * @class  WordpressDriver
  */
+//module.exports.WordpressDriver = WordpressDriver;
 function WordpressDriver() {
 }
 
