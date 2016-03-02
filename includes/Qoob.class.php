@@ -25,13 +25,19 @@ class Qoob {
     /**
      * Name shortcode
      */
-    const NAME_SHORTCODE = "apage";
+    const NAME_SHORTCODE = "qoob-page";
 
     /**
      * Table name plugin
      * @var string
      */
     var $qoob_table_name;
+    
+    /**
+     * State first shortcode
+     * @var boolean
+     */
+    private $statusShortcode = false;
 
     /**
      * Register actions for module
@@ -381,7 +387,11 @@ class Qoob {
      */
     public function add_shortcode($atts, $content = null) {
         if (is_user_logged_in() && ( isset($_GET['qoob']) && $_GET['qoob'] == true)) {
+            if ($this->statusShortcode == true) {
+                return;
+            }
             return $this->addMainBuilderBlock();
+            $this->statusShortcode = true;
         } else {
             $block = $this->getBlock($atts['id']);
             $preload_script = '<script src="' . SmartUtils::getUrlFromPath($this->getPathQoob() . 'js/builder-preloader.js') . '"></script>';
@@ -421,7 +431,7 @@ class Qoob {
         wp_enqueue_style('builder.qoob.iframe', $this->getUrlQoob() . "css/iframe-builder.css");
 
         // Load js
-        wp_enqueue_script('control.edit.page.iframe', $this->getUrlQoob() . 'js/control-edit-page-iframe.js', array('jquery'), '', true);
+        wp_enqueue_script('control.edit.page.iframe', $this->getUrlAssets() . 'js/control-edit-page-iframe.js', array('jquery'), '', true);
     }
     
     /**
@@ -506,7 +516,7 @@ class Qoob {
      * add html instead shortcode
      */
     public function addMainBuilderBlock() {
-        echo '<div class="builder-sc"></div>';
+        echo '<div id="builder-blocks"></div>';
     }
 
     /**
