@@ -32,12 +32,18 @@ class Qoob {
      * @var string
      */
     var $qoob_table_name;
-    
+
     /**
      * State first shortcode
      * @var boolean
      */
     private $statusShortcode = false;
+
+    /**
+     * All template url's
+     * @var array
+     */
+    private $urls = [];
 
     /**
      * Register actions for module
@@ -62,7 +68,7 @@ class Qoob {
             add_action('wp_enqueue_scripts', array($this, 'iframe_scripts'));
         }
         add_action('wp_enqueue_scripts', array($this, 'frontend_scripts'));
-        
+
         // Registration ajax
         add_action('wp_ajax_load_page_data', array($this, 'loadPageData'));
         add_action('wp_ajax_load_builder_data', array($this, 'loadBuilderData'));
@@ -433,7 +439,7 @@ class Qoob {
         // Load js
         wp_enqueue_script('control.edit.page.iframe', $this->getUrlAssets() . 'js/control-edit-page-iframe.js', array('jquery'), '', true);
     }
-    
+
     /**
      * Load js and css on frontend pages
      */
@@ -551,11 +557,13 @@ class Qoob {
 
         $blocks_html = trim($_POST['blocks']['html']);
         $data = json_encode($_POST['blocks']['data']);
+        $settings = trim($_POST['blocks']['settings']);
 
         $result = $wpdb->update(
                 $this->qoob_table_name, array(
             'data' => $data,
-            'html' => $blocks_html
+            'html' => $blocks_html,
+            'settings' => $settings
                 ), array('pid' => $_POST['page_id'])
         );
 
@@ -564,11 +572,13 @@ class Qoob {
     }
 
     /**
-     * Get all blocks in folder
+     * Get url templates
      * @return array
      */
-    private function getTemplates() {
-        $templates = array();
+    private function getUrlTemplates() {
+        if (!empty($this->urls)) {
+            return $this->urls;
+        }
 
         $path = get_template_directory() . '/blocks';
 
@@ -578,16 +588,37 @@ class Qoob {
 
             if ($file->isDir()) {
                 $url = get_template_directory_uri() . '/blocks/' . $file->getFilename() . '/';
-                $settings_json = file_get_contents($url . 'settings.json');
 
-                $settings = SmartUtils::decode($settings_json, true);
-
-                $templates[] = array(
+                $this->urls[] = array(
                     'id' => $file->getFilename(),
-                    'groups' => $settings['groups'],
                     'url' => $url
                 );
             }
+        }
+
+        return $this->urls;
+    }
+
+    /**
+     * Get all blocks in folder
+     * @return array
+     */
+    private function getTemplates() {
+        $templates = array();
+
+        $urls = $this->getUrlTemplates();
+
+        foreach ($urls as $val) {
+            if ($val['id'] == 'global_settings')
+                continue;
+            $settings_json = file_get_contents($val['url'] . 'settings.json');
+            $settings = SmartUtils::decode($settings_json, true);
+
+            $templates[] = array(
+                'id' => $val['id'],
+                'groups' => $settings['groups'],
+                'url' => $val['url']
+            );
         }
 
         // Get other blocks
@@ -604,7 +635,7 @@ class Qoob {
      * @return null|array
      */
     private function getTemplate($id) {
-        $templates = $this->getTemplates();
+        $templates = $this->getUrlTemplates();
 
         foreach ($templates as $key => $val) {
             if ($val['id'] === $id) {
@@ -623,7 +654,18 @@ class Qoob {
         $json = SmartUtils::decode($json, true);
 
         // Get other groups
-        $json = apply_filters('Smart_blocks_groups', $json);
+//        $json = apply_filters('Smart_blocks_groups', $json);
+
+        return $json;
+    }
+
+    /**
+     * Get global settings
+     * @return array
+     */
+    private function getGlobalSettings() {
+        $json = file_get_contents(get_template_directory_uri() . '/blocks/global_settings.json');
+        $json = SmartUtils::decode($json, true);
 
         return $json;
     }
@@ -635,13 +677,15 @@ class Qoob {
     public function loadBuilderData() {
         $templates = $this->getTemplates();
         $groups = $this->getGroups();
+        $global_settings = $this->getGlobalSettings();
 
         if (isset($templates)) {
             $response = array(
                 'success' => true,
                 'data' => array(
                     'templates' => $templates,
-                    'groups' => $groups
+                    'groups' => $groups,
+                    'global_settings' => $global_settings
                 )
             );
         } else {
