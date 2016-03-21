@@ -420,6 +420,7 @@ class Qoob {
                 pid int(9) NOT NULL AUTO_INCREMENT,
                 data text NOT NULL,
                 html text NOT NULL,
+                settings text NOT NULL,
                 PRIMARY KEY (pid),
                 KEY pid(pid)
             );";
