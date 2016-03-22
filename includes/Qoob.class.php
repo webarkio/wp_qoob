@@ -420,7 +420,6 @@ class Qoob {
                 pid int(9) NOT NULL AUTO_INCREMENT,
                 data text NOT NULL,
                 html text NOT NULL,
-                settings text NOT NULL,
                 PRIMARY KEY (pid),
                 KEY pid(pid)
             );";
@@ -558,13 +557,11 @@ class Qoob {
 
         $blocks_html = trim($_POST['blocks']['html']);
         $data = json_encode($_POST['blocks']['data']);
-        $settings = trim($_POST['blocks']['settings']);
 
         $result = $wpdb->update(
                 $this->qoob_table_name, array(
             'data' => $data,
             'html' => $blocks_html,
-            'settings' => $settings
                 ), array('pid' => $_POST['page_id'])
         );
 
