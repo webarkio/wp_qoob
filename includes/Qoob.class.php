@@ -215,13 +215,12 @@ class Qoob {
      * @return mixed
      */
     public function addEditLinkAction($actions) {
+        //TODO: check if page has qoob shortcode show Edit with qoob
         $post = get_post();
         $id = (strlen($post->ID) > 0 ? $post->ID : get_the_ID());
         $url = admin_url() . 'post.php?qoob=true&post_id=' . $id . '&post_type=' . get_post_type($id);
 
-        $actions['edit_qoob'] = '<a href="' . $url . '">' . __('qoob editor', 'qoob') . '</a>';
-
-        return $actions;
+        return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>')+$actions;
     }
 
     /**
