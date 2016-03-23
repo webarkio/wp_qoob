@@ -219,9 +219,7 @@ class Qoob {
         $id = (strlen($post->ID) > 0 ? $post->ID : get_the_ID());
         $url = admin_url() . 'post.php?qoob=true&post_id=' . $id . '&post_type=' . get_post_type($id);
 
-        $actions['edit_qoob'] = '<a href="' . $url . '">' . __('qoob editor', 'qoob') . '</a>';
-
-        return $actions;
+        return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>')+$actions;
     }
 
     /**
