@@ -215,6 +215,7 @@ class Qoob {
      * @return mixed
      */
     public function addEditLinkAction($actions) {
+        //TODO: check if page has qoob shortcode show Edit with qoob
         $post = get_post();
         $id = (strlen($post->ID) > 0 ? $post->ID : get_the_ID());
         $url = admin_url() . 'post.php?qoob=true&post_id=' . $id . '&post_type=' . get_post_type($id);
