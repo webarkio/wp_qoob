@@ -613,8 +613,9 @@ class Qoob {
         $urls = $this->getUrlTemplates();
 
         foreach ($urls as $val) {
-            if ($val['id'] == 'global_settings')
+            if ($val['id'] == 'global')
                 continue;
+            
             $settings_json = file_get_contents($val['url'] . 'settings.json');
             $settings = SmartUtils::decode($settings_json, true);
 
@@ -624,9 +625,6 @@ class Qoob {
                 'url' => $val['url']
             );
         }
-
-        // Get other blocks
-        $templates = apply_filters('Smart_blocks', $templates);
 
         return $templates;
     }
@@ -668,7 +666,7 @@ class Qoob {
      * @return array
      */
     private function getGlobalSettings() {
-        $json = file_get_contents(get_template_directory_uri() . '/blocks/global_settings.json');
+        $json = file_get_contents(get_template_directory_uri() . '/blocks/global/settings.json');
         $json = SmartUtils::decode($json, true);
 
         return $json;
