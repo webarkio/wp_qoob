@@ -217,10 +217,15 @@ class Qoob {
     public function addEditLinkAction($actions) {
         //TODO: check if page has qoob shortcode show Edit with qoob
         $post = get_post();
+        
         $id = (strlen($post->ID) > 0 ? $post->ID : get_the_ID());
         $url = admin_url() . 'post.php?qoob=true&post_id=' . $id . '&post_type=' . get_post_type($id);
-
-        return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>')+$actions;
+        
+        if (preg_match("/" . self::NAME_SHORTCODE . "/", $post->post_content)) {
+            return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>') + $actions;
+        } else {
+            return $actions;
+        }
     }
 
     /**
@@ -478,6 +483,7 @@ class Qoob {
         wp_enqueue_script('jquery-ui-droppable');
         wp_enqueue_script('jquery-ui-slider');
         wp_enqueue_script('jquery-ui-accordion');
+        wp_enqueue_script('jquery-ui-autocomplete');
         wp_enqueue_script('jquery-touch-punch');
         wp_enqueue_script('underscore');
         wp_enqueue_script('backbone');
@@ -490,6 +496,7 @@ class Qoob {
         // Application scripts
         wp_enqueue_script('block-view', $this->getUrlQoob() . 'js/block-view.js', array('jquery'), '', true);
         wp_enqueue_script('field-text', $this->getUrlQoob() . 'js/fields/field-text.js', array('jquery'), '', true);
+        wp_enqueue_script('field-text-autocomplete', $this->getUrlQoob() . 'js/fields/field-text-autocomplete.js', array('jquery'), '', true);
         wp_enqueue_script('field-checkbox', $this->getUrlQoob() . 'js/fields/field-checkbox.js', array('jquery'), '', true);
         wp_enqueue_script('field-select', $this->getUrlQoob() . 'js/fields/field-select.js', array('jquery'), '', true);
         wp_enqueue_script('field-texarea', $this->getUrlQoob() . 'js/fields/field-textarea.js', array('jquery'), '', true);
