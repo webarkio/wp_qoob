@@ -18,7 +18,6 @@
 
 var assert = require('assert');
 var loader = require('../assets/js/builder-wordpress-driver');
-console.log(loader);
 
 describe('#getIframePageUrl()', function () {
 	it('should return url', function () {
