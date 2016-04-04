@@ -484,6 +484,7 @@ class Qoob {
         wp_enqueue_script('jquery-ui-slider');
         wp_enqueue_script('jquery-ui-accordion');
         wp_enqueue_script('jquery-ui-autocomplete');
+        wp_enqueue_script('sortable.js', $this->getUrlQoob() . 'js/libs/Sortable.js', array('jquery'), '', true);
         wp_enqueue_script('jquery-touch-punch');
         wp_enqueue_script('underscore');
         wp_enqueue_script('backbone');
@@ -492,6 +493,7 @@ class Qoob {
         wp_enqueue_script('handlebars-helper', $this->getUrlQoob() . 'js/libs/handlebars-helper.js', array('jquery'), '', true);
         wp_enqueue_script('jquery-ui-droppable-iframe', $this->getUrlQoob() . 'js/libs/jquery-ui-droppable-iframe.js', array('jquery'), '', true);
         wp_enqueue_script('perfect-scrollbar', $this->getUrlQoob() . 'js/libs/perfect-scrollbar.jquery.js', array('jquery'), '', true);
+        wp_enqueue_script('nicescroll', $this->getUrlQoob() . 'js/libs/jquery.nicescroll.js', array('jquery'), '', true);
 
         // Application scripts
         wp_enqueue_script('block-view', $this->getUrlQoob() . 'js/block-view.js', array('jquery'), '', true);
