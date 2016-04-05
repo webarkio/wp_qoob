@@ -503,6 +503,7 @@ class Qoob {
         wp_enqueue_script('field-texarea', $this->getUrlQoob() . 'js/fields/field-textarea.js', array('jquery'), '', true);
         wp_enqueue_script('field-slider', $this->getUrlQoob() . 'js/fields/field-slider.js', array('jquery'), '', true);
         wp_enqueue_script('field-image', $this->getUrlQoob() . 'js/fields/field-image.js', array('jquery'), '', true);
+        wp_enqueue_script('field-colorpicker', $this->getUrlQoob() . 'js/fields/field-colorpicker.js', array('jquery'), '', true);
         wp_enqueue_script('field-accordion', $this->getUrlQoob() . 'js/fields/field-accordion.js', array('jquery'), '', true);
         wp_enqueue_script('field-accordion-item', $this->getUrlQoob() . 'js/fields/field-accordion-item.js', array('jquery'), '', true);
         wp_enqueue_script('field-devices', $this->getUrlQoob() . 'js/fields/field-devices.js', array('jquery'), '', true);
@@ -543,7 +544,9 @@ class Qoob {
         $block = $wpdb->get_row("SELECT * FROM " . $this->qoob_table_name . " WHERE pid = " . $_POST['page_id'] . "");
 
         if (isset($block) && $block->data) {
-            $data = json_decode($block->data, true);
+            
+            $data = stripslashes_deep(json_decode($block->data, true));
+            
             $response = array(
                 'success' => true,
                 'data' => $data
@@ -562,7 +565,6 @@ class Qoob {
      */
     public function savePageData() {
         global $wpdb;
-
         $blocks_html = trim($_POST['blocks']['html']);
         $data = json_encode($_POST['blocks']['data']);
 
