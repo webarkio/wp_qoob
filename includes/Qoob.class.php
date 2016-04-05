@@ -463,7 +463,6 @@ class Qoob {
             wp_enqueue_script('waves.min', $this->getUrlQoob() . 'js/libs/waves.min.js', array('builder.admin'), '', true);
             wp_enqueue_style('waves.min', $this->getUrlQoob() . "css/waves.min.css");
             wp_enqueue_style('wheelcolorpicker-minicolors', $this->getUrlQoob() . "css/wheelcolorpicker.css");
-//            wp_enqueue_style('colorpicker-minicolors', $this->getUrlQoob() . "css/jquery.minicolors.css");
             wp_enqueue_style('builder.qoob.iframe', $this->getUrlQoob() . "css/builder-admin.css");
         }
     }
