@@ -546,7 +546,9 @@ class Qoob {
         $block = $wpdb->get_row("SELECT * FROM " . $this->qoob_table_name . " WHERE pid = " . $_POST['page_id'] . "");
 
         if (isset($block) && $block->data) {
-            $data = json_decode($block->data, true);
+            
+            $data = stripslashes_deep(json_decode($block->data, true));
+            
             $response = array(
                 'success' => true,
                 'data' => $data
@@ -565,7 +567,6 @@ class Qoob {
      */
     public function savePageData() {
         global $wpdb;
-
         $blocks_html = trim($_POST['blocks']['html']);
         $data = json_encode($_POST['blocks']['data']);
 
