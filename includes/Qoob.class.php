@@ -78,9 +78,15 @@ class Qoob {
 
         // Add edit link
         add_filter('page_row_actions', array($this, 'addEditLinkAction'));
-
+        //deregister dashicons.min.css for Edge
+        add_action( 'wp_print_styles', array($this, 'deregister_dashicons'), 100 );
         //register shortcode
         add_shortcode(self::NAME_SHORTCODE, array($this, 'add_shortcode'));
+    }
+
+    
+    public function deregister_dashicons() { 
+        wp_deregister_style( 'dashicons' ); 
     }
 
     /**
