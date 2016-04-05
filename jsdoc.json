@@ -23,7 +23,8 @@
             "assets/js/fields/field-select.js",
             "assets/js/fields/field-slider.js",
             "assets/js/fields/field-texarea.js",
-            "assets/js/fields/field-text.js"
+            "assets/js/fields/field-text.js",
+            "assets/js/fields/field-colorpicker.js"
         ]
     },
     "plugins": [],

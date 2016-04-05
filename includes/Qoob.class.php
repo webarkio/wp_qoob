@@ -503,6 +503,7 @@ class Qoob {
         wp_enqueue_script('field-texarea', $this->getUrlQoob() . 'js/fields/field-textarea.js', array('jquery'), '', true);
         wp_enqueue_script('field-slider', $this->getUrlQoob() . 'js/fields/field-slider.js', array('jquery'), '', true);
         wp_enqueue_script('field-image', $this->getUrlQoob() . 'js/fields/field-image.js', array('jquery'), '', true);
+        wp_enqueue_script('field-colorpicker', $this->getUrlQoob() . 'js/fields/field-colorpicker.js', array('jquery'), '', true);
         wp_enqueue_script('field-accordion', $this->getUrlQoob() . 'js/fields/field-accordion.js', array('jquery'), '', true);
         wp_enqueue_script('field-accordion-item', $this->getUrlQoob() . 'js/fields/field-accordion-item.js', array('jquery'), '', true);
         wp_enqueue_script('field-devices', $this->getUrlQoob() . 'js/fields/field-devices.js', array('jquery'), '', true);
