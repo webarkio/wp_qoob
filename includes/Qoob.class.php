@@ -442,6 +442,8 @@ class Qoob {
 
         // Load js
         wp_enqueue_script('control.edit.page.iframe', $this->getUrlAssets() . 'js/control-edit-page-iframe.js', array('jquery'), '', true);
+        wp_enqueue_script('jquery.appear.js', $this->getUrlQoob() . 'js/libs/jquery.appear.js', array('jquery'), '', true);
+        wp_enqueue_script('builder.controls.scroll', $this->getUrlQoob() . 'js/builder-controls-scroll.js', array('jquery', 'jquery.appear.js'), '', true);
     }
 
     /**
@@ -487,12 +489,11 @@ class Qoob {
         wp_enqueue_script('jquery-touch-punch');
         wp_enqueue_script('underscore');
         wp_enqueue_script('backbone');
+        wp_enqueue_script('jquery-appear', $this->geturlQoob() . 'js/libs/jquery.appear.js');
         wp_enqueue_script('builder-tinymce', $this->getUrlQoob() . 'js/libs/tinymce/tinymce.min.js', array('jquery'), '', true);
         wp_enqueue_script('handlebars', $this->getUrlQoob() . 'js/libs/handlebars.js', array('jquery'), '', true);
         wp_enqueue_script('handlebars-helper', $this->getUrlQoob() . 'js/libs/handlebars-helper.js', array('jquery'), '', true);
         wp_enqueue_script('jquery-ui-droppable-iframe', $this->getUrlQoob() . 'js/libs/jquery-ui-droppable-iframe.js', array('jquery'), '', true);
-        wp_enqueue_script('perfect-scrollbar', $this->getUrlQoob() . 'js/libs/perfect-scrollbar.jquery.js', array('jquery'), '', true);
-
         // Application scripts
         wp_enqueue_script('block-view', $this->getUrlQoob() . 'js/block-view.js', array('jquery'), '', true);
         wp_enqueue_script('field-text', $this->getUrlQoob() . 'js/fields/field-text.js', array('jquery'), '', true);
@@ -516,6 +517,7 @@ class Qoob {
         wp_enqueue_script('builder-menu', $this->getUrlQoob() . 'js/builder-menu.js', array('jquery'), '', true);
         wp_enqueue_script('builder-viewport', $this->getUrlQoob() . 'js/builder-viewport.js', array('jquery'), '', true);
         wp_enqueue_script('builder-qoob', $this->getUrlQoob() . 'js/builder.js', array('jquery'), '', true);
+        wp_enqueue_script('', $this->getUrlQoob() . 'js/builder.js', array('jquery'), '', true);
 
         // page edit script
         wp_enqueue_script('control_edit_page', $this->getUrlAssets() . 'js/control-edit-page.js', array('builder-qoob'), '', true);
