@@ -468,6 +468,7 @@ class Qoob {
             wp_enqueue_script('builder.admin', $this->getUrlQoob() . 'js/builder-admin.js', array('jquery'), '', true);
             wp_enqueue_script('waves.min', $this->getUrlQoob() . 'js/libs/waves.min.js', array('builder.admin'), '', true);
             wp_enqueue_style('waves.min', $this->getUrlQoob() . "css/waves.min.css");
+            wp_enqueue_style('wheelcolorpicker-minicolors', $this->getUrlQoob() . "css/wheelcolorpicker.css");
             wp_enqueue_style('builder.qoob.iframe', $this->getUrlQoob() . "css/builder-admin.css");
         }
     }
@@ -500,6 +501,7 @@ class Qoob {
         wp_enqueue_script('handlebars', $this->getUrlQoob() . 'js/libs/handlebars.js', array('jquery'), '', true);
         wp_enqueue_script('handlebars-helper', $this->getUrlQoob() . 'js/libs/handlebars-helper.js', array('jquery'), '', true);
         wp_enqueue_script('jquery-ui-droppable-iframe', $this->getUrlQoob() . 'js/libs/jquery-ui-droppable-iframe.js', array('jquery'), '', true);
+        wp_enqueue_script('jquery-wheelcolorpicker', $this->getUrlQoob() . 'js/libs/jquery.wheelcolorpicker.js', array('jquery'), '', true);
         // Application scripts
         wp_enqueue_script('block-view', $this->getUrlQoob() . 'js/block-view.js', array('jquery'), '', true);
         wp_enqueue_script('field-text', $this->getUrlQoob() . 'js/fields/field-text.js', array('jquery'), '', true);
