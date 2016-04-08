@@ -80,14 +80,13 @@ class Qoob {
         // Add edit link
         add_filter('page_row_actions', array($this, 'addEditLinkAction'));
         //deregister dashicons.min.css for Edge
-        add_action( 'wp_print_styles', array($this, 'deregister_dashicons'), 100 );
+        add_action('wp_print_styles', array($this, 'deregister_dashicons'), 100);
         //register shortcode
         add_shortcode(self::NAME_SHORTCODE, array($this, 'add_shortcode'));
     }
 
-    
-    public function deregister_dashicons() { 
-        wp_deregister_style( 'dashicons' ); 
+    public function deregister_dashicons() {
+        wp_deregister_style('dashicons');
     }
 
     /**
@@ -503,6 +502,7 @@ class Qoob {
         wp_enqueue_script('handlebars-helper', $this->getUrlQoob() . 'js/libs/handlebars-helper.js', array('jquery'), '', true);
         wp_enqueue_script('jquery-ui-droppable-iframe', $this->getUrlQoob() . 'js/libs/jquery-ui-droppable-iframe.js', array('jquery'), '', true);
         wp_enqueue_script('jquery-wheelcolorpicker', $this->getUrlQoob() . 'js/libs/jquery.wheelcolorpicker.js', array('jquery'), '', true);
+
         // Application scripts
         wp_enqueue_script('block-view', $this->getUrlQoob() . 'js/block-view.js', array('jquery'), '', true);
         wp_enqueue_script('field-text', $this->getUrlQoob() . 'js/fields/field-text.js', array('jquery'), '', true);
@@ -527,6 +527,7 @@ class Qoob {
         wp_enqueue_script('builder-menu', $this->getUrlQoob() . 'js/builder-menu.js', array('jquery'), '', true);
         wp_enqueue_script('builder-viewport', $this->getUrlQoob() . 'js/builder-viewport.js', array('jquery'), '', true);
         wp_enqueue_script('builder-storage', $this->getUrlQoob() . 'js/builder-storage.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-storage', $this->getUrlQoob() . 'js/builder-utils.js', array('jquery'), '', true);
         wp_enqueue_script('builder-qoob', $this->getUrlQoob() . 'js/builder.js', array('jquery'), '', true);
 
         // page edit script
@@ -577,14 +578,20 @@ class Qoob {
         $blocks_html = trim($_POST['blocks']['html']);
         $data = json_encode($_POST['blocks']['data']);
 
-        $result = $wpdb->update(
+        $updated = $wpdb->update(
                 $this->qoob_table_name, array(
             'data' => $data,
             'html' => $blocks_html,
                 ), array('pid' => $_POST['page_id'])
         );
 
-        wp_send_json($result);
+        if (false === $updated) {
+            $responce = array('success' => true);
+        } else {
+            $responce = array('success' => false);
+        }
+
+        wp_send_json($responce);
         exit();
     }
 
@@ -626,17 +633,10 @@ class Qoob {
         $urls = $this->getUrlTemplates();
 
         foreach ($urls as $val) {
-            if ($val['id'] == 'global')
-                continue;
-
             $settings_json = file_get_contents($val['url'] . 'config.json');
             $settings = SmartUtils::decode($settings_json, true);
 
-            $templates[] = array(
-                'id' => $val['id'],
-                'groups' => $settings['groups'],
-                'url' => $val['url']
-            );
+            $templates[] = $settings;
         }
 
         return $templates;
@@ -675,32 +675,19 @@ class Qoob {
     }
 
     /**
-     * Get global settings
-     * @return array
-     */
-    private function getGlobalSettings() {
-        $json = file_get_contents(get_template_directory_uri() . '/blocks/global/config.json');
-        $json = SmartUtils::decode($json, true);
-
-        return $json;
-    }
-
-    /**
      * Load builder data
      * @return json
      */
     public function loadBuilderData() {
         $templates = $this->getTemplates();
         $groups = $this->getGroups();
-        $global_settings = $this->getGlobalSettings();
 
         if (isset($templates)) {
             $response = array(
                 'success' => true,
                 'data' => array(
-                    'templates' => $templates,
+                    'items' => $templates,
                     'groups' => $groups,
-                    'global_settings' => $global_settings
                 )
             );
         } else {
@@ -733,10 +720,6 @@ class Qoob {
         $urls = $this->getUrlTemplates();
 
         foreach ($urls as $val) {
-            if ($val['id'] == 'global') {
-                continue;
-            }
-
             $settings_json = file_get_contents($val['url'] . 'config.json');
             $config[] = SmartUtils::decode($settings_json, true);
         }
@@ -781,7 +764,7 @@ class Qoob {
         echo $template;
         exit();
     }
-    
+
     /**
      * Loading all config.json assets for all existing blocks
      */
