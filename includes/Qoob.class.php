@@ -75,6 +75,7 @@ class Qoob {
         add_action('wp_ajax_load_settings', array($this, 'loadSettings'));
         add_action('wp_ajax_load_template', array($this, 'loadTemplate'));
         add_action('wp_ajax_save_page_data', array($this, 'savePageData'));
+        add_action('wp_ajax_load_assets', array($this, 'loadAssets'));
 
         // Add edit link
         add_filter('page_row_actions', array($this, 'addEditLinkAction'));
@@ -217,10 +218,10 @@ class Qoob {
     public function addEditLinkAction($actions) {
         //TODO: check if page has qoob shortcode show Edit with qoob
         $post = get_post();
-        
+
         $id = (strlen($post->ID) > 0 ? $post->ID : get_the_ID());
         $url = admin_url() . 'post.php?qoob=true&post_id=' . $id . '&post_type=' . get_post_type($id);
-        
+
         if (preg_match("/" . self::NAME_SHORTCODE . "/", $post->post_content)) {
             return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>') + $actions;
         } else {
@@ -544,9 +545,9 @@ class Qoob {
         $block = $wpdb->get_row("SELECT * FROM " . $this->qoob_table_name . " WHERE pid = " . $_POST['page_id'] . "");
 
         if (isset($block) && $block->data) {
-            
+
             $data = stripslashes_deep(json_decode($block->data, true));
-            
+
             $response = array(
                 'success' => true,
                 'data' => $data
@@ -619,8 +620,8 @@ class Qoob {
         foreach ($urls as $val) {
             if ($val['id'] == 'global')
                 continue;
-            
-            $settings_json = file_get_contents($val['url'] . 'settings.json');
+
+            $settings_json = file_get_contents($val['url'] . 'config.json');
             $settings = SmartUtils::decode($settings_json, true);
 
             $templates[] = array(
@@ -670,7 +671,7 @@ class Qoob {
      * @return array
      */
     private function getGlobalSettings() {
-        $json = file_get_contents(get_template_directory_uri() . '/blocks/global/settings.json');
+        $json = file_get_contents(get_template_directory_uri() . '/blocks/global/config.json');
         $json = SmartUtils::decode($json, true);
 
         return $json;
@@ -707,12 +708,31 @@ class Qoob {
      * @param string $templateId
      * @return json
      */
-    private function getSettingsFile($templateId) {
+    private function getConfigFile($templateId) {
         $template = $this->getTemplate($templateId);
-        $json = file_get_contents($template['url'] . 'settings.json');
+        $json = file_get_contents($template['url'] . 'config.json');
         $json = SmartUtils::decode($json, true);
 
         return $json;
+    }
+
+    /**
+     * Get config files contents
+     * @return array $config Array of config's json
+     */
+    private function getConfigFiles() {
+        $config = [];
+        $urls = $this->getUrlTemplates();
+
+        foreach ($urls as $val) {
+            if ($val['id'] == 'global') {
+                continue;
+            }
+
+            $settings_json = file_get_contents($val['url'] . 'config.json');
+            $config[] = SmartUtils::decode($settings_json, true);
+        }
+        return $config;
     }
 
     /**
@@ -720,7 +740,7 @@ class Qoob {
      * @return json
      */
     public function loadSettings() {
-        $settings = $this->getSettingsFile($_POST['template_id']);
+        $settings = $this->getConfigFile($_POST['template_id']);
 
         if (isset($settings)) {
             $response = array(
@@ -751,6 +771,31 @@ class Qoob {
     public function loadTemplate() {
         $template = $this->getHtml($_POST['template_id']);
         echo $template;
+        exit();
+    }
+    
+    /**
+     * Loading all config.json assets for all existing blocks
+     */
+    public function loadAssets() {
+        $configs = $this->getConfigFiles();
+
+        if (isset($configs)) {
+            $assets = [];
+            for ($i = 0; $i < count($configs); $i++) {
+                if (isset($configs[$i]['assets'])) {
+                    $assets[] = $configs[$i]['assets'];
+                }
+            }
+            $response = array(
+                'success' => true,
+                'assets' => $assets
+            );
+        } else {
+            $response = array('success' => false);
+        }
+
+        wp_send_json($response);
         exit();
     }
 
