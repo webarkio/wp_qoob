@@ -633,11 +633,17 @@ class Qoob {
         $urls = $this->getUrlTemplates();
 
         foreach ($urls as $val) {
-            $settings_json = file_get_contents($val['url'] . 'config.json');
-            $settings = SmartUtils::decode($settings_json, true);
+            $config_json = file_get_contents($val['url'] . 'config.json');
+            $config = SmartUtils::decode($config_json, true);
 
-            $templates[] = $settings;
+            $templates[] = array(
+                'id' => $val['id'],
+                'url' => $val['url'],
+                'config' => $config
+            );
         }
+
+
 
         return $templates;
     }
@@ -687,7 +693,7 @@ class Qoob {
                 'success' => true,
                 'data' => array(
                     'items' => $templates,
-                    'groups' => $groups,
+                    'groups' => $groups
                 )
             );
         } else {
@@ -724,26 +730,6 @@ class Qoob {
             $config[] = SmartUtils::decode($settings_json, true);
         }
         return $config;
-    }
-
-    /**
-     * Load settings block
-     * @return json
-     */
-    public function loadSettings() {
-        $settings = $this->getConfigFile($_POST['template_id']);
-
-        if (isset($settings)) {
-            $response = array(
-                'success' => true,
-                'config' => $settings['settings']
-            );
-        } else {
-            $response = array('success' => false);
-        }
-
-        wp_send_json($response);
-        exit();
     }
 
     /**
