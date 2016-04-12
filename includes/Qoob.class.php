@@ -586,9 +586,9 @@ class Qoob {
         );
 
         if (false === $updated) {
-            $responce = array('success' => true);
-        } else {
             $responce = array('success' => false);
+        } else {
+            $responce = array('success' => true);
         }
 
         wp_send_json($responce);
