@@ -59,7 +59,11 @@ WordpressDriver.prototype.savePageData = function (pageId, data, cb) {
                 },
                 dataType: 'json',
                 success: function (response) {
-                    cb(response);
+                    if (response.success) {
+                        cb(null, response.success);
+                    } else {
+                        cb(response);
+                    }
                 }
             });
         }

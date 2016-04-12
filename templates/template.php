@@ -44,7 +44,7 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
                 </label>
             </div>
             <div class="edit-control-button">
-                <button class="save" type="button" onclick="parent.builder.save();
+                <button class="save" type="button" onclick="parent.builder.viewPort.save();
                         return false;"><span>Save</span>
                     <div class="clock">
                         <div class="minutes-container"><div class="minutes"></div></div>
@@ -53,8 +53,6 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
                 </button>
                 <button class="exit-btn" onclick="builder.exit();
                         return false;" type="button">Exit</button>
-                <button class="screen-size settings" type="button" onclick="builder.menu.showGlobalSettings();
-                        return false;"></button>
                 <button class="screen-size pc active" onclick="parent.builder.toolbar.screenSize(this);
                         return false;" type="button"></button>
                 <button class="screen-size tablet-vertical" onclick="parent.builder.toolbar.screenSize(this);
@@ -92,19 +90,20 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
 <script type="text/javascript">
     var builder;
     jQuery(document).ready(function () {
-        builder = new Builder({
-            pageId: <?php echo $pageId; ?>,
-            driver: new WordpressDriver()
-        });
+        builder = new Builder(
+                new BuilderStorage({
+                    pageId: <?php echo $pageId; ?>,
+                    driver: new WordpressDriver()
+                }));
         builder.activate();
     });
 </script>
 
 <div style="height: 1px; visibility: hidden; overflow: hidden;">
-<?php
+    <?php
 // fix missed meta boxes
-require_once ABSPATH . 'wp-admin/edit-form-advanced.php';
-?>
+    require_once ABSPATH . 'wp-admin/edit-form-advanced.php';
+    ?>
 </div>
 <?php
 require_once(ABSPATH . 'wp-admin/admin-footer.php');
