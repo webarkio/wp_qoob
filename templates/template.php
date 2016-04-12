@@ -22,18 +22,16 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
     </div>
     <h1><?php _e('Please wait', 'qoob'); ?></h1>
 </div>
-
 <script type="text/javascript">
     var builder;
     jQuery(document).ready(function () {
         builder = new Builder({
             pageId: <?php echo $pageId; ?>,
-            driver: new WordpressDriver()
+            driver: new WordpressDriver() 
         });
         builder.activate();
     });
 </script>
-
 <div style="height: 1px; visibility: hidden; overflow: hidden;">
     <?php
     // fix missed meta boxes
