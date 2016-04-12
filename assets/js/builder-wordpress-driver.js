@@ -59,7 +59,11 @@ WordpressDriver.prototype.savePageData = function (pageId, data, cb) {
                 },
                 dataType: 'json',
                 success: function (response) {
-                    cb(response);
+                    if (response.success) {
+                        cb(null, response.success);
+                    } else {
+                        cb(response);
+                    }
                 }
             });
         }
@@ -198,6 +202,32 @@ WordpressDriver.prototype.loadSettings = function (templateId, cb) {
                 success: function (response) {
                     if (response.success) {
                         cb(null, response.config);
+                    } else {
+                        cb(response.success);
+                    }
+                }
+            });
+        }
+    });
+};
+/**
+ * Get assets from config files of all existing blocks
+ * @param {function} cb
+ *
+ */
+WordpressDriver.prototype.loadAssets = function (cb) {
+    jQuery(document).ready(function() {
+        if(ajax.logged_in && ajax.qoob == true) {
+            jQuery.ajax({
+                url: ajax.url,
+                type: 'POST',
+                data: {
+                    action: 'load_assets'
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if(response.success) {
+                        cb(null, response.assets);
                     } else {
                         cb(response.success);
                     }

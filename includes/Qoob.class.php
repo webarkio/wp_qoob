@@ -75,18 +75,18 @@ class Qoob {
         add_action('wp_ajax_load_settings', array($this, 'loadSettings'));
         add_action('wp_ajax_load_template', array($this, 'loadTemplate'));
         add_action('wp_ajax_save_page_data', array($this, 'savePageData'));
+        add_action('wp_ajax_load_assets', array($this, 'loadAssets'));
 
         // Add edit link
         add_filter('page_row_actions', array($this, 'addEditLinkAction'));
         //deregister dashicons.min.css for Edge
-        add_action( 'wp_print_styles', array($this, 'deregister_dashicons'), 100 );
+        add_action('wp_print_styles', array($this, 'deregister_dashicons'), 100);
         //register shortcode
         add_shortcode(self::NAME_SHORTCODE, array($this, 'add_shortcode'));
     }
 
-    
-    public function deregister_dashicons() { 
-        wp_deregister_style( 'dashicons' ); 
+    public function deregister_dashicons() {
+        wp_deregister_style('dashicons');
     }
 
     /**
@@ -223,10 +223,10 @@ class Qoob {
     public function addEditLinkAction($actions) {
         //TODO: check if page has qoob shortcode show Edit with qoob
         $post = get_post();
-        
+
         $id = (strlen($post->ID) > 0 ? $post->ID : get_the_ID());
         $url = admin_url() . 'post.php?qoob=true&post_id=' . $id . '&post_type=' . get_post_type($id);
-        
+
         if (preg_match("/" . self::NAME_SHORTCODE . "/", $post->post_content)) {
             return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>') + $actions;
         } else {
@@ -502,6 +502,7 @@ class Qoob {
         wp_enqueue_script('handlebars-helper', $this->getUrlQoob() . 'js/libs/handlebars-helper.js', array('jquery'), '', true);
         wp_enqueue_script('jquery-ui-droppable-iframe', $this->getUrlQoob() . 'js/libs/jquery-ui-droppable-iframe.js', array('jquery'), '', true);
         wp_enqueue_script('jquery-wheelcolorpicker', $this->getUrlQoob() . 'js/libs/jquery.wheelcolorpicker.js', array('jquery'), '', true);
+
         // Application scripts
         wp_enqueue_script('block-view', $this->getUrlQoob() . 'js/block-view.js', array('jquery'), '', true);
         wp_enqueue_script('field-text', $this->getUrlQoob() . 'js/fields/field-text.js', array('jquery'), '', true);
@@ -525,14 +526,14 @@ class Qoob {
         wp_enqueue_script('builder-iframe', $this->getUrlQoob() . 'js/builder-iframe.js', array('jquery'), '', true);
         wp_enqueue_script('builder-menu', $this->getUrlQoob() . 'js/builder-menu.js', array('jquery'), '', true);
         wp_enqueue_script('builder-viewport', $this->getUrlQoob() . 'js/builder-viewport.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-storage', $this->getUrlQoob() . 'js/builder-storage.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-storage', $this->getUrlQoob() . 'js/builder-utils.js', array('jquery'), '', true);
         wp_enqueue_script('builder-qoob', $this->getUrlQoob() . 'js/builder.js', array('jquery'), '', true);
-        wp_enqueue_script('', $this->getUrlQoob() . 'js/builder.js', array('jquery'), '', true);
 
         // page edit script
         wp_enqueue_script('control_edit_page', $this->getUrlAssets() . 'js/control-edit-page.js', array('builder-qoob'), '', true);
 
         // style
-        wp_enqueue_style('perfect-scrollbar', $this->getUrlQoob() . "css/perfect-scrollbar.min.css");
         wp_enqueue_style('builder.qoob', $this->getUrlQoob() . "css/builder.css");
     }
 
@@ -553,9 +554,9 @@ class Qoob {
         $block = $wpdb->get_row("SELECT * FROM " . $this->qoob_table_name . " WHERE pid = " . $_POST['page_id'] . "");
 
         if (isset($block) && $block->data) {
-            
+
             $data = stripslashes_deep(json_decode($block->data, true));
-            
+
             $response = array(
                 'success' => true,
                 'data' => $data
@@ -577,14 +578,20 @@ class Qoob {
         $blocks_html = trim($_POST['blocks']['html']);
         $data = json_encode($_POST['blocks']['data']);
 
-        $result = $wpdb->update(
+        $updated = $wpdb->update(
                 $this->qoob_table_name, array(
             'data' => $data,
             'html' => $blocks_html,
                 ), array('pid' => $_POST['page_id'])
         );
 
-        wp_send_json($result);
+        if (false === $updated) {
+            $responce = array('success' => true);
+        } else {
+            $responce = array('success' => false);
+        }
+
+        wp_send_json($responce);
         exit();
     }
 
@@ -626,18 +633,17 @@ class Qoob {
         $urls = $this->getUrlTemplates();
 
         foreach ($urls as $val) {
-            if ($val['id'] == 'global')
-                continue;
-            
-            $settings_json = file_get_contents($val['url'] . 'settings.json');
-            $settings = SmartUtils::decode($settings_json, true);
+            $config_json = file_get_contents($val['url'] . 'config.json');
+            $config = SmartUtils::decode($config_json, true);
 
             $templates[] = array(
                 'id' => $val['id'],
-                'groups' => $settings['groups'],
-                'url' => $val['url']
+                'url' => $val['url'],
+                'config' => $config
             );
         }
+
+
 
         return $templates;
     }
@@ -675,32 +681,19 @@ class Qoob {
     }
 
     /**
-     * Get global settings
-     * @return array
-     */
-    private function getGlobalSettings() {
-        $json = file_get_contents(get_template_directory_uri() . '/blocks/global/settings.json');
-        $json = SmartUtils::decode($json, true);
-
-        return $json;
-    }
-
-    /**
      * Load builder data
      * @return json
      */
     public function loadBuilderData() {
         $templates = $this->getTemplates();
         $groups = $this->getGroups();
-        $global_settings = $this->getGlobalSettings();
 
         if (isset($templates)) {
             $response = array(
                 'success' => true,
                 'data' => array(
-                    'templates' => $templates,
-                    'groups' => $groups,
-                    'global_settings' => $global_settings
+                    'items' => $templates,
+                    'groups' => $groups
                 )
             );
         } else {
@@ -716,32 +709,27 @@ class Qoob {
      * @param string $templateId
      * @return json
      */
-    private function getSettingsFile($templateId) {
+    private function getConfigFile($templateId) {
         $template = $this->getTemplate($templateId);
-        $json = file_get_contents($template['url'] . 'settings.json');
+        $json = file_get_contents($template['url'] . 'config.json');
         $json = SmartUtils::decode($json, true);
 
         return $json;
     }
 
     /**
-     * Load settings block
-     * @return json
+     * Get config files contents
+     * @return array $config Array of config's json
      */
-    public function loadSettings() {
-        $settings = $this->getSettingsFile($_POST['template_id']);
+    private function getConfigFiles() {
+        $config = [];
+        $urls = $this->getUrlTemplates();
 
-        if (isset($settings)) {
-            $response = array(
-                'success' => true,
-                'config' => $settings['settings']
-            );
-        } else {
-            $response = array('success' => false);
+        foreach ($urls as $val) {
+            $settings_json = file_get_contents($val['url'] . 'config.json');
+            $config[] = SmartUtils::decode($settings_json, true);
         }
-
-        wp_send_json($response);
-        exit();
+        return $config;
     }
 
     /**
@@ -760,6 +748,31 @@ class Qoob {
     public function loadTemplate() {
         $template = $this->getHtml($_POST['template_id']);
         echo $template;
+        exit();
+    }
+
+    /**
+     * Loading all config.json assets for all existing blocks
+     */
+    public function loadAssets() {
+        $configs = $this->getConfigFiles();
+
+        if (isset($configs)) {
+            $assets = [];
+            for ($i = 0; $i < count($configs); $i++) {
+                if (isset($configs[$i]['assets'])) {
+                    $assets[] = $configs[$i]['assets'];
+                }
+            }
+            $response = array(
+                'success' => true,
+                'assets' => $assets
+            );
+        } else {
+            $response = array('success' => false);
+        }
+
+        wp_send_json($response);
         exit();
     }
 
