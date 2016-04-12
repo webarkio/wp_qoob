@@ -46,6 +46,12 @@ class Qoob {
     private $urls = [];
 
     /**
+     * All fields template url's
+     * @var array
+     */
+    private $fieldTmplUrls = [];
+    
+    /**
      * Register actions for module
      */
     public function register() {
@@ -76,6 +82,7 @@ class Qoob {
         add_action('wp_ajax_load_template', array($this, 'loadTemplate'));
         add_action('wp_ajax_save_page_data', array($this, 'savePageData'));
         add_action('wp_ajax_load_assets', array($this, 'loadAssets'));
+        add_action('wp_ajax_load_fields_tmpl', array($this, 'loadFieldsTmpl'));
 
         // Add edit link
         add_filter('page_row_actions', array($this, 'addEditLinkAction'));
@@ -624,6 +631,36 @@ class Qoob {
     }
 
     /**
+     * Get url fields templates
+     * @return array
+     */
+    private function getUrlFieldsTemplates() {
+        if (!empty($this->fieldTmplUrls)) {
+            return $this->fieldTmplUrls;
+        }
+
+        $path = ABSPATH . 'wp-content/plugins/qoob.wordpress/qoob/tmpl/fields';
+        
+        foreach (new DirectoryIterator($path) as $file) {
+            
+            if ($file->isDot())
+                continue;
+
+                $filename = $file->getFilename();
+               
+                $url = plugin_dir_url($filename) . 'qoob.wordpress/qoob/tmpl/fields/' . $file->getFilename();
+
+                $this->fieldTmplUrls[] = array(
+                    'id' => $file->getFilename(),
+                    'url' => $url
+                );
+        }
+
+        return $this->fieldTmplUrls;
+    }
+
+
+    /**
      * Get all blocks in folder
      * @return array
      */
@@ -733,6 +770,24 @@ class Qoob {
     }
 
     /**
+     * Get fields tmol files contents
+     * @return array $tmpl Array of config's json
+     */
+    private function getFieldsTmplFiles() {
+        $tmpl = [];
+        $urls = $this->getUrlFieldsTemplates();
+        foreach ($urls as $val) {
+            
+            $html_content = file_get_contents($val['url']);
+            $id = str_replace('.html', '', $val['id']);
+           // $tmpl[] = SmartUtils::decode($settings_json, true);
+            //$tmpl[] = array($id => $html_content);
+            $tmpl[$id] =  $html_content;
+        }
+        return $tmpl;
+    }
+
+    /**
      * Get content hbs file's
      * @return html
      */
@@ -772,6 +827,28 @@ class Qoob {
             $response = array('success' => false);
         }
 
+        wp_send_json($response);
+        exit();
+    }
+     
+    /**
+    * Loading all field's templates  
+    */
+    public function loadFieldsTmpl() {
+        $templates = $this->getFieldsTmplFiles();
+
+        if (isset($templates)) {
+            $fieldstmpl = [];
+            foreach ($templates as $key => $value) {
+                 $fieldstmpl[$key] = $value;
+            }
+            $response = array(
+                'success' => true,
+                'fieldstemplate' => $fieldstmpl
+            );
+        } else {
+            $response = array('success' => false);
+        }
         wp_send_json($response);
         exit();
     }
