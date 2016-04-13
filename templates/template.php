@@ -1,16 +1,16 @@
 <?php
 /** @var $this Qoob builder */
-global $menu, $submenu, $parent_file, $post_ID, $post, $post_type;
+global $menu, $submenu, $parent_file, $post_ID, $post, $post_type, $is_IE;
 $post_ID = $this->post_id;
 $post = $this->post;
 $post_type = $post->post_type;
 $post_title = trim($post->post_title);
-$nonce_action = 'update-post_' . $this->post_id;
+$nonce_action = 'update-post_' . $post_ID;
 $user_ID = isset($this->current_user) && isset($this->current_user->ID) ? (int) $this->current_user->ID : 0;
 $pageId = $post_ID;
 $form_action = 'editpost';
 add_thickbox();
-wp_enqueue_media(array('post' => $this->post_id));
+wp_enqueue_media(array('post' => $post_ID));
 require_once(ABSPATH . 'wp-admin/admin-header.php');
 ?>
 <!--START PRELOADER -->
@@ -99,12 +99,6 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
     });
 </script>
 
-<div style="height: 1px; visibility: hidden; overflow: hidden;">
-    <?php
-// fix missed meta boxes
-    require_once ABSPATH . 'wp-admin/edit-form-advanced.php';
-    ?>
-</div>
 <?php
 require_once(ABSPATH . 'wp-admin/admin-footer.php');
 ?>
