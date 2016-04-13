@@ -106,6 +106,32 @@ WordpressDriver.prototype.loadPageData = function (pageId, cb) {
     });
 };
 
+/**
+ * Get fields template
+ * 
+ * @param {loadFieldsTmplCallback} cb - A callback to run.
+ */
+WordpressDriver.prototype.loadFieldsTmpl = function (cb) {
+    jQuery(document).ready(function ($) {
+        if (ajax.logged_in && ajax.qoob == true) {
+            $.ajax({
+                url: ajax.url,
+                type: 'POST',
+                data: {
+                    action: 'load_fields_tmpl'
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        cb(null, response.fieldstemplate);
+                    } else {
+                        cb(response.success);
+                    }
+                }
+            });
+        }
+    });
+};
 
 /**
  * Callback for get builder data
