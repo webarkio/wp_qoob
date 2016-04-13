@@ -85,6 +85,7 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
         <iframe src="/?page_id=<?php echo $post_ID; ?>&qoob=true" scrolling="auto" name="builder-iframe" id="builder-iframe"></iframe>
     </div></div>
 </div>
+<input type='hidden' id='post_ID' name='post_ID' value='<?php echo $post_ID; ?>' />
 <!--END BUILDER STRUCTURE-->
 <!--SCRIPT FOR BUILDER INIT-->
 <script type="text/javascript">
@@ -98,6 +99,13 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
         builder.activate();
     });
 </script>
+
+<div style="height: 1px; visibility: hidden; overflow: hidden;">
+        <?php
+        // Fix: WP 4.0
+        wp_dequeue_script( 'editor-expand' );
+        ?>
+</div>
 
 <?php
 require_once(ABSPATH . 'wp-admin/admin-footer.php');
