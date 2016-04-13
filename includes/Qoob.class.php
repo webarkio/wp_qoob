@@ -331,7 +331,7 @@ class Qoob {
         $pages = $wpdb->get_results(
                 'SELECT * FROM ' . $this->qoob_table_name .
                 ' WHERE pid = ' . $this->post_id .
-                ' AND lang = "' . $lang . '"', ARRAY_A
+                ' AND lang = "' . $lang . '"', "ARRAY_A"
         );
 
         //if pages don't exist - creating page in database
@@ -808,8 +808,6 @@ class Qoob {
             
             $html_content = file_get_contents($val['url']);
             $id = str_replace('.html', '', $val['id']);
-           // $tmpl[] = SmartUtils::decode($settings_json, true);
-            //$tmpl[] = array($id => $html_content);
             $tmpl[$id] =  $html_content;
         }
         return $tmpl;
