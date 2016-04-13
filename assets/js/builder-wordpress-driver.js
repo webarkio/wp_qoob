@@ -91,7 +91,8 @@ WordpressDriver.prototype.loadPageData = function (pageId, cb) {
                 type: 'POST',
                 data: {
                     action: 'load_page_data',
-                    page_id: pageId
+                    page_id: pageId,
+                    lang: 'en'
                 },
                 dataType: 'json',
                 success: function (response) {

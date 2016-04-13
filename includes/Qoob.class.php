@@ -279,12 +279,12 @@ class Qoob {
      *
      * @param int $pageId
      */
-    private function addShortcodeToContent($pageId) {
+    private function addShortcodeToContent() {
         $post_data = array(
             'ID' => $this->post_id,
             'post_status' => ($this->post->post_status == 'publish' ? 'publish' : 'draft'),
             'post_title' => ($this->post->post_title != '' ? $this->post->post_title : ''),
-            'post_content' => '[' . self::NAME_SHORTCODE . ' id="' . $pageId . '"]',
+            'post_content' => '[' . self::NAME_SHORTCODE . ']',
         );
 
         // Update the post into the database
@@ -292,22 +292,23 @@ class Qoob {
     }
 
     /**
-     * Create new pageId
+     * Create new page in Qoob db table
      *
      * @return int id new page
      */
-    private function createPageId() {
+    private function createQoobPage($lang) {
         global $wpdb;
+
         $wpdb->insert($this->qoob_table_name, array(
+            'pid' => $this->post_id,
+            'lang' => $lang,
             'data' => '',
-            'html' => ''
+            'html' => '',
+            'rev' => 0,
         ));
 
-        $pageId = $wpdb->insert_id;
-
-        $this->addShortcodeToContent($pageId);
-
-        return $pageId;
+        //Adding shortcode text to page content in the editor
+        $this->addShortcodeToContent();
     }
 
     /**
@@ -316,14 +317,19 @@ class Qoob {
      * @param string $post_content
      * @return string id from page
      */
-    private function getPageId($post_content) {
-        $id = null;
-        preg_match('/\[' . self::NAME_SHORTCODE . '.*id=.(.*).\]/', $post_content, $id);
+    private function checkPage($lang = 'en') {
+        global $wpdb;
 
-        if (empty($id)) {
-            return $this->createPageId();
-        } else {
-            return $id[1];
+        //getting existing pages by id
+        $pages = $wpdb->get_results(
+                'SELECT * FROM ' . $this->qoob_table_name .
+                ' WHERE pid = ' . $this->post_id .
+                ' AND lang = "' . $lang . '"', ARRAY_A
+        );
+
+        //if pages don't exist - creating page in database
+        if (empty($pages)) {
+            $this->createQoobPage($lang);
         }
     }
 
@@ -336,7 +342,7 @@ class Qoob {
         global $current_user;
         get_currentuserinfo();
 
-        $this->pageId = $this->getPageId($this->post->post_content);
+        $this->checkPage();
         $this->current_user = $current_user;
         $this->post_url = str_replace(array('http://', 'https://'), '//', get_permalink($this->post_id));
         if (!current_user_can('edit_post', $this->post_id)) {
@@ -431,9 +437,10 @@ class Qoob {
                 data text NOT NULL,
                 html text NOT NULL,
                 rev int(9) NOT NULL,
-                date DATETIME NOT NULL,
-                lang VARCHAR(9) NOT NULL, 
-                PRIMARY KEY (pid, rev, lang)
+                date DATETIME NOT NULL DEFAULT NOW(),
+                lang VARCHAR(9) NOT NULL DEFAULT 'en', 
+                PRIMARY KEY (pid, rev, lang),
+                KEY pid(pid)
             );";
 
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -553,11 +560,16 @@ class Qoob {
     public function loadPageData() {
         global $wpdb;
 
-        $block = $wpdb->get_row("SELECT * FROM " . $this->qoob_table_name . " WHERE pid = " . $_POST['page_id'] . "");
+        $blocks = $wpdb->get_results(
+                "SELECT * FROM " . $this->qoob_table_name .
+                " WHERE pid=" . $_POST['page_id'] .
+                " AND lang='" . $_POST['lang'] .
+                "' ORDER BY rev DESC", "ARRAY_A");
 
-        if (isset($block) && $block->data) {
+        $block = !empty($blocks) ? $blocks[0] : null;
 
-            $data = stripslashes_deep(json_decode($block->data, true));
+        if (isset($block) && isset($block['data'])) {
+            $data = stripslashes_deep(json_decode($block['data'], true));
 
             $response = array(
                 'success' => true,
@@ -578,16 +590,30 @@ class Qoob {
     public function savePageData() {
         global $wpdb;
         $blocks_html = trim($_POST['blocks']['html']);
-        $data = json_encode($_POST['blocks']['data']);
+        $data = isset($_POST['blocks']['data']) ? json_encode($_POST['blocks']['data']) : '';
+        $lang = isset($_POST['lang']) ? $_POST['lang'] : 'en';
+        $post_id = $_POST['page_id'];
 
-        $updated = $wpdb->update(
-                $this->qoob_table_name, array(
-            'data' => $data,
-            'html' => $blocks_html,
-                ), array('pid' => $_POST['page_id'])
-        );
+        $blocks = $wpdb->get_results(
+                "SELECT * FROM " . $this->qoob_table_name .
+                " WHERE pid = " . $post_id .
+                " AND lang='" . $lang .
+                "' ORDER BY rev DESC;", "ARRAY_A");
 
-        if (false === $updated) {
+        if (!empty($blocks)) {
+            $new_rev = intval($blocks[0]['rev']) + 1;
+
+            $updated = $wpdb->insert(
+                    $this->qoob_table_name, array(
+                'data' => $data,
+                'html' => $blocks_html,
+                'rev' => $new_rev,
+                'pid' => $post_id,
+                'lang' => $lang)
+            );
+        }
+
+        if (isset($updated) && false === $updated) {
             $responce = array('success' => true);
         } else {
             $responce = array('success' => false);
