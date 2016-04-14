@@ -50,7 +50,7 @@ class Qoob {
      * @var array
      */
     private $fieldTmplUrls = [];
-    
+
     /**
      * Register actions for module
      */
@@ -600,27 +600,48 @@ class Qoob {
         $data = isset($_POST['blocks']['data']) ? json_encode($_POST['blocks']['data']) : '';
         $lang = isset($_POST['lang']) ? $_POST['lang'] : 'en';
         $post_id = $_POST['page_id'];
+        $updated = false;
 
+        //Getting same blocks with such id and language
         $blocks = $wpdb->get_results(
                 "SELECT * FROM " . $this->qoob_table_name .
-                " WHERE pid = " . $post_id .
+                " WHERE pid=" . $post_id .
                 " AND lang='" . $lang .
                 "' ORDER BY rev DESC;", "ARRAY_A");
 
         if (!empty($blocks)) {
-            $new_rev = intval($blocks[0]['rev']) + 1;
+            //Last page revisioned
+            $last_block = $blocks[0];
+            $last_rev_count = intval($last_block['rev']);
 
-            $updated = $wpdb->insert(
-                    $this->qoob_table_name, array(
-                'data' => $data,
-                'html' => $blocks_html,
-                'rev' => $new_rev,
-                'pid' => $post_id,
-                'lang' => $lang)
-            );
+            //Comparing saving page to last page saved
+            //If html hashes are equal - don't need to save the new revision
+            $last_revision_hash = md5($last_block['html']);
+            $current_revision_hash = md5($blocks_html);
+
+            if ($last_revision_hash !== $current_revision_hash) {
+                $updated = $wpdb->insert(
+                        $this->qoob_table_name, array(
+                    'data' => $data,
+                    'html' => $blocks_html,
+                    'rev' => $last_rev_count + 1,
+                    'pid' => $post_id,
+                    'lang' => $lang)
+                );
+                
+                //When the amount of revisions are more then 20, 
+                // we are deleting first revision in the list
+                if($last_rev_count >= 20) {
+                    $block_to_delete = $wpdb->delete($this->qoob_table_name, array(
+                        'pid' => $post_id,
+                        'lang' => $lang,
+                        'rev' => $last_rev_count - 20
+                    ));
+                }
+            }
         }
 
-        if (isset($updated) && false === $updated) {
+        if (false === $updated) {
             $responce = array('success' => false);
         } else {
             $responce = array('success' => true);
@@ -668,25 +689,24 @@ class Qoob {
         }
 
         $path = ABSPATH . 'wp-content/plugins/qoob.wordpress/qoob/tmpl/fields';
-        
+
         foreach (new DirectoryIterator($path) as $file) {
-            
+
             if ($file->isDot())
                 continue;
 
-                $filename = $file->getFilename();
-               
-                $url = plugin_dir_url($filename) . 'qoob.wordpress/qoob/tmpl/fields/' . $file->getFilename();
+            $filename = $file->getFilename();
 
-                $this->fieldTmplUrls[] = array(
-                    'id' => $file->getFilename(),
-                    'url' => $url
-                );
+            $url = plugin_dir_url($filename) . 'qoob.wordpress/qoob/tmpl/fields/' . $file->getFilename();
+
+            $this->fieldTmplUrls[] = array(
+                'id' => $file->getFilename(),
+                'url' => $url
+            );
         }
 
         return $this->fieldTmplUrls;
     }
-
 
     /**
      * Get all blocks in folder
@@ -805,10 +825,10 @@ class Qoob {
         $tmpl = [];
         $urls = $this->getUrlFieldsTemplates();
         foreach ($urls as $val) {
-            
+
             $html_content = file_get_contents($val['url']);
             $id = str_replace('.html', '', $val['id']);
-            $tmpl[$id] =  $html_content;
+            $tmpl[$id] = $html_content;
         }
         return $tmpl;
     }
@@ -856,17 +876,17 @@ class Qoob {
         wp_send_json($response);
         exit();
     }
-     
+
     /**
-    * Loading all field's templates  
-    */
+     * Loading all field's templates  
+     */
     public function loadFieldsTmpl() {
         $templates = $this->getFieldsTmplFiles();
 
         if (isset($templates)) {
             $fieldstmpl = [];
             foreach ($templates as $key => $value) {
-                 $fieldstmpl[$key] = $value;
+                $fieldstmpl[$key] = $value;
             }
             $response = array(
                 'success' => true,
