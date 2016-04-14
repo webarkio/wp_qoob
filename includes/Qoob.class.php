@@ -360,9 +360,6 @@ class Qoob {
             'html' => '',
             'rev' => 0,
         ));
-
-        //Adding shortcode text to page content in the editor
-        $this->addShortcodeToContent();
     }
 
     /**
@@ -394,9 +391,14 @@ class Qoob {
      */
     public function renderPage() {
         global $current_user;
+        global $post;
         wp_get_current_user();
 
         $this->checkPage();
+        if(!preg_match('/\[qoob-page\]/', $post->post_content)) {
+            $this->addShortcodeToContent();
+        }
+        
         $this->current_user = $current_user;
         $this->post_url = str_replace(array('http://', 'https://'), '//', get_permalink($this->post_id));
         if (!current_user_can('edit_post', $this->post_id)) {
@@ -469,7 +471,9 @@ class Qoob {
             return $this->addMainBuilderBlock();
             $this->statusShortcode = true;
         } else {
-            $block = $this->getBlock($atts['id']);
+            global $post;
+            $id = $post->ID;
+            $block = $this->getBlock($id);
             $preload_script = '<script src="' . SmartUtils::getUrlFromPath($this->getPathQoob() . 'js/builder-preloader.js') . '"></script>';
             $html = $preload_script . stripslashes($block->html);
             return $html;
