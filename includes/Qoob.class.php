@@ -451,10 +451,15 @@ class Qoob {
      * @param type int
      * @return string html
      */
-    private function getBlock($id) {
+    private function getBlock($id, $lang = 'en') {
         global $wpdb;
-        $block = $wpdb->get_row("SELECT * FROM " . $this->qoob_table_name . " WHERE pid = " . $id . "");
-        return $block;
+        $block = $wpdb->get_results(
+                "SELECT * FROM " . $this->qoob_table_name . 
+                " WHERE pid = " . $id . 
+                " AND lang='" . $lang . "'" .
+                " ORDER BY rev DESC", "ARRAY_A");
+
+        return $block[0];
     }
 
     /**
@@ -475,7 +480,7 @@ class Qoob {
             $id = $post->ID;
             $block = $this->getBlock($id);
             $preload_script = '<script src="' . SmartUtils::getUrlFromPath($this->getPathQoob() . 'js/builder-preloader.js') . '"></script>';
-            $html = $preload_script . stripslashes($block->html);
+            $html = $preload_script . stripslashes($block['html']);
             return $html;
         }
     }
