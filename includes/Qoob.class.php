@@ -25,7 +25,7 @@ class Qoob {
     /**
      * Name shortcode
      */
-    const NAME_SHORTCODE = "qoob-page";
+    const NAME_SHORTCODE = 'qoob-page';
 
     /**
      * Table name plugin
@@ -50,7 +50,13 @@ class Qoob {
      * @var array
      */
     private $fieldTmplUrls = [];
-    
+
+    /**
+     * Default post types
+     * @var string
+     */
+    private $default_post_types = array('page');
+
     /**
      * Register actions for module
      */
@@ -58,14 +64,17 @@ class Qoob {
         // Create table in DB
         $this->creater_db_table();
 
-        // Load backend
         if (is_admin()) {
+            // Load backend
             add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
 
             //Load JS and CSS
             if (isset($_GET['qoob']) && $_GET['qoob'] == true) {
                 add_action('current_screen', array($this, 'initEditPage'));
             }
+        } else {
+            // add edit link to admin bar
+            add_action('admin_bar_menu', array(&$this, "addAdminBarLink"), 999);
         }
 
         // Load js in frame
@@ -86,14 +95,9 @@ class Qoob {
 
         // Add edit link
         add_filter('page_row_actions', array($this, 'addEditLinkAction'));
-        //deregister dashicons.min.css for Edge
-        add_action('wp_print_styles', array($this, 'deregister_dashicons'), 100);
+
         //register shortcode
         add_shortcode(self::NAME_SHORTCODE, array($this, 'add_shortcode'));
-    }
-
-    public function deregister_dashicons() {
-        wp_deregister_style('dashicons');
     }
 
     /**
@@ -220,6 +224,16 @@ class Qoob {
     public function setDefaultTitle($title) {
         return !is_string($title) || strlen($title) == 0 ? __('(no title)', 'qoob') : $title;
     }
+    
+    /**
+     * Get qoob url edit page 
+     *
+     * @param string $id Post id
+     * @return string
+     */
+    public function getUrlQoobPage($id) {
+        return admin_url() . 'post.php?qoob=true&post_id=' . $id . '&post_type=' . get_post_type($id);
+    }    
 
     /**
      * Add link to posts list
@@ -232,10 +246,10 @@ class Qoob {
         $post = get_post();
 
         $id = (strlen($post->ID) > 0 ? $post->ID : get_the_ID());
-        $url = admin_url() . 'post.php?qoob=true&post_id=' . $id . '&post_type=' . get_post_type($id);
+        $url = $this->getUrlQoobPage($id);
 
         if (preg_match("/" . self::NAME_SHORTCODE . "/", $post->post_content)) {
-            return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>') + $actions;
+            return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob it', 'qoob') . '</a>') + $actions;
         } else {
             return $actions;
         }
@@ -269,6 +283,39 @@ class Qoob {
         do_action_ref_array('the_post', array(&$this->post));
         $post = $this->post;
         $this->post_id = $this->post->ID;
+    }
+
+    /**
+     * Get state show button
+     * @param null $post_id
+     * @return bool
+     */
+    public function showButton($post_id = null) {
+        wp_get_current_user();
+        if (!current_user_can('edit_post', $post_id)) {
+            return false;
+        }
+        return in_array(get_post_type(), $this->default_post_types);
+    }
+
+    /**
+     * Add link to admin bar
+     * @param WP_Admin_Bar $wp_admin_bar
+     */
+    public function addAdminBarLink($wp_admin_bar) {
+        if (!is_object($wp_admin_bar)) {
+            global $wp_admin_bar;
+        }
+        if (is_singular()) {
+            if ($this->showButton(get_the_ID())) {
+                $wp_admin_bar->add_menu(array(
+                    'id' => 'qoob-admin-bar-link',
+                    'title' => __('qoob it', "qoob"),
+                    'href' => $this->getUrlQoobPage(get_the_ID()),
+                    'meta' => array('class' => 'qoob-inline-link')
+                ));
+            }
+        }
     }
 
     /**
@@ -341,7 +388,7 @@ class Qoob {
      */
     public function renderPage() {
         global $current_user;
-        get_currentuserinfo();
+        wp_get_current_user();
 
         $this->pageId = $this->getPageId($this->post->post_content);
         $this->current_user = $current_user;
@@ -463,7 +510,8 @@ class Qoob {
      * Load js and css on frontend pages
      */
     function frontend_scripts() {
-        wp_enqueue_style('builder.qoob.preloader', $this->getUrlQoob() . "css/builder-preloader.css");
+        wp_enqueue_style('builder.qoob.preloader', $this->getUrlQoob() . "css/qoob-preloader.css");
+        wp_enqueue_style('builder.qoob', $this->getUrlAssets() . "css/qoob.css");
     }
 
     /**
@@ -473,10 +521,8 @@ class Qoob {
     public function admin_scripts() {
         if (get_post_type() == 'page') {
             wp_enqueue_script('builder.admin', $this->getUrlQoob() . 'js/builder-admin.js', array('jquery'), '', true);
-            wp_enqueue_script('waves.min', $this->getUrlQoob() . 'js/libs/waves.min.js', array('builder.admin'), '', true);
-            wp_enqueue_style('waves.min', $this->getUrlQoob() . "css/waves.min.css");
             wp_enqueue_style('wheelcolorpicker-minicolors', $this->getUrlQoob() . "css/wheelcolorpicker.css");
-            wp_enqueue_style('builder.qoob.iframe', $this->getUrlQoob() . "css/builder-admin.css");
+            wp_enqueue_style('builder.qoob.iframe', $this->getUrlAssets() . "css/builder-admin.css");
         }
     }
 
@@ -640,25 +686,24 @@ class Qoob {
         }
 
         $path = ABSPATH . 'wp-content/plugins/qoob.wordpress/qoob/tmpl/fields';
-        
+
         foreach (new DirectoryIterator($path) as $file) {
-            
+
             if ($file->isDot())
                 continue;
 
-                $filename = $file->getFilename();
-               
-                $url = plugin_dir_url($filename) . 'qoob.wordpress/qoob/tmpl/fields/' . $file->getFilename();
+            $filename = $file->getFilename();
 
-                $this->fieldTmplUrls[] = array(
-                    'id' => $file->getFilename(),
-                    'url' => $url
-                );
+            $url = plugin_dir_url($filename) . 'qoob.wordpress/qoob/tmpl/fields/' . $file->getFilename();
+
+            $this->fieldTmplUrls[] = array(
+                'id' => $file->getFilename(),
+                'url' => $url
+            );
         }
 
         return $this->fieldTmplUrls;
     }
-
 
     /**
      * Get all blocks in folder
@@ -777,12 +822,12 @@ class Qoob {
         $tmpl = [];
         $urls = $this->getUrlFieldsTemplates();
         foreach ($urls as $val) {
-            
+
             $html_content = file_get_contents($val['url']);
             $id = str_replace('.html', '', $val['id']);
-           // $tmpl[] = SmartUtils::decode($settings_json, true);
+            // $tmpl[] = SmartUtils::decode($settings_json, true);
             //$tmpl[] = array($id => $html_content);
-            $tmpl[$id] =  $html_content;
+            $tmpl[$id] = $html_content;
         }
         return $tmpl;
     }
@@ -830,17 +875,17 @@ class Qoob {
         wp_send_json($response);
         exit();
     }
-     
+
     /**
-    * Loading all field's templates  
-    */
+     * Loading all field's templates  
+     */
     public function loadFieldsTmpl() {
         $templates = $this->getFieldsTmplFiles();
 
         if (isset($templates)) {
             $fieldstmpl = [];
             foreach ($templates as $key => $value) {
-                 $fieldstmpl[$key] = $value;
+                $fieldstmpl[$key] = $value;
             }
             $response = array(
                 'success' => true,

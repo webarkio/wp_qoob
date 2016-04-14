@@ -1,0 +1,7 @@
+#wpadminbar .qoob-inline-link .ab-item:before {
+    content: '';
+    height: 18px;
+    width: 18px;
+    margin-top: 8px;
+    background-image: url(../img/qoob_logo_admin_bar.png) !important;
+}

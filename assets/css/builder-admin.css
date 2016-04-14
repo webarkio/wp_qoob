@@ -1,0 +1,77 @@
+@font-face {
+    font-family: 'OpenSans-Regular';
+    src: url("../../qoob/fonts/opensans/OpenSans-Regular.eot");
+    src: url("../../qoob/fonts/opensans/OpenSans-Regular.eot?#iefix")format("embedded-opentype"),
+        url("../../qoob/fonts/opensans/OpenSans-Regular.woff") format("woff"),
+        url("../../qoob/fonts/opensans/OpenSans-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+.cube-button-block {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: -10px;
+    z-index: 1001;
+}
+
+.cube-button {
+    display: inline-block;
+    margin: 16px 0 1px 0;
+    background: #0085ba;
+    border-color: #0073aa #006799 #006799;
+    -webkit-box-shadow: 0 1px 0 #006799;
+    box-shadow: 0 1px 0 #006799;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+}
+.cube-button i.cube {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+    margin: 0 7px 0 0;
+    background: transparent url('../img/qoob_button.png') no-repeat;
+}
+.cube-button a,
+.cube-button a:hover {
+    display: block;
+    font-family: 'OpenSans-Regular';
+    font-size: 16px;
+    color: #fff;
+    padding: 10px 15px 4px 8px;
+    text-decoration: none;    
+    text-shadow: 0 -1px 1px #006799,1px 0 1px #006799,0 1px 1px #006799,-1px 0 1px #006799;
+}
+.cube-button a,
+.cube-button a:hover,
+.cube-button a:focus {
+  outline: none;
+    border: 0;
+}
+.cube-button span {
+    display: inline-block;
+    vertical-align: middle;
+    height: 26px;
+}
+.cube-button:hover {
+    background: #008ec2;
+    border-color: #006799;
+}
+
+.cube-button:active {    
+    background: #0073aa;
+    border-color: #006799;
+    -webkit-box-shadow: inset 0 2px 0 #006799;
+    box-shadow: inset 0 2px 0 #006799;
+    -webkit-transform: translateY(1px);
+    -ms-transform: translateY(1px);
+    transform: translateY(1px);
+}
+
+.cube-button:active, .cube-button:focus {
+    outline: 0;
+}
