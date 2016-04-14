@@ -7,7 +7,7 @@ $post_type = $post->post_type;
 $post_title = trim($post->post_title);
 $nonce_action = 'update-post_' . $post_ID;
 $user_ID = isset($this->current_user) && isset($this->current_user->ID) ? (int) $this->current_user->ID : 0;
-$pageId = $this->pageId;
+$pageId = $post_ID;
 $form_action = 'editpost';
 add_thickbox();
 wp_enqueue_media(array('post' => $post_ID));
