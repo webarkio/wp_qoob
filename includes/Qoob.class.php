@@ -848,21 +848,6 @@ class Qoob {
     }
 
     /**
-     * Get config files contents
-     * @return array $config Array of config's json
-     */
-    private function getConfigFiles() {
-        $config = [];
-        $urls = $this->getUrlTemplates();
-
-        foreach ($urls as $val) {
-            $settings_json = file_get_contents($val['url'] . 'config.json');
-            $config[] = SmartUtils::decode($settings_json, true);
-        }
-        return $config;
-    }
-
-    /**
      * Get fields tmol files contents
      * @return array $tmpl Array of config's json
      */
@@ -894,31 +879,6 @@ class Qoob {
     public function loadTemplate() {
         $template = $this->getHtml($_POST['template_id']);
         echo $template;
-        exit();
-    }
-
-    /**
-     * Loading all config.json assets for all existing blocks
-     */
-    public function loadAssets() {
-        $configs = $this->getConfigFiles();
-
-        if (isset($configs)) {
-            $assets = [];
-            for ($i = 0; $i < count($configs); $i++) {
-                if (isset($configs[$i]['assets'])) {
-                    $assets[] = $configs[$i]['assets'];
-                }
-            }
-            $response = array(
-                'success' => true,
-                'assets' => $assets
-            );
-        } else {
-            $response = array('success' => false);
-        }
-
-        wp_send_json($response);
         exit();
     }
 
