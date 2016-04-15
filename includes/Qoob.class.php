@@ -590,8 +590,8 @@ class Qoob {
         wp_enqueue_script('field-image', $this->getUrlQoob() . 'js/fields/field-image.js', array('jquery'), '', true);
         wp_enqueue_script('field-colorpicker', $this->getUrlQoob() . 'js/fields/field-colorpicker.js', array('jquery'), '', true);
         wp_enqueue_script('field-accordion', $this->getUrlQoob() . 'js/fields/field-accordion.js', array('jquery'), '', true);
-        wp_enqueue_script('field-accordion-item', $this->getUrlQoob() . 'js/fields/field-accordion-item.js', array('jquery'), '', true);
-        wp_enqueue_script('field-accordion-item-front', $this->getUrlQoob() . 'js/fields/field-accordion-item-front.js', array('jquery'), '', true);
+        wp_enqueue_script('field-accordion-item', $this->getUrlQoob() . 'js/fields/field-accordion-item-expand.js', array('jquery'), '', true);
+        wp_enqueue_script('field-accordion-item-front', $this->getUrlQoob() . 'js/fields/field-accordion-item-flip.js', array('jquery'), '', true);
         wp_enqueue_script('field-devices', $this->getUrlQoob() . 'js/fields/field-devices.js', array('jquery'), '', true);
         wp_enqueue_script('settings-view', $this->getUrlQoob() . 'js/settings-view.js', array('jquery'), '', true);
 
