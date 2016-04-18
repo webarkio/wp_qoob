@@ -156,10 +156,11 @@ WordpressDriver.prototype.loadBuilderData = function (cb) {
                 },
                 dataType: 'json',
                 success: function (response) {
+                    console.log(response);
                     if (response.success) {
                         cb(null, response.data);
                     } else {
-                        cb(responce.success);
+                        cb(response.success);
                     }
                 }
             });

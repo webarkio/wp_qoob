@@ -655,10 +655,10 @@ class Qoob {
      */
     public function savePageData() {
         //Checking for administration rights
-        if(!current_user_can('manage_options')) {
+        if (!current_user_can('manage_options')) {
             return;
         }
-        
+
         global $wpdb;
         $blocks_html = trim($_POST['blocks']['html']);
         $data = isset($_POST['blocks']['data']) ? json_encode($_POST['blocks']['data']) : '';
@@ -693,7 +693,7 @@ class Qoob {
                     'lang' => $lang)
                 );
 
-                //When the amount of revisions are more then 20, 
+                //When the amount of revisions are more then needed, 
                 // we are deleting first revision in the list
                 if ($last_rev_count >= self::REVISIONS_COUNT) {
                     $this->deletePageRow($post_id, $lang, $last_rev_count - self::REVISIONS_COUNT);
@@ -778,18 +778,24 @@ class Qoob {
         $urls = $this->getUrlTemplates();
 
         foreach ($urls as $val) {
-            $config_json = file_get_contents($val['url'] . 'config.json');
+            $theme_url = get_template_directory_uri();
+            $blocks_url = get_template_directory_uri() . '/blocks';
+            $block_url = $val['url'];
+
+            $config_json = file_get_contents($block_url . 'config.json');
+            //Parsing for url masks to replace            
+            $config_json = preg_replace('/%theme_url%/', $theme_url, $config_json);
+            $config_json = preg_replace('/%block_url%/', $block_url, $config_json);
+            $config_json = preg_replace('/%blocks_url%/', $blocks_url, $config_json);
+            //Decoding json config
             $config = SmartUtils::decode($config_json, true);
-            //TODO: Parsing for url templates to replace
             $templates[] = array(
                 'id' => $val['id'],
                 'url' => $val['url'],
                 'config' => $config
             );
         }
-
-
-
+        
         return $templates;
     }
 
@@ -918,7 +924,7 @@ class Qoob {
         wp_send_json($response);
         exit();
     }
-    
+
     /**
      * Deleting page row
      * @global object $wpdb
@@ -929,11 +935,11 @@ class Qoob {
      */
     private function deletePageRow($pid, $lang = 'en', $revision) {
         global $wpdb;
-        
+
         return $wpdb->delete($this->qoob_table_name, array(
-            'pid' => $pid,
-            'lang' => $lang,
-            'rev' => $revision
+                    'pid' => $pid,
+                    'lang' => $lang,
+                    'rev' => $revision
         ));
     }
 
