@@ -159,7 +159,7 @@ WordpressDriver.prototype.loadBuilderData = function (cb) {
                     if (response.success) {
                         cb(null, response.data);
                     } else {
-                        cb(responce.success);
+                        cb(response.success);
                     }
                 }
             });

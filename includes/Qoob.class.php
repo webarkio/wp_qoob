@@ -28,6 +28,11 @@ class Qoob {
     const NAME_SHORTCODE = 'qoob-page';
 
     /**
+     * Revisions count for page in database
+     */
+    const REVISIONS_COUNT = 20;
+
+    /**
      * Table name plugin
      * @var string
      */
@@ -224,7 +229,7 @@ class Qoob {
     public function setDefaultTitle($title) {
         return !is_string($title) || strlen($title) == 0 ? __('(no title)', 'qoob') : $title;
     }
-    
+
     /**
      * Get qoob url edit page 
      *
@@ -233,7 +238,7 @@ class Qoob {
      */
     public function getUrlQoobPage($id) {
         return admin_url() . 'post.php?qoob=true&post_id=' . $id . '&post_type=' . get_post_type($id);
-    }    
+    }
 
     /**
      * Add link to posts list
@@ -395,10 +400,10 @@ class Qoob {
         wp_get_current_user();
 
         $this->checkPage();
-        if(!preg_match('/\[qoob-page\]/', $post->post_content)) {
+        if (!preg_match('/\[qoob-page\]/', $post->post_content)) {
             $this->addShortcodeToContent();
         }
-        
+
         $this->current_user = $current_user;
         $this->post_url = str_replace(array('http://', 'https://'), '//', get_permalink($this->post_id));
         if (!current_user_can('edit_post', $this->post_id)) {
@@ -454,8 +459,8 @@ class Qoob {
     private function getBlock($id, $lang = 'en') {
         global $wpdb;
         $block = $wpdb->get_results(
-                "SELECT * FROM " . $this->qoob_table_name . 
-                " WHERE pid = " . $id . 
+                "SELECT * FROM " . $this->qoob_table_name .
+                " WHERE pid = " . $id .
                 " AND lang='" . $lang . "'" .
                 " ORDER BY rev DESC", "ARRAY_A");
 
@@ -649,6 +654,11 @@ class Qoob {
      * @return json
      */
     public function savePageData() {
+        //Checking for administration rights
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
         global $wpdb;
         $blocks_html = trim($_POST['blocks']['html']);
         $data = isset($_POST['blocks']['data']) ? json_encode($_POST['blocks']['data']) : '';
@@ -661,14 +671,14 @@ class Qoob {
                 "SELECT * FROM " . $this->qoob_table_name .
                 " WHERE pid=" . $post_id .
                 " AND lang='" . $lang .
-                "' ORDER BY rev DESC;", "ARRAY_A");
+                "' ORDER BY rev DESC LIMIT 1", "ARRAY_A");
 
         if (!empty($blocks)) {
             //Last page revisioned
             $last_block = $blocks[0];
             $last_rev_count = intval($last_block['rev']);
 
-            //Comparing saving page to last page saved
+            //Comparing page to last page saved
             //If html hashes are equal - don't need to save the new revision
             $last_revision_hash = md5($last_block['html']);
             $current_revision_hash = md5($blocks_html);
@@ -682,15 +692,11 @@ class Qoob {
                     'pid' => $post_id,
                     'lang' => $lang)
                 );
-                
-                //When the amount of revisions are more then 20, 
+
+                //When the amount of revisions are more then needed, 
                 // we are deleting first revision in the list
-                if($last_rev_count >= 20) {
-                    $block_to_delete = $wpdb->delete($this->qoob_table_name, array(
-                        'pid' => $post_id,
-                        'lang' => $lang,
-                        'rev' => $last_rev_count - 20
-                    ));
+                if ($last_rev_count >= self::REVISIONS_COUNT) {
+                    $this->deletePageRow($post_id, $lang, $last_rev_count - self::REVISIONS_COUNT);
                 }
             }
         }
@@ -772,18 +778,24 @@ class Qoob {
         $urls = $this->getUrlTemplates();
 
         foreach ($urls as $val) {
-            $config_json = file_get_contents($val['url'] . 'config.json');
-            $config = SmartUtils::decode($config_json, true);
+            $theme_url = get_template_directory_uri();
+            $blocks_url = get_template_directory_uri() . '/blocks';
+            $block_url = $val['url'];
 
+            $config_json = file_get_contents($block_url . 'config.json');
+            //Parsing for url masks to replace            
+            $config_json = preg_replace('/%theme_url%/', $theme_url, $config_json);
+            $config_json = preg_replace('/%block_url%/', $block_url, $config_json);
+            $config_json = preg_replace('/%blocks_url%/', $blocks_url, $config_json);
+            //Decoding json config
+            $config = SmartUtils::decode($config_json, true);
             $templates[] = array(
                 'id' => $val['id'],
                 'url' => $val['url'],
                 'config' => $config
             );
         }
-
-
-
+        
         return $templates;
     }
 
@@ -911,6 +923,24 @@ class Qoob {
         }
         wp_send_json($response);
         exit();
+    }
+
+    /**
+     * Deleting page row
+     * @global object $wpdb
+     * @param integer $pid Page id
+     * @param string $lang Page language
+     * @param integer $revision Number of revision
+     * @return type
+     */
+    private function deletePageRow($pid, $lang = 'en', $revision) {
+        global $wpdb;
+
+        return $wpdb->delete($this->qoob_table_name, array(
+                    'pid' => $pid,
+                    'lang' => $lang,
+                    'rev' => $revision
+        ));
     }
 
 }
