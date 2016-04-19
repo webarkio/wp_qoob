@@ -45,13 +45,13 @@ class Qoob {
     private $statusShortcode = false;
 
     /**
-     * All template url's
+     * All items url's
      * @var array
      */
     private $urls = [];
 
     /**
-     * All fields template url's
+     * All fields items url's
      * @var array
      */
     private $builderTmplUrls = [];
@@ -93,7 +93,7 @@ class Qoob {
         add_action('wp_ajax_load_page_data', array($this, 'loadPageData'));
         add_action('wp_ajax_load_builder_data', array($this, 'loadBuilderData'));
         add_action('wp_ajax_load_settings', array($this, 'loadSettings'));
-        add_action('wp_ajax_load_template', array($this, 'loadTemplate'));
+        add_action('wp_ajax_load_item', array($this, 'loadItem'));
         add_action('wp_ajax_save_page_data', array($this, 'savePageData'));
         add_action('wp_ajax_load_assets', array($this, 'loadAssets'));
         add_action('wp_ajax_load_builder_tmpl', array($this, 'loadBuilderTmpl'));
@@ -484,8 +484,7 @@ class Qoob {
             global $post;
             $id = $post->ID;
             $block = $this->getBlock($id);
-            $preload_script = '<script src="' . SmartUtils::getUrlFromPath($this->getPathQoob() . 'js/builder-preloader.js') . '"></script>';
-            $html = $preload_script . stripslashes($block['html']);
+            $html = stripslashes($block['html']);
             return $html;
         }
     }
@@ -501,10 +500,10 @@ class Qoob {
         $this->qoob_table_name = $wpdb->prefix . "pages";
         if ($wpdb->get_var("show tables like '$this->qoob_table_name'") != $this->qoob_table_name) {
             $sql = "CREATE TABLE " . $this->qoob_table_name . " (
-                pid int(9) NOT NULL,
-                data text NOT NULL,
-                html text NOT NULL,
-                rev int(9) NOT NULL,
+                pid INT(9) NOT NULL,
+                data TEXT NOT NULL,
+                html TEXT NOT NULL,
+                rev VARCHAR(255) NOT NULL,
                 date DATETIME NOT NULL DEFAULT NOW(),
                 lang VARCHAR(9) NOT NULL DEFAULT 'en', 
                 PRIMARY KEY (pid, rev, lang),
@@ -533,7 +532,6 @@ class Qoob {
      * Load js and css on frontend pages
      */
     function frontend_scripts() {
-        wp_enqueue_style('builder.qoob.preloader', $this->getUrlQoob() . "css/qoob-preloader.css");
         wp_enqueue_style('builder.qoob', $this->getUrlAssets() . "css/qoob.css");
     }
 
@@ -673,16 +671,15 @@ class Qoob {
                 "SELECT * FROM " . $this->qoob_table_name .
                 " WHERE pid=" . $post_id .
                 " AND lang='" . $lang .
-                "' ORDER BY rev DESC LIMIT 1", "ARRAY_A");
+                "' ORDER BY date DESC", "ARRAY_A");
 
         if (!empty($blocks)) {
             //Last page revisioned
             $last_block = $blocks[0];
-            $last_rev_count = intval($last_block['rev']);
 
             //Comparing page to last page saved
             //If html hashes are equal - don't need to save the new revision
-            $last_revision_hash = md5($last_block['html']);
+            $last_revision_hash = $last_block['rev'];
             $current_revision_hash = md5($blocks_html);
 
             if ($last_revision_hash !== $current_revision_hash) {
@@ -690,34 +687,30 @@ class Qoob {
                         $this->qoob_table_name, array(
                     'data' => $data,
                     'html' => $blocks_html,
-                    'rev' => $last_rev_count + 1,
+                    'rev' => $current_revision_hash,
                     'pid' => $post_id,
                     'lang' => $lang)
                 );
 
                 //When the amount of revisions are more then needed, 
                 // we are deleting first revision in the list
-                if ($last_rev_count >= self::REVISIONS_COUNT) {
-                    $this->deletePageRow($post_id, $lang, $last_rev_count - self::REVISIONS_COUNT);
+                if (count($blocks) >= self::REVISIONS_COUNT) {
+                    $first_block_rev = $blocks[count($blocks)-1]['rev'];
+                    $this->deletePageRow($post_id, $lang, $first_block_rev);
                 }
             }
         }
 
-        if (false === $updated) {
-            $responce = array('success' => false);
-        } else {
-            $responce = array('success' => true);
-        }
-
+        $responce = array('success' => (boolean) $updated);
         wp_send_json($responce);
         exit();
     }
 
     /**
-     * Get url templates
+     * Get url items
      * @return array
      */
-    private function getUrlTemplates() {
+    private function getUrlItems() {
         if (!empty($this->urls)) {
             return $this->urls;
         }
@@ -783,10 +776,10 @@ class Qoob {
      * Get all blocks in folder
      * @return array
      */
-    private function getTemplates() {
+    private function getItems() {
         $templates = array();
 
-        $urls = $this->getUrlTemplates();
+        $urls = $this->getUrlItems();
 
         foreach ($urls as $val) {
             $theme_url = get_template_directory_uri();
@@ -817,8 +810,8 @@ class Qoob {
      * @param type $array
      * @return null|array
      */
-    private function getTemplate($id) {
-        $templates = $this->getUrlTemplates();
+    private function getItem($id) {
+        $templates = $this->getUrlItems();
 
         foreach ($templates as $key => $val) {
             if ($val['id'] === $id) {
@@ -847,7 +840,7 @@ class Qoob {
      * @return json
      */
     public function loadBuilderData() {
-        $templates = $this->getTemplates();
+        $templates = $this->getItems();
         $groups = $this->getGroups();
 
         if (isset($templates)) {
@@ -871,9 +864,9 @@ class Qoob {
      * @param string $templateId
      * @return json
      */
-    private function getConfigFile($templateId) {
-        $template = $this->getTemplate($templateId);
-        $json = file_get_contents($template['url'] . 'config.json');
+    private function getConfigFile($itemId) {
+        $item = $this->getItem($itemId);
+        $json = file_get_contents($item['url'] . 'config.json');
         $json = SmartUtils::decode($json, true);
 
         return $json;
@@ -900,18 +893,18 @@ class Qoob {
      * Get content hbs file's
      * @return html
      */
-    private function getHtml($templateId) {
-        $template = $this->getTemplate($templateId);
-        return file_get_contents($template['url'] . 'template.hbs');
+    private function getHtml($itemId) {
+        $item = $this->getItem($itemId);
+        return file_get_contents($item['url'] . 'template.hbs');
     }
 
     /**
-     * Load template
+     * Load item
      * @return html
      */
-    public function loadTemplate() {
-        $template = $this->getHtml($_POST['template_id']);
-        echo $template;
+    public function loadItem() {
+        $item = $this->getHtml($_POST['item_id']);
+        echo $item;
         exit();
     }
 

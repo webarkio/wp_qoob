@@ -179,15 +179,15 @@ WordpressDriver.prototype.loadBuilderData = function (cb) {
  * @param {integer} templateId
  * @param {loadTemplateCallback} cb - A callback to run.
  */
-WordpressDriver.prototype.loadTemplate = function (templateId, cb) {
+WordpressDriver.prototype.loadItem = function (itemId, cb) {
         jQuery(document).ready(function ($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
                 url: ajax.url,
                 type: 'POST',
                 data: {
-                    action: 'load_template',
-                    template_id: templateId
+                    action: 'load_item',
+                    item_id: itemId
                 },
                 cache: false,
                 dataType: 'html',
