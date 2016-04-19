@@ -54,7 +54,7 @@ class Qoob {
      * All fields template url's
      * @var array
      */
-    private $fieldTmplUrls = [];
+    private $builderTmplUrls = [];
 
     /**
      * Default post types
@@ -96,7 +96,7 @@ class Qoob {
         add_action('wp_ajax_load_template', array($this, 'loadTemplate'));
         add_action('wp_ajax_save_page_data', array($this, 'savePageData'));
         add_action('wp_ajax_load_assets', array($this, 'loadAssets'));
-        add_action('wp_ajax_load_fields_tmpl', array($this, 'loadFieldsTmpl'));
+        add_action('wp_ajax_load_builder_tmpl', array($this, 'loadBuilderTmpl'));
 
         // Add edit link
         add_filter('page_row_actions', array($this, 'addEditLinkAction'));
@@ -593,8 +593,10 @@ class Qoob {
         wp_enqueue_script('field-accordion-item', $this->getUrlQoob() . 'js/fields/field-accordion-item-expand.js', array('jquery'), '', true);
         wp_enqueue_script('field-accordion-item-front', $this->getUrlQoob() . 'js/fields/field-accordion-item-flip.js', array('jquery'), '', true);
         wp_enqueue_script('field-devices', $this->getUrlQoob() . 'js/fields/field-devices.js', array('jquery'), '', true);
+        wp_enqueue_script('fields-view', $this->getUrlQoob() . 'js/fields-view.js', array('jquery'), '', true);
+        wp_enqueue_script('buildermenu-groups-view', $this->getUrlQoob() . 'js/builder-menu-groups-view.js', array('jquery'), '', true);
         wp_enqueue_script('settings-view', $this->getUrlQoob() . 'js/settings-view.js', array('jquery'), '', true);
-
+        wp_enqueue_script('buildermenu-blocks-preview-view', $this->getUrlQoob() . 'js/builder-menu-blocks-preview-view.js', array('jquery'), '', true);
         // builder scripts
         wp_enqueue_script('builder-loader', $this->getUrlQoob() . 'js/builder-loader.js', array('jquery'), '', true);
         wp_enqueue_script('builder-wordpress_driver', $this->getUrlAssets() . 'js/builder-wordpress-driver.js', array('jquery'), '', true);
@@ -740,32 +742,41 @@ class Qoob {
     }
 
     /**
-     * Get url fields templates
+     * Get url builder templates
      * @return array
      */
-    private function getUrlFieldsTemplates() {
-        if (!empty($this->fieldTmplUrls)) {
-            return $this->fieldTmplUrls;
+    private function getUrlBuilderTemplates() {
+
+        if (!empty($this->builderTmplUrls)) {
+            return $this->builderTmplUrls;
         }
 
-        $path = ABSPATH . 'wp-content/plugins/qoob.wordpress/qoob/tmpl/fields';
-
-        foreach (new DirectoryIterator($path) as $file) {
-
-            if ($file->isDot())
+        $path = ABSPATH . 'wp-content/plugins/qoob.wordpress/qoob/tmpl';
+        
+        foreach (new DirectoryIterator($path) as $folder) {
+           if ($folder->isDot())
                 continue;
+           if(is_dir($folder->getPathname())) {
 
-            $filename = $file->getFilename();
+                $pathtofiles = ABSPATH . 'wp-content/plugins/qoob.wordpress/qoob/tmpl/'.$folder->getFilename();
+                foreach (new DirectoryIterator($pathtofiles) as $file) {
 
-            $url = plugin_dir_url($filename) . 'qoob.wordpress/qoob/tmpl/fields/' . $file->getFilename();
+                    if ($file->isDot())
+                        continue;
 
-            $this->fieldTmplUrls[] = array(
-                'id' => $file->getFilename(),
-                'url' => $url
-            );
+                    $filename = $file->getFilename();
+
+                    $url = plugin_dir_url($filename) . 'qoob.wordpress/qoob/tmpl/'.$folder->getFilename().'/' . $file->getFilename();
+
+                    $this->builderTmplUrls[] = array(
+                        'id' => $file->getFilename(),
+                        'url' => $url
+                    );
+                }
+            }
         }
 
-        return $this->fieldTmplUrls;
+        return $this->builderTmplUrls;
     }
 
     /**
@@ -869,12 +880,13 @@ class Qoob {
     }
 
     /**
-     * Get fields tmol files contents
+     * Get builder tmpl files contents
      * @return array $tmpl Array of config's json
      */
-    private function getFieldsTmplFiles() {
+    private function getBuilderTmplFiles() {
+
         $tmpl = [];
-        $urls = $this->getUrlFieldsTemplates();
+        $urls = $this->getUrlBuilderTemplates();
         foreach ($urls as $val) {
 
             $html_content = file_get_contents($val['url']);
@@ -904,19 +916,20 @@ class Qoob {
     }
 
     /**
-     * Loading all field's templates  
+     * Loading all builder's templates  
      */
-    public function loadFieldsTmpl() {
-        $templates = $this->getFieldsTmplFiles();
+    public function loadBuilderTmpl() {
+        
+        $templates = $this->getBuilderTmplFiles();
 
         if (isset($templates)) {
-            $fieldstmpl = [];
+            $buildertmpl = [];
             foreach ($templates as $key => $value) {
-                $fieldstmpl[$key] = $value;
+                $buildertmpl[$key] = $value;
             }
             $response = array(
                 'success' => true,
-                'fieldstemplate' => $fieldstmpl
+                'buildertemplate' => $buildertmpl
             );
         } else {
             $response = array('success' => false);
