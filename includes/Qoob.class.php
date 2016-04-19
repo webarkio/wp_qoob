@@ -503,7 +503,7 @@ class Qoob {
                 pid INT(9) NOT NULL,
                 data TEXT NOT NULL,
                 html TEXT NOT NULL,
-                rev VARCHAR(255) NOT NULL,
+                rev CHAR(32) NOT NULL,
                 date DATETIME NOT NULL DEFAULT NOW(),
                 lang VARCHAR(9) NOT NULL DEFAULT 'en', 
                 PRIMARY KEY (pid, rev, lang),
