@@ -45,13 +45,13 @@ class Qoob {
     private $statusShortcode = false;
 
     /**
-     * All template url's
+     * All items url's
      * @var array
      */
     private $urls = [];
 
     /**
-     * All fields template url's
+     * All fields items url's
      * @var array
      */
     private $fieldTmplUrls = [];
@@ -93,7 +93,7 @@ class Qoob {
         add_action('wp_ajax_load_page_data', array($this, 'loadPageData'));
         add_action('wp_ajax_load_builder_data', array($this, 'loadBuilderData'));
         add_action('wp_ajax_load_settings', array($this, 'loadSettings'));
-        add_action('wp_ajax_load_template', array($this, 'loadTemplate'));
+        add_action('wp_ajax_load_item', array($this, 'loadItem'));
         add_action('wp_ajax_save_page_data', array($this, 'savePageData'));
         add_action('wp_ajax_load_assets', array($this, 'loadAssets'));
         add_action('wp_ajax_load_fields_tmpl', array($this, 'loadFieldsTmpl'));
@@ -710,10 +710,10 @@ class Qoob {
     }
 
     /**
-     * Get url templates
+     * Get url items
      * @return array
      */
-    private function getUrlTemplates() {
+    private function getUrlItems() {
         if (!empty($this->urls)) {
             return $this->urls;
         }
@@ -770,10 +770,10 @@ class Qoob {
      * Get all blocks in folder
      * @return array
      */
-    private function getTemplates() {
+    private function getItems() {
         $templates = array();
 
-        $urls = $this->getUrlTemplates();
+        $urls = $this->getUrlItems();
 
         foreach ($urls as $val) {
             $theme_url = get_template_directory_uri();
@@ -804,8 +804,8 @@ class Qoob {
      * @param type $array
      * @return null|array
      */
-    private function getTemplate($id) {
-        $templates = $this->getUrlTemplates();
+    private function getItem($id) {
+        $templates = $this->getUrlItems();
 
         foreach ($templates as $key => $val) {
             if ($val['id'] === $id) {
@@ -834,7 +834,7 @@ class Qoob {
      * @return json
      */
     public function loadBuilderData() {
-        $templates = $this->getTemplates();
+        $templates = $this->getItems();
         $groups = $this->getGroups();
 
         if (isset($templates)) {
@@ -858,9 +858,9 @@ class Qoob {
      * @param string $templateId
      * @return json
      */
-    private function getConfigFile($templateId) {
-        $template = $this->getTemplate($templateId);
-        $json = file_get_contents($template['url'] . 'config.json');
+    private function getConfigFile($itemId) {
+        $item = $this->getItem($itemId);
+        $json = file_get_contents($item['url'] . 'config.json');
         $json = SmartUtils::decode($json, true);
 
         return $json;
@@ -886,18 +886,18 @@ class Qoob {
      * Get content hbs file's
      * @return html
      */
-    private function getHtml($templateId) {
-        $template = $this->getTemplate($templateId);
-        return file_get_contents($template['url'] . 'template.hbs');
+    private function getHtml($itemId) {
+        $item = $this->getItem($itemId);
+        return file_get_contents($item['url'] . 'template.hbs');
     }
 
     /**
-     * Load template
+     * Load item
      * @return html
      */
-    public function loadTemplate() {
-        $template = $this->getHtml($_POST['template_id']);
-        echo $template;
+    public function loadItem() {
+        $item = $this->getHtml($_POST['item_id']);
+        echo $item;
         exit();
     }
 
