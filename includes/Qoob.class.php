@@ -500,10 +500,10 @@ class Qoob {
         $this->qoob_table_name = $wpdb->prefix . "pages";
         if ($wpdb->get_var("show tables like '$this->qoob_table_name'") != $this->qoob_table_name) {
             $sql = "CREATE TABLE " . $this->qoob_table_name . " (
-                pid int(9) NOT NULL,
-                data text NOT NULL,
-                html text NOT NULL,
-                rev int(9) NOT NULL,
+                pid INT(9) NOT NULL,
+                data TEXT NOT NULL,
+                html TEXT NOT NULL,
+                rev VARCHAR(255) NOT NULL,
                 date DATETIME NOT NULL DEFAULT NOW(),
                 lang VARCHAR(9) NOT NULL DEFAULT 'en', 
                 PRIMARY KEY (pid, rev, lang),
@@ -669,16 +669,15 @@ class Qoob {
                 "SELECT * FROM " . $this->qoob_table_name .
                 " WHERE pid=" . $post_id .
                 " AND lang='" . $lang .
-                "' ORDER BY rev DESC LIMIT 1", "ARRAY_A");
+                "' ORDER BY date DESC", "ARRAY_A");
 
         if (!empty($blocks)) {
             //Last page revisioned
             $last_block = $blocks[0];
-            $last_rev_count = intval($last_block['rev']);
 
             //Comparing page to last page saved
             //If html hashes are equal - don't need to save the new revision
-            $last_revision_hash = md5($last_block['html']);
+            $last_revision_hash = $last_block['rev'];
             $current_revision_hash = md5($blocks_html);
 
             if ($last_revision_hash !== $current_revision_hash) {
@@ -686,25 +685,21 @@ class Qoob {
                         $this->qoob_table_name, array(
                     'data' => $data,
                     'html' => $blocks_html,
-                    'rev' => $last_rev_count + 1,
+                    'rev' => $current_revision_hash,
                     'pid' => $post_id,
                     'lang' => $lang)
                 );
 
                 //When the amount of revisions are more then needed, 
                 // we are deleting first revision in the list
-                if ($last_rev_count >= self::REVISIONS_COUNT) {
-                    $this->deletePageRow($post_id, $lang, $last_rev_count - self::REVISIONS_COUNT);
+                if (count($blocks) >= self::REVISIONS_COUNT) {
+                    $first_block_rev = $blocks[count($blocks)-1]['rev'];
+                    $this->deletePageRow($post_id, $lang, $first_block_rev);
                 }
             }
         }
 
-        if (false === $updated) {
-            $responce = array('success' => false);
-        } else {
-            $responce = array('success' => true);
-        }
-
+        $responce = array('success' => (boolean) $updated);
         wp_send_json($responce);
         exit();
     }
