@@ -484,8 +484,7 @@ class Qoob {
             global $post;
             $id = $post->ID;
             $block = $this->getBlock($id);
-            $preload_script = '<script src="' . SmartUtils::getUrlFromPath($this->getPathQoob() . 'js/builder-preloader.js') . '"></script>';
-            $html = $preload_script . stripslashes($block['html']);
+            $html = stripslashes($block['html']);
             return $html;
         }
     }
@@ -533,7 +532,6 @@ class Qoob {
      * Load js and css on frontend pages
      */
     function frontend_scripts() {
-        wp_enqueue_style('builder.qoob.preloader', $this->getUrlQoob() . "css/qoob-preloader.css");
         wp_enqueue_style('builder.qoob', $this->getUrlAssets() . "css/qoob.css");
     }
 
