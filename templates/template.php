@@ -91,11 +91,12 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
 <script type="text/javascript">
     var builder;
     jQuery(document).ready(function () {
-        builder = new Builder(
-                new BuilderStorage({
-                    pageId: <?php echo $pageId; ?>,
-                    driver: new WordpressDriver()
-                }));
+        builder = new Builder({
+                    storage: new BuilderStorage({
+                        pageId: <?php echo $pageId; ?>,
+                        driver: new WordpressDriver()
+                    })
+                });
         builder.activate();
     });
 </script>

@@ -604,6 +604,8 @@ class Qoob {
         wp_enqueue_script('builder-storage', $this->getUrlQoob() . 'js/builder-storage.js', array('jquery'), '', true);
         wp_enqueue_script('builder-utils', $this->getUrlQoob() . 'js/builder-utils.js', array('jquery'), '', true);
         wp_enqueue_script('builder-qoob', $this->getUrlQoob() . 'js/builder.js', array('jquery'), '', true);
+        wp_enqueue_script('handlebar-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-handlebars.js', array('handlebars'), '', true);
+        wp_enqueue_script('underscore-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-underscore.js', array('underscore'), '', true);
 
         // page edit script
         wp_enqueue_script('control_edit_page', $this->getUrlAssets() . 'js/control-edit-page.js', array('builder-qoob'), '', true);
@@ -893,9 +895,9 @@ class Qoob {
      * Get content hbs file's
      * @return html
      */
-    private function getHtml($itemId) {
+    private function getHtml($itemId, $fileName) {
         $item = $this->getItem($itemId);
-        return file_get_contents($item['url'] . 'template.hbs');
+        return file_get_contents($item['url'] . $fileName);
     }
 
     /**
@@ -903,7 +905,7 @@ class Qoob {
      * @return html
      */
     public function loadItem() {
-        $item = $this->getHtml($_POST['item_id']);
+        $item = $this->getHtml($_POST['item_id'], $_POST['item_template_url']);
         echo $item;
         exit();
     }
