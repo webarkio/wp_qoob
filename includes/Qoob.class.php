@@ -462,7 +462,7 @@ class Qoob {
                 "SELECT * FROM " . $this->qoob_table_name .
                 " WHERE pid = " . $id .
                 " AND lang='" . $lang . "'" .
-                " ORDER BY rev DESC", "ARRAY_A");
+                " ORDER BY date DESC LIMIT 1", "ARRAY_A");
 
         return $block[0];
     }
