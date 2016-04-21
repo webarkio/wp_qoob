@@ -18,12 +18,12 @@ $builderViewFolderUrl = plugins_url('qoob.wordpress/qoob/tmpl/builder');
 <script type="text/javascript">
     var builder;
     jQuery(document).ready(function () {
-        builder = new Builder(
-                new BuilderStorage({
+        builder = new Builder({
+                storage: new BuilderStorage({
                     pageId: <?php echo $pageId; ?>,
                     builderViewFolderUrl: '<?php echo $builderViewFolderUrl ?>',
                     driver: new WordpressDriver()
-                }));
+                })});
         builder.activate();
     });
 </script>
