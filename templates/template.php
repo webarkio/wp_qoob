@@ -36,7 +36,8 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
                     <div class="right"></div>
                 </div>
             </div>
-            <div class="text"></div></div>
+            <div class="text"></div>
+        </div>
         <div class="edit-control-bar">
             <div class="autosave">
                 <label class="checkbox-sb">
@@ -71,7 +72,7 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
     <div id="builder-menu">
         <div id="card">
             <div class="card-wrap">
-                <div class="card-main">
+                <div class="card-main side-1">
                     <div class="blocks-settings"></div>
                     <div class="groups"></div>
                     <div class="list-group"></div>
@@ -81,10 +82,12 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
         </div>
     </div>
 </div>
-<div id="builder-content"><div id="builder-viewport" class="pc">
+<div id="builder-content">
+    <div id="builder-viewport" class="pc">
         <iframe src="/?page_id=<?php echo $post_ID; ?>&qoob=true" scrolling="auto" name="builder-iframe" id="builder-iframe"></iframe>
-    </div></div>
+    </div>
 </div>
+
 <input type='hidden' id='post_ID' name='post_ID' value='<?php echo $post_ID; ?>' />
 <!--END BUILDER STRUCTURE-->
 <!--SCRIPT FOR BUILDER INIT-->
