@@ -595,6 +595,7 @@ class Qoob {
         wp_enqueue_script('buildermenu-groups-view', $this->getUrlQoob() . 'js/builder-menu-groups-view.js', array('jquery'), '', true);
         wp_enqueue_script('settings-view', $this->getUrlQoob() . 'js/settings-view.js', array('jquery'), '', true);
         wp_enqueue_script('buildermenu-blocks-preview-view', $this->getUrlQoob() . 'js/builder-menu-blocks-preview-view.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-view', $this->getUrlQoob() . 'js/builder-view.js', array('jquery'), '', true);
         // builder scripts
         wp_enqueue_script('builder-loader', $this->getUrlQoob() . 'js/builder-loader.js', array('jquery'), '', true);
         wp_enqueue_script('builder-wordpress_driver', $this->getUrlAssets() . 'js/builder-wordpress-driver.js', array('jquery'), '', true);
