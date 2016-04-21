@@ -72,11 +72,11 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
     <div id="builder-menu">
         <div id="card">
             <div class="card-wrap">
-                <div class="card-main side-1">
-                    <div class="blocks-settings"></div>
-                    <div class="groups"></div>
-                    <div class="list-group"></div>
-                    <div class="global-settings"></div>
+                <div class="card-main side-0">
+                    <div id="side-270" class="blocks-settings"></div>
+                    <div id="side-0" class="groups"></div>
+                    <div id="side-90" class="list-group"></div>
+                    <div id="side-180" class="global-settings"></div>
                 </div>
             </div>
         </div>
