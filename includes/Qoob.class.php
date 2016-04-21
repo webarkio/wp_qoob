@@ -630,7 +630,7 @@ class Qoob {
                 "SELECT * FROM " . $this->qoob_table_name .
                 " WHERE pid=" . $_POST['page_id'] .
                 " AND lang='" . $_POST['lang'] .
-                "' ORDER BY rev DESC", "ARRAY_A");
+                "' ORDER BY date DESC LIMIT 1", "ARRAY_A");
 
         $block = !empty($blocks) ? $blocks[0] : null;
 
