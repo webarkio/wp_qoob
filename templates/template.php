@@ -14,6 +14,14 @@ wp_enqueue_media(array('post' => $post_ID));
 require_once(ABSPATH . 'wp-admin/admin-header.php');
 $builderViewFolderUrl = plugins_url('qoob.wordpress/qoob/tmpl/builder');
 ?>
+<!--START PRELOADER -->
+<div id="loader-wrapper">
+    <div id="loader">
+        <div class="minutes-container"><div class="minutes"></div></div>
+        <div class="seconds-container"><div class="seconds"></div></div>
+    </div>
+    <h1></h1>
+</div>
 <!--SCRIPT FOR BUILDER INIT-->
 <script type="text/javascript">
     var builder;
