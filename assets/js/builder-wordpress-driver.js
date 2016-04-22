@@ -112,7 +112,7 @@ WordpressDriver.prototype.loadPageData = function (pageId, cb) {
  * 
  * @param {loadFieldsTmplCallback} cb - A callback to run.
  */
-WordpressDriver.prototype.loadBuilderTmpl = function (cb) {
+WordpressDriver.prototype.loadBuilderTemplates = function (cb) {
     jQuery(document).ready(function ($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
