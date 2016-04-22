@@ -896,9 +896,10 @@ class Qoob {
      * Get content hbs file's
      * @return html
      */
-    private function getHtml($itemId, $fileName) {
+    private function getHtml($itemId) {
         $item = $this->getItem($itemId);
-        return file_get_contents($item['url'] . $fileName);
+        $config = json_decode(file_get_contents($item['url'] . 'config.json'));
+        return file_get_contents($item['url'] . $config->template);
     }
 
     /**
@@ -906,7 +907,7 @@ class Qoob {
      * @return html
      */
     public function loadItem() {
-        $item = $this->getHtml($_POST['item_id'], $_POST['item_template_url']);
+        $item = $this->getHtml($_POST['item_id']);
         echo $item;
         exit();
     }
