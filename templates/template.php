@@ -25,15 +25,13 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
 <!--START BUILDER STRUCTURE-->
 <div id="builder">
     <div id="builder-toolbar">
-        <div class="logo">
+        <div class="logo side-0">
             <div class="wrap-cube">
                 <div class="cube">
-                    <div class="front"></div>
-                    <div class="back"></div>
-                    <div class="top"></div>
-                    <div class="bottom"></div>
-                    <div class="left"></div>
-                    <div class="right"></div>
+                    <div class="side-0"></div>
+                    <div class="side-90"></div>
+                    <div class="side-180"></div>
+                    <div class="side-270"></div>
                 </div>
             </div>
             <div class="text"></div>
@@ -73,10 +71,10 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
         <div id="card">
             <div class="card-wrap">
                 <div class="card-main side-0">
-                    <div id="side-270" class="blocks-settings"></div>
-                    <div id="side-0" class="groups"></div>
-                    <div id="side-90" class="list-group"></div>
-                    <div id="side-180" class="global-settings"></div>
+                    <div id="side-0"></div>
+                    <div id="side-90"></div>
+                    <div id="side-180"></div>
+                    <div id="side-270"></div>
                 </div>
             </div>
         </div>
