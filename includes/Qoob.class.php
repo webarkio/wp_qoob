@@ -558,6 +558,9 @@ class Qoob {
             'qoob' => ( isset($_GET['qoob']) && $_GET['qoob'] == true ? true : false )
                 )
         );
+        
+        // style
+        wp_enqueue_style('builder.qoob', $this->getUrlQoob() . "css/builder.css");
 
         // core libs
         wp_enqueue_script('jquery');
@@ -613,9 +616,6 @@ class Qoob {
 
         // page edit script
         wp_enqueue_script('control_edit_page', $this->getUrlAssets() . 'js/control-edit-page.js', array('builder-qoob'), '', true);
-
-        // style
-        wp_enqueue_style('builder.qoob', $this->getUrlQoob() . "css/builder.css");
     }
 
     /**
