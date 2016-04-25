@@ -578,7 +578,7 @@ class Qoob {
         wp_enqueue_script('jquery-wheelcolorpicker', $this->getUrlQoob() . 'js/libs/jquery.wheelcolorpicker.js', array('jquery'), '', true);
 
         // Application scripts
-        wp_enqueue_script('block-view', $this->getUrlQoob() . 'js/block-view.js', array('jquery'), '', true);
+        wp_enqueue_script('block-view', $this->getUrlQoob() . 'js/views/block-view.js', array('jquery'), '', true);
         wp_enqueue_script('field-text', $this->getUrlQoob() . 'js/fields/field-text.js', array('jquery'), '', true);
         wp_enqueue_script('field-text-autocomplete', $this->getUrlQoob() . 'js/fields/field-text-autocomplete.js', array('jquery'), '', true);
         wp_enqueue_script('field-checkbox', $this->getUrlQoob() . 'js/fields/field-checkbox.js', array('jquery'), '', true);
@@ -591,11 +591,14 @@ class Qoob {
         wp_enqueue_script('field-accordion-item', $this->getUrlQoob() . 'js/fields/field-accordion-item-expand.js', array('jquery'), '', true);
         wp_enqueue_script('field-accordion-item-front', $this->getUrlQoob() . 'js/fields/field-accordion-item-flip.js', array('jquery'), '', true);
         wp_enqueue_script('field-devices', $this->getUrlQoob() . 'js/fields/field-devices.js', array('jquery'), '', true);
-        wp_enqueue_script('fields-view', $this->getUrlQoob() . 'js/fields-view.js', array('jquery'), '', true);
-        wp_enqueue_script('buildermenu-groups-view', $this->getUrlQoob() . 'js/builder-menu-groups-view.js', array('jquery'), '', true);
-        wp_enqueue_script('settings-view', $this->getUrlQoob() . 'js/settings-view.js', array('jquery'), '', true);
-        wp_enqueue_script('buildermenu-blocks-preview-view', $this->getUrlQoob() . 'js/builder-menu-blocks-preview-view.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-view', $this->getUrlQoob() . 'js/builder-view.js', array('jquery'), '', true);
+        wp_enqueue_script('fields-view', $this->getUrlQoob() . 'js/views/fields-view.js', array('jquery'), '', true);
+        wp_enqueue_script('buildermenu-groups-view', $this->getUrlQoob() . 'js/views/builder-menu-groups-view.js', array('jquery'), '', true);
+        wp_enqueue_script('settings-view', $this->getUrlQoob() . 'js/views/settings-view.js', array('jquery'), '', true);
+        wp_enqueue_script('buildermenu-blocks-preview-view', $this->getUrlQoob() . 'js/views/builder-menu-blocks-preview-view.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-layout', $this->getUrlQoob() . 'js/views/builder-layout.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-menu-view', $this->getUrlQoob() . 'js/views/builder-menu-view.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-toolbar-view', $this->getUrlQoob() . 'js/views/builder-toolbar-view.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-viewport-view', $this->getUrlQoob() . 'js/views/builder-viewport-view.js', array('jquery'), '', true);
         // builder scripts
         wp_enqueue_script('builder-loader', $this->getUrlQoob() . 'js/builder-loader.js', array('jquery'), '', true);
         wp_enqueue_script('builder-wordpress_driver', $this->getUrlAssets() . 'js/builder-wordpress-driver.js', array('jquery'), '', true);
