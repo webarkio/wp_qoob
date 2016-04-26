@@ -12,7 +12,6 @@ $form_action = 'editpost';
 add_thickbox();
 wp_enqueue_media(array('post' => $post_ID));
 require_once(ABSPATH . 'wp-admin/admin-header.php');
-$builderViewFolderUrl = plugins_url('qoob.wordpress/qoob/tmpl/builder');
 ?>
 <!--START PRELOADER -->
 <div id="loader-wrapper">
@@ -29,8 +28,7 @@ $builderViewFolderUrl = plugins_url('qoob.wordpress/qoob/tmpl/builder');
         builder = new Builder({
                     storage: new BuilderStorage({
                         pageId: <?php echo $pageId; ?>,
-                        driver: new WordpressDriver(),
-                        builderViewFolderUrl: '<?php echo $builderViewFolderUrl ?>',
+                        driver: new WordpressDriver()
                     })
                 });
         builder.activate();
