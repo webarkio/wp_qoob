@@ -500,14 +500,15 @@ class Qoob {
         $this->qoob_table_name = $wpdb->prefix . "pages";
         if ($wpdb->get_var("show tables like '$this->qoob_table_name'") != $this->qoob_table_name) {
             $sql = "CREATE TABLE " . $this->qoob_table_name . " (
+                id int(9) NOT NULL AUTO_INCREMENT,
                 pid INT(9) NOT NULL,
                 data TEXT NOT NULL,
                 html TEXT NOT NULL,
                 rev CHAR(32) NOT NULL,
                 date DATETIME NOT NULL DEFAULT NOW(),
                 lang VARCHAR(9) NOT NULL DEFAULT 'en', 
-                PRIMARY KEY (pid, rev, lang),
-                KEY pid(pid)
+                PRIMARY KEY (id),
+                KEY id(id)
             );";
 
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
