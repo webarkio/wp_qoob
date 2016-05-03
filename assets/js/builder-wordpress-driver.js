@@ -148,6 +148,7 @@ WordpressDriver.prototype.loadBuilderTemplates = function (cb) {
 WordpressDriver.prototype.loadBuilderData = function (cb) {
     jQuery(document).ready(function ($) {
         if (ajax.logged_in && ajax.qoob == true) {
+
             $.ajax({
                 url: ajax.url,
                 type: 'POST',
@@ -156,11 +157,15 @@ WordpressDriver.prototype.loadBuilderData = function (cb) {
                 },
                 dataType: 'json',
                 success: function (response) {
+                    console.log("here");
                     if (response.success) {
                         cb(null, response.data);
                     } else {
                         cb(response.success);
                     }
+                },
+                error: function(xrh,error){
+                    //FIXME: 
                 }
             });
         }
