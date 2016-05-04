@@ -580,6 +580,8 @@ class Qoob {
 
         // Application scripts
         wp_enqueue_script('block-view', $this->getUrlQoob() . 'js/views/block-view.js', array('jquery'), '', true);
+        wp_enqueue_script('block-wrapper-view', $this->getUrlQoob() . 'js/views/block-wrapper-view.js', array('jquery'), '', true);
+
         wp_enqueue_script('field-text', $this->getUrlQoob() . 'js/fields/field-text.js', array('jquery'), '', true);
         wp_enqueue_script('field-text-autocomplete', $this->getUrlQoob() . 'js/fields/field-text-autocomplete.js', array('jquery'), '', true);
         wp_enqueue_script('field-checkbox', $this->getUrlQoob() . 'js/fields/field-checkbox.js', array('jquery'), '', true);
@@ -594,6 +596,8 @@ class Qoob {
         wp_enqueue_script('field-devices', $this->getUrlQoob() . 'js/fields/field-devices.js', array('jquery'), '', true);
         wp_enqueue_script('fields-view', $this->getUrlQoob() . 'js/views/fields-view.js', array('jquery'), '', true);
         wp_enqueue_script('page-model', $this->getUrlQoob() . 'js/models/page-model.js', array('jquery'), '', true);
+        wp_enqueue_script('block-model', $this->getUrlQoob() . 'js/models/block-model.js', array('jquery'), '', true);
+
         wp_enqueue_script('buildermenu-groups-view', $this->getUrlQoob() . 'js/views/builder-menu-groups-view.js', array('jquery'), '', true);
         wp_enqueue_script('settings-view', $this->getUrlQoob() . 'js/views/settings-view.js', array('jquery'), '', true);
         wp_enqueue_script('buildermenu-blocks-preview-view', $this->getUrlQoob() . 'js/views/builder-menu-blocks-preview-view.js', array('jquery'), '', true);
@@ -800,11 +804,9 @@ class Qoob {
             $config_json = preg_replace('/%blocks_url%/', $blocks_url, $config_json);
             //Decoding json config
             $config = SmartUtils::decode($config_json, true);
-            $templates[] = array(
-                'id' => $val['id'],
-                'url' => $val['url'],
-                'config' => $config
-            );
+            $config['id']=$val['id'];
+            $config['url']=$val['url'];
+            $templates[] =  $config;
         }
         
         return $templates;
