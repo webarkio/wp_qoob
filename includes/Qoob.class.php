@@ -600,7 +600,10 @@ class Qoob {
         wp_enqueue_script('builder-layout', $this->getUrlQoob() . 'js/views/builder-layout.js', array('jquery'), '', true);
         wp_enqueue_script('builder-menu-view', $this->getUrlQoob() . 'js/views/builder-menu-view.js', array('jquery'), '', true);
         wp_enqueue_script('builder-toolbar-view', $this->getUrlQoob() . 'js/views/builder-toolbar-view.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-edit-mode-button-view', $this->getUrlQoob() . 'js/views/builder-edit-mode-button-view.js', array('jquery'), '', true);
+
         wp_enqueue_script('builder-viewport-view', $this->getUrlQoob() . 'js/views/builder-viewport-view.js', array('jquery'), '', true);
+        wp_enqueue_script('builder-controller', $this->getUrlQoob() . 'js/controllers/builder-controller.js', array('jquery'), '', true);
         wp_enqueue_script('field-accordion-item-flip-view', $this->getUrlQoob() . 'js/views/field-accordion-item-flip-view.js', array('jquery'), '', true);
         wp_enqueue_script('media-center-view', $this->getUrlQoob() . 'js/views/media-center-view.js', array('jquery'), '', true);
         // builder scripts
