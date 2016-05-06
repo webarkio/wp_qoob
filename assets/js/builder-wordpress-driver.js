@@ -14,8 +14,7 @@ function WordpressDriver() {
  * @returns {String}
  */
 WordpressDriver.prototype.getIframePageUrl = function (pageId) {
-    var postId = jQuery('#post_ID').val();
-    return '/?page_id=' + postId + '&qoob=true';
+    return '/?page_id=' + pageId + '&qoob=true';
 };
 
 /**
@@ -31,7 +30,7 @@ WordpressDriver.prototype.exit = function (pageId) {
         }
     }
 
-    var url = '/wp-admin/post.php?post=' + jQuery('#post_ID').val() + '&action=edit';
+    var url = '/wp-admin/post.php?post=' + pageId + '&action=edit';
     window.location.href = url;
 };
 
