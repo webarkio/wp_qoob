@@ -521,7 +521,7 @@ class Qoob {
      */
     public function iframe_scripts() {
         // Load style
-        wp_enqueue_style('builder.qoob.iframe', $this->getUrlQoob() . "css/iframe-builder.css");
+        wp_enqueue_style('builder.qoob', $this->getUrlQoob() . "css/builder.css");
 
         // Load js
         wp_enqueue_script('control.edit.page.iframe', $this->getUrlAssets() . 'js/control-edit-page-iframe.js', array('jquery'), '', true);
@@ -542,6 +542,8 @@ class Qoob {
         if (get_post_type() == 'page') {
             wp_enqueue_script('builder.admin', $this->getUrlAssets() . 'js/builder-admin.js', array('jquery'), '', true);
             wp_enqueue_style('wheelcolorpicker-minicolors', $this->getUrlQoob() . "css/wheelcolorpicker.css");
+            wp_enqueue_style('bootstrap', $this->getUrlQoob() . "css/bootstrap.min.css");
+            wp_enqueue_style('bootstrap-select', $this->getUrlQoob() . "css/bootstrap-select.min.css");
             wp_enqueue_style('builder.qoob.iframe', $this->getUrlAssets() . "css/builder-admin.css");
         }
     }
@@ -577,6 +579,8 @@ class Qoob {
         wp_enqueue_script('handlebars-helper', $this->getUrlQoob() . 'js/libs/handlebars-helper.js', array('jquery'), '', true);
         wp_enqueue_script('jquery-ui-droppable-iframe', $this->getUrlQoob() . 'js/libs/jquery-ui-droppable-iframe.js', array('jquery'), '', true);
         wp_enqueue_script('jquery-wheelcolorpicker', $this->getUrlQoob() . 'js/libs/jquery.wheelcolorpicker.js', array('jquery'), '', true);
+        wp_enqueue_script('bootstrap', $this->getUrlQoob() . 'js/libs/bootstrap.min.js', array('jquery'), '', true);
+        wp_enqueue_script('bootstrap-select', $this->getUrlQoob() . 'js/libs/bootstrap-select.min.js', array('jquery'), '', true);
 
         // Application scripts
         wp_enqueue_script('block-view', $this->getUrlQoob() . 'js/views/block-view.js', array('jquery'), '', true);
@@ -585,6 +589,7 @@ class Qoob {
         wp_enqueue_script('field-text', $this->getUrlQoob() . 'js/views/fields/field-text.js', array('jquery'), '', true);
         wp_enqueue_script('field-text-autocomplete', $this->getUrlQoob() . 'js/views/fields/field-text-autocomplete.js', array('jquery'), '', true);
         wp_enqueue_script('field-checkbox', $this->getUrlQoob() . 'js/views/fields/field-checkbox.js', array('jquery'), '', true);
+        wp_enqueue_script('field-checkbox-switch', $this->getUrlQoob() . 'js/views/fields/field-checkbox-switch.js', array('jquery'), '', true);
         wp_enqueue_script('field-select', $this->getUrlQoob() . 'js/views/fields/field-select.js', array('jquery'), '', true);
         wp_enqueue_script('field-texarea', $this->getUrlQoob() . 'js/views/fields/field-textarea.js', array('jquery'), '', true);
         wp_enqueue_script('field-slider', $this->getUrlQoob() . 'js/views/fields/field-slider.js', array('jquery'), '', true);
