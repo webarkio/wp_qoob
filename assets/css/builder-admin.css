@@ -1,9 +1,9 @@
 @font-face {
     font-family: 'OpenSans-Regular';
-    src: url("../../qoob/fonts/opensans/OpenSans-Regular.eot");
-    src: url("../../qoob/fonts/opensans/OpenSans-Regular.eot?#iefix")format("embedded-opentype"),
-        url("../../qoob/fonts/opensans/OpenSans-Regular.woff") format("woff"),
-        url("../../qoob/fonts/opensans/OpenSans-Regular.ttf") format("truetype");
+    src: url("../fonts/opensans/OpenSans-Regular.eot");
+    src: url("../fonts/opensans/OpenSans-Regular.eot?#iefix")format("embedded-opentype"),
+        url("../fonts/opensans/OpenSans-Regular.woff") format("woff"),
+        url("../fonts/opensans/OpenSans-Regular.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
