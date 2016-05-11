@@ -541,10 +541,13 @@ class Qoob {
     public function admin_scripts() {
         if (get_post_type() == 'page') {
             wp_enqueue_script('builder.admin', $this->getUrlAssets() . 'js/builder-admin.js', array('jquery'), '', true);
-            wp_enqueue_style('wheelcolorpicker-minicolors', $this->getUrlQoob() . "css/wheelcolorpicker.css");
-            wp_enqueue_style('bootstrap', $this->getUrlQoob() . "css/bootstrap.min.css");
-            wp_enqueue_style('bootstrap-select', $this->getUrlQoob() . "css/bootstrap-select.min.css");
             wp_enqueue_style('builder.qoob.iframe', $this->getUrlAssets() . "css/builder-admin.css");
+            if (isset($_GET['qoob']) && $_GET['qoob'] == true) {
+                wp_enqueue_style('wheelcolorpicker-minicolors', $this->getUrlQoob() . "css/wheelcolorpicker.css");
+                wp_enqueue_style('bootstrap', $this->getUrlQoob() . "css/bootstrap.min.css");
+                wp_enqueue_style('bootstrap-select', $this->getUrlQoob() . "css/bootstrap-select.min.css");
+            }
+
         }
     }
 
