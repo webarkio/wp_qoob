@@ -15,31 +15,40 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
 ?>
 <!--START PRELOADER -->
 <div id="loader-wrapper">
-    <div id="loader">
-        <div class="minutes-container"><div class="minutes"></div></div>
-        <div class="seconds-container"><div class="seconds"></div></div>
+    <div class="loading-panel">
+        <div class="qoob-preview-img"></div> 
+        <span class="sr-only">Loading <span class="precent">0</span>%</span>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="0"
+                 aria-valuemin="0" aria-valuemax="100" style="width:0%;">
+            </div>
+        </div>
     </div>
-    <h1></h1>
+
+    <div class="panel tip-panel">
+        <span class="tip-header">Did you know</span>
+        <div class="tip-content"></div>
+    </div>
 </div>
 <!--SCRIPT FOR BUILDER INIT-->
 <script type="text/javascript">
     var builder;
     jQuery(document).ready(function () {
         builder = new Builder({
-                    storage: new BuilderStorage({
-                        pageId: <?php echo $pageId; ?>,
-                        driver: new WordpressDriver()
-                    })
-                });
+            storage: new BuilderStorage({
+                pageId: <?php echo $pageId; ?>,
+                driver: new WordpressDriver()
+            })
+        });
         builder.activate();
     });
 </script>
 
 <div style="height: 1px; visibility: hidden; overflow: hidden;">
-        <?php
-        // Fix: WP 4.0
-        wp_dequeue_script( 'editor-expand' );
-        ?>
+    <?php
+    // Fix: WP 4.0
+    wp_dequeue_script('editor-expand');
+    ?>
 </div>
 
 <?php
