@@ -58,11 +58,7 @@ WordpressDriver.prototype.savePageData = function (pageId, data, cb) {
                 },
                 dataType: 'json',
                 success: function (response) {
-                    if (response.success) {
-                        cb(null, response.success);
-                    } else {
-                        cb(response);
-                    }
+                    cb(null, response.success);
                 }
             });
         }
@@ -162,7 +158,7 @@ WordpressDriver.prototype.loadBuilderData = function (cb) {
                         cb(response.success);
                     }
                 },
-                error: function(xrh,error){
+                error: function (xrh, error) {
                     //FIXME: 
                 }
             });
@@ -183,7 +179,7 @@ WordpressDriver.prototype.loadBuilderData = function (cb) {
  * @param {loadTemplateCallback} cb - A callback to run.
  */
 WordpressDriver.prototype.loadTemplate = function (itemId, cb) {
-        jQuery(document).ready(function ($) {
+    jQuery(document).ready(function ($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
                 url: ajax.url,
