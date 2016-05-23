@@ -563,8 +563,17 @@ class Qoob {
                 )
         );
         
-        // style
+        // tyles
         wp_enqueue_style('builder.qoob', $this->getUrlQoob() . "css/builder.css");
+        //loading styles for icons
+        foreach (new DirectoryIterator($this->getPathQoob() . '/icons') as $file) {
+            if($file->isDot()) {
+                continue;
+            }
+            if ($file->isDir()) {           
+                wp_enqueue_style('icons-font-' . $file->getFilename(), $this->getUrlQoob() . '/icons/' . $file->getFilename() . '/style.css');
+            }
+        }
 
         // core libs
         wp_enqueue_script('jquery');
@@ -621,6 +630,8 @@ class Qoob {
         wp_enqueue_script('media-center-view', $this->getUrlQoob() . 'js/views/fields/media-center-view.js', array('jquery'), '', true);
         wp_enqueue_script('field-video-view', $this->getUrlQoob() . 'js/views/fields/field-video.js', array('jquery', 'field-view'), '', true);
         wp_enqueue_script('video-center-view', $this->getUrlQoob() . 'js/views/fields/video-center-view.js', array('jquery', 'field-view'), '', true);
+        wp_enqueue_script('field-icon-view', $this->getUrlQoob() . 'js/views/fields/field-icon.js', array('jquery', 'field-view'), '', true);
+        wp_enqueue_script('icon-center-view', $this->getUrlQoob() . 'js/views/fields/icon-center-view.js', array('jquery', 'field-view'), '', true);
         // builder scripts
         wp_enqueue_script('builder-loader', $this->getUrlQoob() . 'js/builder-loader.js', array('jquery'), '', true);
         wp_enqueue_script('builder-wordpress_driver', $this->getUrlAssets() . 'js/builder-wordpress-driver.js', array('jquery'), '', true);
@@ -632,6 +643,8 @@ class Qoob {
 
         // page edit script
         wp_enqueue_script('control_edit_page', $this->getUrlAssets() . 'js/control-edit-page.js', array('builder-qoob'), '', true);
+        
+        
     }
 
     /**
@@ -854,6 +867,28 @@ class Qoob {
 
         return $json;
     }
+    /**
+     * Receiving icon libs
+     * @return array Array of icon libs, containing key - value pairs of icon lib's classes and tags
+     */
+    private function getIcons() {
+        $result = [];
+        foreach (new DirectoryIterator($this->getPathQoob(). '/icons') as $folder) {
+            if($folder->isDot()) {
+                continue;
+            }
+            if($folder->isDir()) {
+                $json = file_get_contents($this->getUrlQoob() . '/icons/' . $folder->getFilename() . '/config.json');
+                $config = SmartUtils::decode($json, true);
+                $lib = [];
+                foreach($config['lib'] as $key => $value) {
+                    $lib[] = array('classes' => $key, 'tags' => $value);
+                }
+                $result[$folder->getFilename()] = $lib;
+            }
+        }
+        return $result;
+    }
 
     /**
      * Load builder data
@@ -862,13 +897,15 @@ class Qoob {
     public function loadBuilderData() {
         $templates = $this->getItems();
         $groups = $this->getGroups();
+        $icons = $this->getIcons();
 
         if (isset($templates)) {
             $response = array(
                 'success' => true,
                 'data' => array(
                     'items' => $templates,
-                    'groups' => $groups
+                    'groups' => $groups,
+                    'icons' => $icons ? $icons : array()
                 )
             );
         } else {
