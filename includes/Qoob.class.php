@@ -532,6 +532,15 @@ class Qoob {
      */
     function frontend_scripts() {
         wp_enqueue_style('builder.qoob', $this->getUrlAssets() . "css/qoob.css");
+        //loading styles for icons
+        foreach (new DirectoryIterator($this->getPathQoob() . '/icons') as $file) {
+            if($file->isDot()) {
+                continue;
+            }
+            if ($file->isDir()) {           
+                wp_enqueue_style('icons-font-' . $file->getFilename(), $this->getUrlQoob() . '/icons/' . $file->getFilename() . '/style.css');
+            }
+        }
     }
 
     /**
