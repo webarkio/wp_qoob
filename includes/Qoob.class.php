@@ -533,7 +533,8 @@ class Qoob {
     function frontend_scripts() {
         wp_enqueue_style('builder.qoob', $this->getUrlAssets() . "css/qoob.css");
         //loading styles for icons
-        foreach (new DirectoryIterator($this->getPathQoob() . '/icons') as $file) {
+        $path_icons = $this->getPathQoob() . '/icons';
+        foreach (new DirectoryIterator($path_icons) as $file) {
             if($file->isDot()) {
                 continue;
             }
@@ -575,7 +576,8 @@ class Qoob {
         // tyles
         wp_enqueue_style('builder.qoob', $this->getUrlQoob() . "css/builder.css");
         //loading styles for icons
-        foreach (new DirectoryIterator($this->getPathQoob() . '/icons') as $file) {
+        $path_icons = $this->getPathQoob() . '/icons';
+        foreach (new DirectoryIterator($path_icons) as $file) {
             if($file->isDot()) {
                 continue;
             }
@@ -882,7 +884,8 @@ class Qoob {
      */
     private function getIcons() {
         $result = [];
-        foreach (new DirectoryIterator($this->getPathQoob(). '/icons') as $folder) {
+        $path_icons = $this->getPathQoob(). '/icons';
+        foreach (new DirectoryIterator($path_icons) as $folder) {
             if($folder->isDot()) {
                 continue;
             }
