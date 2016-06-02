@@ -221,6 +221,21 @@ class Qoob {
     }
 
     /**
+     * Get url to current module templates dir
+     * 
+     * 
+     * <pre><code>global $smart;
+     * $template = $this->getUrlTemplates(). DIRECTORY_SEPARATOR. "template.php"; //url to template file
+     * 
+     * </code></pre>
+     * 
+     * @return String Path to templates directory
+     */
+    public function getUrlTemplates() {
+        return SmartUtils::getUrlFromPath($this->getPathTemplates());
+    }
+
+    /**
      * Set default title for page
      *
      * @param string $title
@@ -531,14 +546,20 @@ class Qoob {
      * Load js and css on frontend pages
      */
     function frontend_scripts() {
+        // load qoob blocks asset's styles
+        $blocks = $this->getItems();
+        $this->loadAssetsScripts($blocks);
+
+        // load qoob styles
         wp_enqueue_style('builder.qoob', $this->getUrlAssets() . "css/qoob.css");
-        //loading styles for icons
+
+        // loading styles for icons
         $path_icons = $this->getPathQoob() . '/icons';
         foreach (new DirectoryIterator($path_icons) as $file) {
-            if($file->isDot()) {
+            if ($file->isDot()) {
                 continue;
             }
-            if ($file->isDir()) {           
+            if ($file->isDir()) {
                 wp_enqueue_style('icons-font-' . $file->getFilename(), $this->getUrlQoob() . '/icons/' . $file->getFilename() . '/style.css');
             }
         }
@@ -557,7 +578,6 @@ class Qoob {
                 wp_enqueue_style('bootstrap', $this->getUrlQoob() . "css/bootstrap.min.css");
                 wp_enqueue_style('bootstrap-select', $this->getUrlQoob() . "css/bootstrap-select.min.css");
             }
-
         }
     }
 
@@ -572,19 +592,13 @@ class Qoob {
             'qoob' => ( isset($_GET['qoob']) && $_GET['qoob'] == true ? true : false )
                 )
         );
-        
-        // tyles
+
+        // builder styles
         wp_enqueue_style('builder.qoob', $this->getUrlQoob() . "css/builder.css");
-        //loading styles for icons
-        $path_icons = $this->getPathQoob() . '/icons';
-        foreach (new DirectoryIterator($path_icons) as $file) {
-            if($file->isDot()) {
-                continue;
-            }
-            if ($file->isDir()) {           
-                wp_enqueue_style('icons-font-' . $file->getFilename(), $this->getUrlQoob() . '/icons/' . $file->getFilename() . '/style.css');
-            }
-        }
+
+        // load qoob blocks asset's styles
+        $blocks = $this->getItems();
+        $this->loadAssetsScripts($blocks);
 
         // core libs
         wp_enqueue_script('jquery');
@@ -654,8 +668,6 @@ class Qoob {
 
         // page edit script
         wp_enqueue_script('control_edit_page', $this->getUrlAssets() . 'js/control-edit-page.js', array('builder-qoob'), '', true);
-        
-        
     }
 
     /**
@@ -741,7 +753,7 @@ class Qoob {
                 //When the amount of revisions are more then needed, 
                 // we are deleting first revision in the list
                 if (count($blocks) >= self::REVISIONS_COUNT) {
-                    $first_block_rev = $blocks[count($blocks)-1]['rev'];
+                    $first_block_rev = $blocks[count($blocks) - 1]['rev'];
                     $this->deletePageRow($post_id, $lang, $first_block_rev);
                 }
             }
@@ -791,13 +803,13 @@ class Qoob {
         }
 
         $path = ABSPATH . 'wp-content/plugins/qoob.wordpress/qoob/tmpl';
-        
-        foreach (new DirectoryIterator($path) as $folder) {
-           if ($folder->isDot())
-                continue;
-           if(is_dir($folder->getPathname())) {
 
-                $pathtofiles = ABSPATH . 'wp-content/plugins/qoob.wordpress/qoob/tmpl/'.$folder->getFilename();
+        foreach (new DirectoryIterator($path) as $folder) {
+            if ($folder->isDot())
+                continue;
+            if (is_dir($folder->getPathname())) {
+
+                $pathtofiles = ABSPATH . 'wp-content/plugins/qoob.wordpress/qoob/tmpl/' . $folder->getFilename();
                 foreach (new DirectoryIterator($pathtofiles) as $file) {
 
                     if ($file->isDot())
@@ -805,7 +817,7 @@ class Qoob {
 
                     $filename = $file->getFilename();
 
-                    $url = plugin_dir_url($filename) . 'qoob.wordpress/qoob/tmpl/'.$folder->getFilename().'/' . $file->getFilename();
+                    $url = plugin_dir_url($filename) . 'qoob.wordpress/qoob/tmpl/' . $folder->getFilename() . '/' . $file->getFilename();
 
                     $this->builderTmplUrls[] = array(
                         'id' => $file->getFilename(),
@@ -823,8 +835,12 @@ class Qoob {
      * @return array
      */
     private function getItems() {
-        $templates = array();
 
+        if (isset($this->items)) {
+            return $this->items;
+        }
+
+        $items = array();
         $urls = $this->getUrlItems();
 
         foreach ($urls as $val) {
@@ -839,12 +855,15 @@ class Qoob {
             $config_json = preg_replace('/%blocks_url%/', $blocks_url, $config_json);
             //Decoding json config
             $config = SmartUtils::decode($config_json, true);
-            $config['id']=$val['id'];
-            $config['url']=$val['url'];
-            $templates[] =  $config;
+            $config['id'] = $val['id'];
+            $config['url'] = $val['url'];
+            $items[] = $config;
         }
-        
-        return $templates;
+
+        // cash blocks for next ajax request
+        $this->items = $items;
+
+        return $items;
     }
 
     /**
@@ -873,33 +892,54 @@ class Qoob {
         $json = file_get_contents(get_template_directory_uri() . '/blocks/groups.json');
         $json = SmartUtils::decode($json, true);
 
-        // Get other groups
-//        $json = apply_filters('Smart_blocks_groups', $json);
-
         return $json;
     }
+    
     /**
-     * Receiving icon libs
-     * @return array Array of icon libs, containing key - value pairs of icon lib's classes and tags
+     * Enqueueing scripts and styles, contained in theme block's assets
+     * 
+     * @param Array $blocks blocks that contain wordpress theme
      */
-    private function getIcons() {
-        $result = [];
-        $path_icons = $this->getPathQoob(). '/icons';
-        foreach (new DirectoryIterator($path_icons) as $folder) {
-            if($folder->isDot()) {
-                continue;
-            }
-            if($folder->isDir()) {
-                $json = file_get_contents($this->getUrlQoob() . '/icons/' . $folder->getFilename() . '/config.json');
-                $config = SmartUtils::decode($json, true);
-                $lib = [];
-                foreach($config['lib'] as $key => $value) {
-                    $lib[] = array('classes' => $key, 'tags' => $value);
+    private function loadAssetsScripts($blocks) {
+        $qoob_style_urls = [];
+
+        // checking item's assets for styles and scripts
+        // if asset is a style - we add it's url to the array
+        // if one is a script - we explicitly enqueue it
+        for ($i = 0; $i < count($blocks); $i++) {
+            if (isset($blocks[$i]['assets'])) {
+                $assets = $blocks[$i]['assets'];
+                for ($j = 0; $j < count($assets); $j++) {
+                    if ($assets[$j]['type'] === 'style') {
+                        $qoob_style_urls[] = array(
+                            'src' => $assets[$j]['src'],
+                            'url' => $blocks[$i]['url']
+                        );
+                    } else if ($assets[$j]['type'] === 'script') {
+                        wp_enqueue_script('block-custom-script-' . $j, $assets[$j]['src'], array(), false, true);
+                    }
                 }
-                $result[$folder->getFilename()] = $lib;
             }
         }
-        return $result;
+
+        // Enqueing file that will compose all styles from $qoob_style_urls array
+        if (!empty($qoob_style_urls)) {
+            $style_url = $this->getUrlTemplates() . 'blocks.css.php';
+            $style_path = $this->getPathTemplates() . 'blocks.css.php';
+            $content = "<?php header('Content-Type: text/css'); ?>";
+            $theme_url = get_template_directory_uri();
+            $blocks_url = get_template_directory_uri() . '/blocks';
+            for ($i = 0; $i < count($qoob_style_urls); $i++) {
+                $block_url = $qoob_style_urls[$i]['url'];
+                $file = file_get_contents($qoob_style_urls[$i]['src']);
+                $file = preg_replace('/%theme_url%/', $theme_url, $file);
+                $file = preg_replace('/%block_url%/', $block_url, $file);
+                $file = preg_replace('/%blocks_url%/', $blocks_url, $file);
+                $content .= "\n" . $file;
+            }
+            file_put_contents($style_path, $content);
+            wp_enqueue_style('block-custom-styles', $style_url);
+        }
     }
 
     /**
@@ -907,17 +947,15 @@ class Qoob {
      * @return json
      */
     public function loadBuilderData() {
-        $templates = $this->getItems();
+        $blocks = $this->getItems();
         $groups = $this->getGroups();
-        $icons = $this->getIcons();
 
-        if (isset($templates)) {
+        if (isset($blocks)) {
             $response = array(
                 'success' => true,
                 'data' => array(
-                    'items' => $templates,
-                    'groups' => $groups,
-                    'icons' => $icons ? $icons : array()
+                    'items' => $blocks,
+                    'groups' => $groups
                 )
             );
         } else {
@@ -982,7 +1020,7 @@ class Qoob {
      * Loading all builder's templates  
      */
     public function loadBuilderTmpl() {
-        
+
         $templates = $this->getBuilderTmplFiles();
 
         if (isset($templates)) {
