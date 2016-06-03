@@ -546,23 +546,12 @@ class Qoob {
      * Load js and css on frontend pages
      */
     function frontend_scripts() {
-// load qoob blocks asset's styles
+        // load qoob blocks asset's styles
         $blocks = $this->getItems();
         $this->loadAssetsScripts($blocks);
 
-// load qoob styles
+        // load qoob styles
         wp_enqueue_style('builder.qoob', $this->getUrlAssets() . "css/qoob.css");
-
-// loading styles for icons
-        $path_icons = $this->getPathQoob() . '/icons';
-        foreach (new DirectoryIterator($path_icons) as $file) {
-            if ($file->isDot()) {
-                continue;
-            }
-            if ($file->isDir()) {
-                wp_enqueue_style('icons-font-' . $file->getFilename(), $this->getUrlQoob() . '/icons/' . $file->getFilename() . '/style.css');
-            }
-        }
     }
 
     /**
