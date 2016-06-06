@@ -42,7 +42,7 @@ module.exports = function(grunt) {
             // },
             tgm_stable: {
                 options: {
-                    archive: 'build/qoob.wordpress.zip'
+                    archive: 'build/qoob-wordpress.zip'
                 },
                 expand: true,
                 cwd: '',
