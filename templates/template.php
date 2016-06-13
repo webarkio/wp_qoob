@@ -1,5 +1,5 @@
 <?php
-/** @var $this Qoob builder */
+/** @var $this Qoob */
 global $menu, $submenu, $parent_file, $post_ID, $post, $post_type, $is_IE;
 $post_ID = $this->post_id;
 $post = $this->post;
@@ -26,21 +26,21 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
     </div>
 
     <div class="panel tip-panel">
-        <span class="tip-header">Did you know</span>
+        <span class="tip-header"><?php __("Did you know", "qoob") ?></span>
         <div class="tip-content"></div>
     </div>
 </div>
-<!--SCRIPT FOR BUILDER INIT-->
+<!--SCRIPT FOR QOOB INIT-->
 <script type="text/javascript">
-    var builder;
+    var qoob;
     jQuery(document).ready(function () {
-        builder = new Builder({
-            storage: new BuilderStorage({
+        qoob = new Qoob({
+            storage: new QoobStorage({
                 pageId: <?php echo $pageId; ?>,
                 driver: new WordpressDriver()
             })
         });
-        builder.activate();
+        qoob.activate();
     });
 </script>
 

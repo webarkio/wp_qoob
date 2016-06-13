@@ -11,7 +11,6 @@
  * @copyright  2014-2015 Webark.io
  * @license    http://cube.webark.io/LISENCE
  */
-//require_once('SmartModule.class.php');
 
 /**
  * Cube
@@ -54,7 +53,7 @@ class Qoob {
      * All fields items url's
      * @var array
      */
-    private $builderTmplUrls = [];
+    private $qoobTmplUrls = [];
 
     /**
      * Default post types
@@ -91,12 +90,12 @@ class Qoob {
 
 // Registration ajax
         add_action('wp_ajax_load_page_data', array($this, 'loadPageData'));
-        add_action('wp_ajax_load_builder_data', array($this, 'loadBuilderData'));
+        add_action('wp_ajax_load_qoob_data', array($this, 'loadQoobData'));
         add_action('wp_ajax_load_settings', array($this, 'loadSettings'));
         add_action('wp_ajax_load_item', array($this, 'loadItem'));
         add_action('wp_ajax_save_page_data', array($this, 'savePageData'));
         add_action('wp_ajax_load_assets', array($this, 'loadAssets'));
-        add_action('wp_ajax_load_builder_tmpl', array($this, 'loadBuilderTmpl'));
+        add_action('wp_ajax_load_qoob_tmpl', array($this, 'loadQoobTmpl'));
 
 // Add edit link
         add_filter('page_row_actions', array($this, 'addEditLinkAction'));
@@ -276,7 +275,7 @@ class Qoob {
     }
 
     /**
-     * Initialize page builder
+     * Initialize page qoob
      */
     public function initEditPage() {
         $this->setPost();
@@ -405,7 +404,7 @@ class Qoob {
     }
 
     /**
-     * Create builder page
+     * Create qoob page
      *
      * @global object $current_user
      */
@@ -446,7 +445,7 @@ class Qoob {
         add_filter('user_can_richedit', '__return_false');
 
 //Load JS and CSS for frontend
-        add_action('admin_enqueue_scripts', array($this, 'load_builder_scripts'));
+        add_action('admin_enqueue_scripts', array($this, 'load_qoob_scripts'));
 
         add_filter('admin_title', array($this, 'setTitlePage'));
 
@@ -493,7 +492,7 @@ class Qoob {
             if ($this->statusShortcode == true) {
                 return;
             }
-            return $this->addMainBuilderBlock();
+            return $this->addMainQoobBlock();
             $this->statusShortcode = true;
         } else {
             global $post;
@@ -536,7 +535,7 @@ class Qoob {
      */
     public function iframe_scripts() {
 // Load style
-        wp_enqueue_style('builder.qoob', $this->getUrlQoob() . "css/builder.css");
+        wp_enqueue_style('qoob.iframe.style', $this->getUrlQoob() . "css/qoob.css");
 
 // Load js
         wp_enqueue_script('control.edit.page.iframe', $this->getUrlAssets() . 'js/control-edit-page-iframe.js', array('jquery'), '', true);
@@ -549,7 +548,7 @@ class Qoob {
         // load qoob blocks asset's styles
         $this->loadAssetsScripts();
         // load qoob styles
-        wp_enqueue_style('builder.qoob', $this->getUrlAssets() . "css/qoob.css");
+        wp_enqueue_style('qoob.frontend.style', $this->getUrlAssets() . "css/qoob.css");
     }
 
     /**
@@ -558,8 +557,8 @@ class Qoob {
      */
     public function admin_scripts() {
         if (get_post_type() == 'page') {
-            wp_enqueue_script('builder.admin', $this->getUrlAssets() . 'js/builder-admin.js', array('jquery'), '', true);
-            wp_enqueue_style('builder.qoob.iframe', $this->getUrlAssets() . "css/builder-admin.css");
+            wp_enqueue_script('qoob.admin', $this->getUrlAssets() . 'js/qoob-admin.js', array('jquery'), '', true);
+            wp_enqueue_style('qoob.admin.style', $this->getUrlAssets() . "css/qoob-admin.css");
             if (isset($_GET['qoob']) && $_GET['qoob'] == true) {
                 wp_enqueue_style('wheelcolorpicker-minicolors', $this->getUrlQoob() . "css/wheelcolorpicker.css");
                 wp_enqueue_style('bootstrap', $this->getUrlQoob() . "css/bootstrap.min.css");
@@ -569,9 +568,9 @@ class Qoob {
     }
 
     /**
-     * Load javascript and css for builder page
+     * Load javascript and css for qoob page
      */
-    public function load_builder_scripts() {
+    public function load_qoob_scripts() {
 // add ajax url
         wp_localize_script('jquery', 'ajax', array(
             'url' => admin_url('admin-ajax.php'),
@@ -580,8 +579,8 @@ class Qoob {
                 )
         );
 
-// builder styles
-        wp_enqueue_style('builder.qoob', $this->getUrlQoob() . "css/builder.css");
+// qoob styles
+        wp_enqueue_style('qoob-style', $this->getUrlQoob() . "css/qoob.css");
 
 // load qoob blocks asset's styles
         $this->loadAssetsScripts();
@@ -597,7 +596,7 @@ class Qoob {
         wp_enqueue_script('jquery-touch-punch');
         wp_enqueue_script('underscore');
         wp_enqueue_script('backbone');
-        wp_enqueue_script('builder-tinymce', $this->getUrlQoob() . 'js/libs/tinymce/tinymce.min.js', array('jquery'), '', true);
+        wp_enqueue_script('qoob-tinymce', $this->getUrlQoob() . 'js/libs/tinymce/tinymce.min.js', array('jquery'), '', true);
         wp_enqueue_script('handlebars', $this->getUrlQoob() . 'js/libs/handlebars.js', array('jquery'), '', true);
         wp_enqueue_script('handlebars-helper', $this->getUrlQoob() . 'js/libs/handlebars-helper.js', array('jquery'), '', true);
         wp_enqueue_script('jquery-ui-droppable-iframe', $this->getUrlQoob() . 'js/libs/jquery-ui-droppable-iframe.js', array('jquery'), '', true);
@@ -627,40 +626,40 @@ class Qoob {
         wp_enqueue_script('block-model', $this->getUrlQoob() . 'js/models/block-model.js', array('jquery'), '', true);
         wp_enqueue_script('field-view', $this->getUrlQoob() . 'js/views/field-view.js', array('jquery'), '', true);
 
-        wp_enqueue_script('buildermenu-groups-view', $this->getUrlQoob() . 'js/views/builder-menu-groups-view.js', array('jquery'), '', true);
+        wp_enqueue_script('qoob-menu-groups-view', $this->getUrlQoob() . 'js/views/qoob-menu-groups-view.js', array('jquery'), '', true);
         wp_enqueue_script('settings-view', $this->getUrlQoob() . 'js/views/settings-view.js', array('jquery'), '', true);
-        wp_enqueue_script('buildermenu-blocks-preview-view', $this->getUrlQoob() . 'js/views/builder-menu-blocks-preview-view.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-layout', $this->getUrlQoob() . 'js/views/builder-layout.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-menu-view', $this->getUrlQoob() . 'js/views/builder-menu-view.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-toolbar-view', $this->getUrlQoob() . 'js/views/builder-toolbar-view.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-edit-mode-button-view', $this->getUrlQoob() . 'js/views/builder-edit-mode-button-view.js', array('jquery'), '', true);
+        wp_enqueue_script('qoob-menu-blocks-preview-view', $this->getUrlQoob() . 'js/views/qoob-menu-blocks-preview-view.js', array('jquery'), '', true);
+        wp_enqueue_script('qoob-layout', $this->getUrlQoob() . 'js/views/qoob-layout.js', array('jquery'), '', true);
+        wp_enqueue_script('qoob-menu-view', $this->getUrlQoob() . 'js/views/qoob-menu-view.js', array('jquery'), '', true);
+        wp_enqueue_script('qoob-toolbar-view', $this->getUrlQoob() . 'js/views/qoob-toolbar-view.js', array('jquery'), '', true);
+        wp_enqueue_script('qoob-edit-mode-button-view', $this->getUrlQoob() . 'js/views/qoob-edit-mode-button-view.js', array('jquery'), '', true);
 
-        wp_enqueue_script('builder-viewport-view', $this->getUrlQoob() . 'js/views/builder-viewport-view.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-controller', $this->getUrlQoob() . 'js/controllers/builder-controller.js', array('jquery'), '', true);
+        wp_enqueue_script('qoob-viewport-view', $this->getUrlQoob() . 'js/views/qoob-viewport-view.js', array('jquery'), '', true);
+        wp_enqueue_script('qoob-controller', $this->getUrlQoob() . 'js/controllers/qoob-controller.js', array('jquery'), '', true);
         wp_enqueue_script('field-accordion-item-flip-view', $this->getUrlQoob() . 'js/views/fields/field-accordion-item-flip-settings.js', array('jquery', 'field-view'), '', true);
         wp_enqueue_script('image-center-view', $this->getUrlQoob() . 'js/views/fields/image-center-view.js', array('jquery', 'field-view'), '', true);
         wp_enqueue_script('field-video-view', $this->getUrlQoob() . 'js/views/fields/field-video.js', array('jquery', 'field-view'), '', true);
         wp_enqueue_script('video-center-view', $this->getUrlQoob() . 'js/views/fields/video-center-view.js', array('jquery', 'field-view'), '', true);
         wp_enqueue_script('field-icon-view', $this->getUrlQoob() . 'js/views/fields/field-icon.js', array('jquery', 'field-view'), '', true);
         wp_enqueue_script('icon-center-view', $this->getUrlQoob() . 'js/views/fields/icon-center-view.js', array('jquery', 'field-view'), '', true);
-// builder scripts
-        wp_enqueue_script('builder-loader', $this->getUrlQoob() . 'js/builder-loader.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-wordpress_driver', $this->getUrlAssets() . 'js/builder-wordpress-driver.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-storage', $this->getUrlQoob() . 'js/builder-storage.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-utils', $this->getUrlQoob() . 'js/builder-utils.js', array('jquery'), '', true);
-        wp_enqueue_script('builder-qoob', $this->getUrlQoob() . 'js/builder.js', array('jquery'), '', true);
+// qoob scripts
+        wp_enqueue_script('qoob-loader', $this->getUrlQoob() . 'js/qoob-loader.js', array('jquery'), '', true);
+        wp_enqueue_script('qoob-wordpress-driver', $this->getUrlAssets() . 'js/qoob-wordpress-driver.js', array('jquery'), '', true);
+        wp_enqueue_script('qoob-storage', $this->getUrlQoob() . 'js/qoob-storage.js', array('jquery'), '', true);
+        wp_enqueue_script('qoob-utils', $this->getUrlQoob() . 'js/qoob-utils.js', array('jquery'), '', true);
+        wp_enqueue_script('qoob', $this->getUrlQoob() . 'js/qoob.js', array('jquery'), '', true);
         wp_enqueue_script('handlebar-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-handlebars.js', array('handlebars'), '', true);
         wp_enqueue_script('underscore-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-underscore.js', array('underscore'), '', true);
 
 // page edit script
-        wp_enqueue_script('control_edit_page', $this->getUrlAssets() . 'js/control-edit-page.js', array('builder-qoob'), '', true);
+        wp_enqueue_script('control_edit_page', $this->getUrlAssets() . 'js/control-edit-page.js', array('qoob'), '', true);
     }
 
     /**
      * add html instead shortcode
      */
-    public function addMainBuilderBlock() {
-        echo '<div id="builder-blocks"></div>';
+    public function addMainQoobBlock() {
+        echo '<div id="qoob-blocks"></div>';
     }
 
     /**
@@ -779,13 +778,13 @@ class Qoob {
     }
 
     /**
-     * Get url builder templates
+     * Get url qoob templates
      * @return array
      */
-    private function getUrlBuilderTemplates() {
+    private function getUrlQoobTemplates() {
 
-        if (!empty($this->builderTmplUrls)) {
-            return $this->builderTmplUrls;
+        if (!empty($this->qoobTmplUrls)) {
+            return $this->qoobTmplUrls;
         }
 
         $path = ABSPATH . 'wp-content/plugins/qoob.wordpress/qoob/tmpl';
@@ -805,7 +804,7 @@ class Qoob {
 
                     $url = plugin_dir_url($filename) . 'qoob.wordpress/qoob/tmpl/' . $folder->getFilename() . '/' . $file->getFilename();
 
-                    $this->builderTmplUrls[] = array(
+                    $this->qoobTmplUrls[] = array(
                         'id' => $file->getFilename(),
                         'url' => $url
                     );
@@ -813,7 +812,7 @@ class Qoob {
             }
         }
 
-        return $this->builderTmplUrls;
+        return $this->qoobTmplUrls;
     }
 
     /**
@@ -892,10 +891,10 @@ class Qoob {
     }
 
     /**
-     * Load builder data
+     * Load qoob data
      * @return json
      */
-    public function loadBuilderData() {
+    public function loadQoobData() {
         $blocks = $this->getItems();
         $groups = $this->getGroups();
 
@@ -929,13 +928,13 @@ class Qoob {
     }
 
     /**
-     * Get builder tmpl files contents
+     * Get qoob tmpl files contents
      * @return array $tmpl Array of config's json
      */
-    private function getBuilderTmplFiles() {
+    private function getQoobTmplFiles() {
 
         $tmpl = [];
-        $urls = $this->getUrlBuilderTemplates();
+        $urls = $this->getUrlQoobTemplates();
         foreach ($urls as $val) {
 
             $html_content = file_get_contents($val['url']);
@@ -966,20 +965,20 @@ class Qoob {
     }
 
     /**
-     * Loading all builder's templates  
+     * Loading all qoob's templates  
      */
-    public function loadBuilderTmpl() {
+    public function loadQoobTmpl() {
 
-        $templates = $this->getBuilderTmplFiles();
+        $templates = $this->getQoobTmplFiles();
 
         if (isset($templates)) {
-            $buildertmpl = [];
+            $tmpl = [];
             foreach ($templates as $key => $value) {
-                $buildertmpl[$key] = $value;
+                $tmpl[$key] = $value;
             }
             $response = array(
                 'success' => true,
-                'buildertemplate' => $buildertmpl
+                'qoobTemplate' => $tmpl
             );
         } else {
             $response = array('success' => false);

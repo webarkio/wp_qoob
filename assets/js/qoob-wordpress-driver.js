@@ -107,19 +107,19 @@ WordpressDriver.prototype.loadPageData = function (pageId, cb) {
  * 
  * @param {loadFieldsTmplCallback} cb - A callback to run.
  */
-WordpressDriver.prototype.loadBuilderTemplates = function (cb) {
+WordpressDriver.prototype.loadQoobTemplates = function (cb) {
     jQuery(document).ready(function ($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
                 url: ajax.url,
                 type: 'POST',
                 data: {
-                    action: 'load_builder_tmpl'
+                    action: 'load_qoob_tmpl'
                 },
                 dataType: 'json',
                 success: function (response) {
                     if (response.success) {
-                        cb(null, response.buildertemplate);
+                        cb(null, response.qoobTemplate);
                     } else {
                         cb(response.success);
                     }
@@ -130,17 +130,17 @@ WordpressDriver.prototype.loadBuilderTemplates = function (cb) {
 };
 
 /**
- * Callback for get builder data
+ * Callback for get qoob data
  * 
- * @callback loadBuilderDataCallback
+ * @callback loadQoobDataCallback
  */
 
 /**
- * Get builder data
+ * Get qoob data
  * 
- * @param {loadBuilderDataCallback} cb - A callback to run.
+ * @param {loadQoobDataCallback} cb - A callback to run.
  */
-WordpressDriver.prototype.loadBuilderData = function (cb) {
+WordpressDriver.prototype.loadQoobData = function (cb) {
     jQuery(document).ready(function ($) {
         if (ajax.logged_in && ajax.qoob == true) {
 
@@ -148,7 +148,7 @@ WordpressDriver.prototype.loadBuilderData = function (cb) {
                 url: ajax.url,
                 type: 'POST',
                 data: {
-                    action: 'load_builder_data'
+                    action: 'load_qoob_data'
                 },
                 dataType: 'json',
                 success: function (response) {
