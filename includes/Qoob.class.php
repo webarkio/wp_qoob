@@ -547,9 +547,7 @@ class Qoob {
      */
     function frontend_scripts() {
         // load qoob blocks asset's styles
-        $blocks = $this->getItems();
-        $this->loadAssetsScripts($blocks);
-
+        $this->loadAssetsScripts();
         // load qoob styles
         wp_enqueue_style('builder.qoob', $this->getUrlAssets() . "css/qoob.css");
     }
@@ -586,8 +584,7 @@ class Qoob {
         wp_enqueue_style('builder.qoob', $this->getUrlQoob() . "css/builder.css");
 
 // load qoob blocks asset's styles
-        $blocks = $this->getItems();
-        $this->loadAssetsScripts($blocks);
+        $this->loadAssetsScripts();
 
 // core libs
         wp_enqueue_script('jquery');
@@ -889,50 +886,9 @@ class Qoob {
      * 
      * @param Array $blocks blocks that contain wordpress theme
      */
-    private function loadAssetsScripts($blocks) {
-        $qoob_style_urls = [];
-
-// checking item's assets for styles and scripts
-// if asset is a style - we add it's url to the array
-// if one is a script - we explicitly enqueue it
-        for ($i = 0; $i < count($blocks); $i++) {
-            if (isset($blocks[$i]['assets'])) {
-                $assets = $blocks[$i]['assets'];
-                for ($j = 0; $j < count($assets); $j++) {
-                    if ($assets[$j]['type'] === 'style' || $assets[$j]['type'] === 'script') {
-                        $qoob_style_urls[] = array(
-                            'src' => $assets[$j]['src'],
-                            'url' => $blocks[$i]['url'],
-                            'type' => $assets[$j]['type']
-                        );
-                    }
-                }
-            }
-        }
-
-// Enqueing files that will compose all styles and all scripts from $qoob_style_urls array
-        if (!empty($qoob_style_urls)) {
-            $content_styles = "";
-            $content_scripts = "";
-            $theme_url = get_template_directory_uri();
-            $blocks_url = get_template_directory_uri() . '/blocks';
-            for ($i = 0; $i < count($qoob_style_urls); $i++) {
-                $block_url = $qoob_style_urls[$i]['url'];
-                $file = file_get_contents($qoob_style_urls[$i]['src']);
-                $file = preg_replace('/%theme_url%/', $theme_url, $file);
-                $file = preg_replace('/%block_url%/', $block_url, $file);
-                $file = preg_replace('/%blocks_url%/', $blocks_url, $file);
-                ($qoob_style_urls[$i]['type'] === 'style') ? ($content_styles .= "\n" . $file) : ($content_scripts .= "\n" . $file);
-            }
-            if ($content_styles !== '') {
-                file_put_contents($this->getPathTemplates() . 'blocks.css', $content_styles);
-                wp_enqueue_style('block-custom-styles', $this->getUrlTemplates() . 'blocks.css');
-            }
-            if ($content_scripts !== '') {
-                file_put_contents($this->getPathTemplates() . 'blocks.js', $content_scripts);
-                wp_enqueue_script('block-custom-scripts', $this->getUrlTemplates() . 'blocks.js', array(), false, true);
-            }
-        }
+    private function loadAssetsScripts() {
+        wp_enqueue_style('blocks-custom-styles', $this->getUrlTemplates() . 'load-styles.php');
+        wp_enqueue_script('blocks-custom-scripts', $this->getUrlTemplates() . 'load-scripts.php', array(), false, true);
     }
 
     /**
