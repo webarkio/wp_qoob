@@ -16,7 +16,7 @@ if (defined('ABSPATH')) {
     include($includesDirectory . DIRECTORY_SEPARATOR . "Qoob.class.php");
     include($includesDirectory . DIRECTORY_SEPARATOR . "SmartUtils.class.php");
 
-    // Register builder
+    // Register qoob
     $qoob = new Qoob();
     $qoob->register();
 }     

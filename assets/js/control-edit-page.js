@@ -1,5 +1,5 @@
 /**
- * Control edit draft page and builder
+ * Control edit draft page and qoob
  * 
  * @param {window.jQuery} $
  */
@@ -8,7 +8,7 @@
     $('#wpadminbar').hide();
 
     $(document).ready(function () {
-        $('body').removeClass('admin-bar').addClass('builder-editor');
+        $('body').removeClass('admin-bar').addClass('qoob-editor');
 
         $('#wpadminbar').hide();
         $('.edit-link').hide();
