@@ -251,7 +251,7 @@ class Qoob {
      * @return string
      */
     public function getUrlQoobPage($id) {
-        return admin_url() . 'post.php?qoob=true&post_id=' . $id . '&post_type=' . get_post_type($id);
+        return admin_url() . 'post.php?post_id=' . $id . '&post_type=' . get_post_type($id) . '&qoob=true';
     }
 
     /**
@@ -420,6 +420,7 @@ class Qoob {
 
         $this->current_user = $current_user;
         $this->post_url = str_replace(array('http://', 'https://'), '//', get_permalink($this->post_id));
+
         if (!current_user_can('edit_post', $this->post_id)) {
             header('Location: ' . $this->post_url);
         }
@@ -572,9 +573,11 @@ class Qoob {
      */
     public function load_qoob_scripts() {
 // add ajax url
+        $url = add_query_arg( 'qoob', 'true', $this->post_url);
         wp_localize_script('jquery', 'ajax', array(
             'url' => admin_url('admin-ajax.php'),
             'logged_in' => is_user_logged_in(),
+            'iframe_url' => $url,
             'qoob' => ( isset($_GET['qoob']) && $_GET['qoob'] == true ? true : false )
                 )
         );
