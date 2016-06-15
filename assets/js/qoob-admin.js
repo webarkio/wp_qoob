@@ -5,7 +5,7 @@
 (function ($) {
     $(document).ready(function () {
         // Add button editor in WP admin
-        var url = '/wp-admin/post.php?qoob=true&post_id=' + jQuery('#post_ID').val() + '&post_type=page';
+        var url = 'post.php?post_id=' + jQuery('#post_ID').val() + '&post_type=page&qoob=true';
         var button = '<div class="cube-button-block"><div class="cube-button"><a href="' + url + '"><i class="cube"></i><span>qoob it</span></a></div></div>';
         $(button).insertAfter('div#titlediv');
     });
