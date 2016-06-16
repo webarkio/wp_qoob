@@ -17,7 +17,16 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
 <div id="loader-wrapper">
     <div class="loader-inner-wrapper">
         <div class="loading-panel">
-            <div class="qoob-preview-img"></div> 
+            <div class="cube-wrap">
+                <div class="cube">
+                    <div class="front"></div>
+                    <div class="back"></div>
+                    <div class="top"></div>
+                    <div class="bottom"></div>
+                    <div class="left"></div>
+                    <div class="right"></div>
+                </div>
+            </div>
             <span class="sr-only">Loading <span class="precent">0</span>%</span>
             <div class="progress">
                 <div class="progress-bar" role="progressbar" aria-valuenow="0"
