@@ -15,19 +15,21 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
 ?>
 <!--START PRELOADER -->
 <div id="loader-wrapper">
-    <div class="loading-panel">
-        <div class="qoob-preview-img"></div> 
-        <span class="sr-only">Loading <span class="precent">0</span>%</span>
-        <div class="progress">
-            <div class="progress-bar" role="progressbar" aria-valuenow="0"
-                 aria-valuemin="0" aria-valuemax="100" style="width:0%;">
+    <div class="loader-inner-wrapper">
+        <div class="loading-panel">
+            <div class="qoob-preview-img"></div> 
+            <span class="sr-only">Loading <span class="precent">0</span>%</span>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="0"
+                     aria-valuemin="0" aria-valuemax="100" style="width:0%;">
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="panel tip-panel">
-        <span class="tip-header"><?php __("Did you know", "qoob") ?></span>
-        <div class="tip-content"></div>
+        <div class="panel tip-panel">
+            <span class="tip-header"><?php __("Did you know", "qoob") ?></span>
+            <div class="tip-content"></div>
+        </div>
     </div>
 </div>
 <!--SCRIPT FOR QOOB INIT-->
