@@ -14,7 +14,7 @@ function WordpressDriver() {
  * @returns {String}
  */
 WordpressDriver.prototype.getIframePageUrl = function (pageId) {
-    return '/?page_id=' + pageId + '&qoob=true';
+    return ajax.iframe_url;
 };
 
 /**
@@ -30,7 +30,7 @@ WordpressDriver.prototype.exit = function (pageId) {
         }
     }
 
-    var url = '/wp-admin/post.php?post=' + pageId + '&action=edit';
+    var url = 'post.php?post=' + pageId + '&action=edit';
     window.location.href = url;
 };
 
@@ -143,7 +143,6 @@ WordpressDriver.prototype.loadQoobTemplates = function (cb) {
 WordpressDriver.prototype.loadQoobData = function (cb) {
     jQuery(document).ready(function ($) {
         if (ajax.logged_in && ajax.qoob == true) {
-
             $.ajax({
                 url: ajax.url,
                 type: 'POST',
