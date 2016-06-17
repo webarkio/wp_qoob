@@ -47,13 +47,13 @@ class Qoob {
      * All items url's
      * @var array
      */
-    private $urls = [];
+    private $urls = array();
 
     /**
      * All fields items url's
      * @var array
      */
-    private $qoobTmplUrls = [];
+    private $qoobTmplUrls = array();
 
     /**
      * Default post types
@@ -936,7 +936,7 @@ class Qoob {
      */
     private function getQoobTmplFiles() {
 
-        $tmpl = [];
+        $tmpl = array();
         $urls = $this->getUrlQoobTemplates();
         foreach ($urls as $val) {
 
@@ -975,7 +975,7 @@ class Qoob {
         $templates = $this->getQoobTmplFiles();
 
         if (isset($templates)) {
-            $tmpl = [];
+            $tmpl = array();
             foreach ($templates as $key => $value) {
                 $tmpl[$key] = $value;
             }
