@@ -1,14 +1,12 @@
 <?php
-
 /*
-  Plugin Name: qoob
-  Plugin URI: http://qoob.webark.io/
-  Description: Amazing qoob builder for wordpress
+  Plugin Name: qoob.it
+  Plugin URI: http://qoob.it/
+  Description: qoob.it builder for wordpress
   Version: 1.0
   Author: webark.io
   Author URI: http://webark.io/
  */
-
 if (defined('ABSPATH')) {
     //Includes dir
     $includesDirectory = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . "includes");
@@ -18,5 +16,5 @@ if (defined('ABSPATH')) {
 
     // Register qoob
     $qoob = new Qoob();
-    $qoob->register();
-}     
+    $qoob->qoob_register();
+}

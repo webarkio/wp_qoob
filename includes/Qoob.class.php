@@ -64,7 +64,7 @@ class Qoob {
     /**
      * Register actions for module
      */
-    public function register() {
+    public function qoob_register() {
 // Create table in DB
         $this->creater_db_table();
 
