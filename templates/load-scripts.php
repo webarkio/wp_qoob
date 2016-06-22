@@ -1,11 +1,15 @@
 <?php
+
 include_once(str_replace('wp-content' . DIRECTORY_SEPARATOR, '', explode(DIRECTORY_SEPARATOR . 'wp-content' . DIRECTORY_SEPARATOR, dirname(__FILE__))[0] . DIRECTORY_SEPARATOR . 'wp-load.php'));
 $qoob_scripts = '';
 $path = get_template_directory() . '/blocks';
 
-foreach (new DirectoryIterator($path) as $file) {
-    if ($file->isDot())
+$directory = new DirectoryIterator($path);
+
+foreach ($directory as $file) {
+    if ($file->isDot()) {
         continue;
+    }
 
     if ($file->isDir()) {
         // masks urls
@@ -19,7 +23,7 @@ foreach (new DirectoryIterator($path) as $file) {
         $config_json = preg_replace('/%block_url%/', $block_url, $config_json);
         $config_json = preg_replace('/%blocks_url%/', $blocks_url, $config_json);
         // getting assets
-        $config = SmartUtils::decode($config_json, true);
+        $config = QoobtUtils::decode($config_json, true);
         if (isset($config['assets'])) {
             $assets = $config['assets'];
             for ($i = 0; $i < count($assets); $i++) {
