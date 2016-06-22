@@ -600,7 +600,8 @@ class Qoob {
         wp_enqueue_script('underscore');
         wp_enqueue_script('backbone');
         wp_enqueue_script('qoob-tinymce', $this->getUrlQoob() . 'js/libs/tinymce/tinymce.min.js', array('jquery'), '', true);
-       if (!WP_DEBUG) {
+        
+        if (!WP_DEBUG) {
             wp_enqueue_script('qoob', $this->getUrlQoob() . '/qoob.min.js', array('jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'backbone', 'underscore'));
         } else {
             wp_enqueue_script('control_edit_page', $this->getUrlAssets() . 'js/control-edit-page.js', array('qoob'), '', true);
@@ -702,19 +703,32 @@ class Qoob {
      * @return json
      */
     public function savePageData() {
-//Checking for administration rights
+        // Checking for administration rights
         if (!current_user_can('manage_options')) {
             return;
         }
 
         global $wpdb;
         $blocks_html = trim($_POST['blocks']['html']);
-        $data = isset($_POST['blocks']['data']) ? json_encode($_POST['blocks']['data']) : '';
         $lang = isset($_POST['lang']) ? $_POST['lang'] : 'en';
         $post_id = $_POST['page_id'];
         $updated = false;
+        $data = isset($_POST['blocks']['data']) ? $_POST['blocks']['data'] : '';
+        if ($data !== '') {
+            $blocks = $data['blocks'];
+            // Parsing masks of empty arrays
+            for ($i = 0; $i < count($blocks); $i++) {
+                foreach ($blocks[$i] as $key => $value) {
+                    if (is_string($value) && $value === '[]') {
+                        $blocks[$i][$key] = array();
+                    }
+                }
+            }
+            $data['blocks'] = $blocks;
+            $data = json_encode($data);
+        }
 
-//Getting same blocks with such id and language
+        // Getting same blocks with such id and language
         $blocks = $wpdb->get_results(
                 "SELECT * FROM " . $this->qoob_table_name .
                 " WHERE pid=" . $post_id .
@@ -722,11 +736,11 @@ class Qoob {
                 "' ORDER BY date DESC", "ARRAY_A");
 
         if (!empty($blocks)) {
-//Last page revisioned
+            // Last page revisioned
             $last_block = $blocks[0];
 
-//Comparing page to last page saved
-//If html hashes are equal - don't need to save the new revision
+            // Comparing page to last page saved
+            // If html hashes are equal - don't need to save the new revision
             $last_revision_hash = $last_block['rev'];
             $current_revision_hash = md5($blocks_html);
 
@@ -740,8 +754,8 @@ class Qoob {
                     'lang' => $lang)
                 );
 
-//When the amount of revisions are more then needed, 
-// we are deleting first revision in the list
+                // When the amount of revisions are more then needed, 
+                // we are deleting first revision in the list
                 if (count($blocks) >= self::REVISIONS_COUNT) {
                     $first_block_rev = $blocks[count($blocks) - 1]['rev'];
                     $this->deletePageRow($post_id, $lang, $first_block_rev);
