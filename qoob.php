@@ -17,5 +17,5 @@ if (defined('ABSPATH')) {
 
     // Register qoob
     $qoob = new Qoob();
-    $qoob->qoob_register();
+    $qoob->register();
 }

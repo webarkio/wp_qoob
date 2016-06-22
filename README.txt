@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== qoob ===
 Contributors: (this should be a list of wordpress.org userid's)
 Donate link: http://example.com/
 Tags: comments, spam
@@ -67,20 +67,8 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
-= 1.0 =
-* A change since the previous version.
-* Another change.
-
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
-
-== Upgrade Notice ==
-
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
-
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
+= 1.0.0 =
+First release.
 
 == Arbitrary section ==
 
