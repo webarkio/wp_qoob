@@ -1,6 +1,6 @@
 <?php
 /*
-  Plugin Name: qoob.it
+  Plugin Name: qoob
   Plugin URI: http://qoob.it/
   Description: qoob.it builder for wordpress
   Version: 1.0.0

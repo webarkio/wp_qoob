@@ -70,7 +70,7 @@ class Qoob {
 
         if (is_admin()) {
 // Load backend
-            add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
+            add_action('admin_enqueue_scripts', array($this, 'qoob_admin_scripts'));
 
 //Load JS and CSS
             if (isset($_GET['qoob']) && $_GET['qoob'] == true) {
@@ -556,7 +556,7 @@ class Qoob {
      * Load javascript and css on admin page
      *
      */
-    public function admin_scripts() {
+    public function qoob_admin_scripts() {
         if (get_post_type() == 'page') {
             wp_enqueue_script('qoob.admin', $this->getUrlAssets() . 'js/qoob-admin.js', array('jquery'), '', true);
             wp_enqueue_style('qoob.admin.style', $this->getUrlAssets() . "css/qoob-admin.css");
