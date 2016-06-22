@@ -64,13 +64,13 @@ class Qoob {
     /**
      * Register actions for module
      */
-    public function register() {
+    public function qoob_register() {
 // Create table in DB
         $this->creater_db_table();
 
         if (is_admin()) {
 // Load backend
-            add_action('admin_enqueue_scripts', array($this, 'admin_scripts'));
+            add_action('admin_enqueue_scripts', array($this, 'qoob_admin_scripts'));
 
 //Load JS and CSS
             if (isset($_GET['qoob']) && $_GET['qoob'] == true) {
@@ -165,7 +165,7 @@ class Qoob {
      * @return String Url to assets directory of current module
      */
     public function getUrlAssets() {
-        return SmartUtils::getUrlFromPath($this->getPathAssets());
+        return QoobtUtils::getUrlFromPath($this->getPathAssets());
     }
 
     /**
@@ -197,7 +197,7 @@ class Qoob {
      * @return String Url to assets directory of current module
      */
     public function getUrlQoob() {
-        return SmartUtils::getUrlFromPath($this->getPathQoob());
+        return QoobtUtils::getUrlFromPath($this->getPathQoob());
     }
 
     /**
@@ -210,7 +210,7 @@ class Qoob {
      * 
      * <pre><code>global $smart;
      * $template = $smart->getPathTemplates(). DIRECTORY_SEPARATOR. "template.php"; //path to template file
-     * echo SmartUtils::template($template); //apply template
+     * echo QoobtUtils::template($template); //apply template
      * </code></pre>
      * 
      * @return String Path to templates directory
@@ -231,7 +231,7 @@ class Qoob {
      * @return String Path to templates directory
      */
     public function getUrlTemplates() {
-        return SmartUtils::getUrlFromPath($this->getPathTemplates());
+        return QoobtUtils::getUrlFromPath($this->getPathTemplates());
     }
 
     /**
@@ -556,7 +556,7 @@ class Qoob {
      * Load javascript and css on admin page
      *
      */
-    public function admin_scripts() {
+    public function qoob_admin_scripts() {
         if (get_post_type() == 'page') {
             wp_enqueue_script('qoob.admin', $this->getUrlAssets() . 'js/qoob-admin.js', array('jquery'), '', true);
             wp_enqueue_style('qoob.admin.style', $this->getUrlAssets() . "css/qoob-admin.css");
@@ -858,7 +858,7 @@ class Qoob {
             $config_json = preg_replace('/%block_url%/', $block_url, $config_json);
             $config_json = preg_replace('/%blocks_url%/', $blocks_url, $config_json);
 //Decoding json config
-            $config = SmartUtils::decode($config_json, true);
+            $config = QoobtUtils::decode($config_json, true);
             $config['id'] = $val['id'];
             $config['url'] = $val['url'];
             $items[] = $config;
@@ -894,7 +894,7 @@ class Qoob {
      */
     private function getGroups() {
         $json = file_get_contents(get_template_directory_uri() . '/blocks/groups.json');
-        $json = SmartUtils::decode($json, true);
+        $json = QoobtUtils::decode($json, true);
 
         return $json;
     }
@@ -941,7 +941,7 @@ class Qoob {
     private function getConfigFile($itemId) {
         $item = $this->getItem($itemId);
         $json = file_get_contents($item['url'] . 'config.json');
-        $json = SmartUtils::decode($json, true);
+        $json = QoobtUtils::decode($json, true);
 
         return $json;
     }
