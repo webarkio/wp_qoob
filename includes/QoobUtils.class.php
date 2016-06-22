@@ -1,33 +1,33 @@
 <?php
 
 /**
- * This file is part of the SmartBuilder package
+ * This file is part of the Qoob package
  * 
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  * 
  * @author     webark.io <info@webark.io>
- * @link       http://builder.webark.io/
- * @copyright  2014-2015 Webark.io
- * @license    http://builder.webark.io/LISENCE
+ * @link       http://qoob.webark.io/
+ * @copyright  2014-2016 Webark.io
+ * @license    http://qoob.webark.io/LISENCE
  */
 
 /**
- * Utils for SmartBuilder
+ * Utils for Qoob
  * 
- * The SmartUtils class is a collection of static methods for making development
+ * The QoobtUtils class is a collection of static methods for making development
  * process easier. For example methods getUrlFromPath or template. 
- * The SmartBuilder class uses a static interface and should not 
+ * The Qoob class uses a static interface and should not 
  * be instantiated.
  * 
  * <pre><code>//Get url to current file
- * $url = SmartUtils::getUrlFromPath(__FILE__);
+ * $url = QoobtUtils::getUrlFromPath(__FILE__);
  * </code></pre>
  *
- * @package    SmartBuilder
+ * @package    Qoob
  * @version    @package_version@
  */
-class SmartUtils {
+class QoobtUtils {
 
     /**
      * Get url from path
@@ -35,10 +35,10 @@ class SmartUtils {
      * This method delete ABSPATH or $_SERVER['DOCUMENT_ROOT'] from $path and normalize to url
      * 
      * <pre><code>//Get url to current file with path ABSPATH
-     * $url = SmartUtils::getUrlFromPath(__FILE__);
+     * $url = QoobtUtils::getUrlFromPath(__FILE__);
      * 
      * // Get url to current file with path $_SERVER['DOCUMENT_ROOT']
-     * $url = SmartUtils::getUrlFromPath(__FILE__, true);
+     * $url = QoobtUtils::getUrlFromPath(__FILE__, true);
      * </code></pre>
      * 
      * @param String $path path to convert
@@ -59,7 +59,7 @@ class SmartUtils {
      * Generate randon id number
      * 
      * You can safity use this id in html tags
-     * <pre><code>$id = SmartUtils::generateId();
+     * <pre><code>$id = QoobtUtils::generateId();
      * $html = "<div id='$id'></div>";
      * </code></pre>
      * 
