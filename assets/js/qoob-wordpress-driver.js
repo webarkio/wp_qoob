@@ -48,19 +48,43 @@ WordpressDriver.prototype.exit = function (pageId) {
 WordpressDriver.prototype.savePageData = function (pageId, data, cb) {
     jQuery(document).ready(function ($) {
         if (ajax.logged_in && ajax.qoob == true) {
-            $.ajax({
-                url: ajax.url,
-                type: 'POST',
-                data: {
+            // if (!!data['data']['blocks']) {
+            //     for(var i = 0, blocks = data['data']['blocks']; i < blocks.length; i++) {
+            //         for (param in blocks[i]) {
+            //             if (blocks[i][param] instanceof Array && blocks[i][param].length === 0) {
+            //                 blocks[i][param] = ["empty_array"];
+            //             }
+            //         }
+            //     }
+            // }
+            // $.ajax({
+            //     url: ajax.url,
+            //     type: 'POST',
+            //     data: {
+            //         action: 'save_page_data',
+            //         page_id: pageId,
+            //         blocks: data
+            //     },
+            //     dataType: 'json',
+            //     success: function (response) {
+            //         cb(null, response.success);
+            //     }
+            // });
+            var req = new XMLHttpRequest(),
+                dataToSend = {
                     action: 'save_page_data',
                     page_id: pageId,
                     blocks: data
                 },
-                dataType: 'json',
-                success: function (response) {
-                    cb(null, response.success);
+                params = QoobUtils.JSONParam(dataToSend);
+            req.open("POST", ajax.url, true);
+            req.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+            req.onreadystatechange = function() {
+                if(req.readyState == 4 && req.status == 200) {
+                    cb(null, req.responseText);
                 }
-            });
+            };
+            req.send(params);
         }
     });
 };
