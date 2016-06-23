@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the CubeBuilder package
+ * This file is part of the Qoob builder package
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -13,10 +13,10 @@
  */
 
 /**
- * Cube
+ * Qoob
  *
  *
- * @package    CubeBuilder
+ * @package    Qoob
  * @version    @package_version@
  */
 class Qoob {
@@ -35,7 +35,7 @@ class Qoob {
      * Table name plugin
      * @var string
      */
-    var $qoob_table_name;
+    var $tableName;
 
     /**
      * State first shortcode
@@ -53,55 +53,60 @@ class Qoob {
      * All fields items url's
      * @var array
      */
-    private $qoobTmplUrls = array();
+    private $tmplUrls = array();
 
     /**
      * Default post types
      * @var string
      */
-    private $default_post_types = array('page');
+    private $defaultPostTypes = array('page');
 
     /**
      * Register actions for module
      */
-    public function qoob_register() {
-// Create table in DB
-        $this->creater_db_table();
+    public function register() {
+        // Create table in DB
+        $this->createrDbTable();
 
         if (is_admin()) {
-// Load backend
-            add_action('admin_enqueue_scripts', array($this, 'qoob_admin_scripts'));
+            // Load backend
+            add_action('admin_enqueue_scripts', array($this, 'adminScripts'));
 
-//Load JS and CSS
+            //Load JS and CSS
             if (isset($_GET['qoob']) && $_GET['qoob'] == true) {
                 add_action('current_screen', array($this, 'initEditPage'));
             }
         } else {
-// add edit link to admin bar
+            // add edit link to admin bar
             add_action('admin_bar_menu', array(&$this, "addAdminBarLink"), 999);
         }
 
-// Load js in frame
+        // Load js in frame
         if (isset($_GET['qoob']) && $_GET['qoob'] == true) {
             add_filter('the_title', array($this, 'setDefaultTitle'));
-            add_action('wp_enqueue_scripts', array($this, 'iframe_scripts'));
+            add_action('wp_enqueue_scripts', array($this, 'iframeScripts'));
         }
-        add_action('wp_enqueue_scripts', array($this, 'frontend_scripts'));
+        add_action('wp_enqueue_scripts', array($this, 'frontendScripts'));
 
-// Registration ajax
-        add_action('wp_ajax_load_page_data', array($this, 'loadPageData'));
-        add_action('wp_ajax_load_qoob_data', array($this, 'loadQoobData'));
-        add_action('wp_ajax_load_settings', array($this, 'loadSettings'));
-        add_action('wp_ajax_load_item', array($this, 'loadItem'));
-        add_action('wp_ajax_save_page_data', array($this, 'savePageData'));
-        add_action('wp_ajax_load_assets', array($this, 'loadAssets'));
-        add_action('wp_ajax_load_qoob_tmpl', array($this, 'loadQoobTmpl'));
-
-// Add edit link
+        // Add edit link
         add_filter('page_row_actions', array($this, 'addEditLinkAction'));
 
-//register shortcode
-        add_shortcode(self::NAME_SHORTCODE, array($this, 'add_shortcode'));
+        //register shortcode
+        add_shortcode(self::NAME_SHORTCODE, array($this, 'addShortcode'));
+
+        // registration ajax actions
+        $this->registrationAjax();
+    }
+
+    /**
+     * Registration ajax actions
+     */
+    public function registrationAjax() {
+        add_action('wp_ajax_qoob_load_page_data', array($this, 'loadPageData'));
+        add_action('wp_ajax_qoob_load_data', array($this, 'loadData'));
+        add_action('wp_ajax_qoob_load_item', array($this, 'loadItem'));
+        add_action('wp_ajax_qoob_save_page_data', array($this, 'savePageData'));
+        add_action('wp_ajax_qoob_load_tmpl', array($this, 'loadTmpl'));
     }
 
     /**
@@ -118,7 +123,7 @@ class Qoob {
      * Get current module path
      * 
      * This method is easiest way to find out where is module located. This is 
-     * very useful method, because smartbuilder can work the same as plugin and 
+     * very useful method, because qoob builder can work the same as plugin and 
      * as part of theme. 
      * 
      * <pre><code>$qoob = new Qoob();
@@ -135,7 +140,7 @@ class Qoob {
      * Get path to current module assets dir
      * 
      * This method is easiest way to find out where is module assets located.
-     * This is very useful method, because smartbuilder can work the same as 
+     * This is very useful method, because qoob builder can work the same as 
      * plugin and as part of theme. If your module has different assets 
      * directory, method getPathAssets() should be overwritten.
      * 
@@ -153,7 +158,7 @@ class Qoob {
      * Get current module assets directory URL
      * 
      * This method is easiest way to make link to assets file in module. This is 
-     * very useful method, because smartbuilder can work the same as plugin and 
+     * very useful method, because qoob builder can work the same as plugin and 
      * as part of theme. 
      * 
      * <pre><code>$qoob = new Qoob();
@@ -204,12 +209,12 @@ class Qoob {
      * Get path to current module templates dir
      * 
      * This method is easiest way to find out where is module templates located.
-     * This is very useful method, because smartbuilder can work the same as 
+     * This is very useful method, because qoob builder can work the same as 
      * plugin and as part of theme. If your module has different templates 
      * directory, method getPathTemplates() should be overwritten.
      * 
-     * <pre><code>global $smart;
-     * $template = $smart->getPathTemplates(). DIRECTORY_SEPARATOR. "template.php"; //path to template file
+     * <pre><code>
+     * $template = $self->getPathTemplates(). DIRECTORY_SEPARATOR. "template.php"; //path to template file
      * echo QoobtUtils::template($template); //apply template
      * </code></pre>
      * 
@@ -223,7 +228,7 @@ class Qoob {
      * Get url to current module templates dir
      * 
      * 
-     * <pre><code>global $smart;
+     * <pre><code>
      * $template = $this->getUrlTemplates(). DIRECTORY_SEPARATOR. "template.php"; //url to template file
      * 
      * </code></pre>
@@ -250,7 +255,7 @@ class Qoob {
      * @param string $id Post id
      * @return string
      */
-    public function getUrlQoobPage($id) {
+    public function getUrlPage($id) {
         return admin_url() . 'post.php?post_id=' . $id . '&post_type=' . get_post_type($id) . '&qoob=true';
     }
 
@@ -261,11 +266,11 @@ class Qoob {
      * @return mixed
      */
     public function addEditLinkAction($actions) {
-//TODO: check if page has qoob shortcode show Edit with qoob
+        //TODO: check if page has qoob shortcode show Edit with qoob
         $post = get_post();
 
         $id = (strlen($post->ID) > 0 ? $post->ID : get_the_ID());
-        $url = $this->getUrlQoobPage($id);
+        $url = $this->getUrlPage($id);
 
         if (preg_match("/" . self::NAME_SHORTCODE . "/", $post->post_content)) {
             return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob it', 'qoob') . '</a>') + $actions;
@@ -314,7 +319,7 @@ class Qoob {
         if (!current_user_can('edit_post', $post_id)) {
             return false;
         }
-        return in_array(get_post_type(), $this->default_post_types);
+        return in_array(get_post_type(), $this->defaultPostTypes);
     }
 
     /**
@@ -330,7 +335,7 @@ class Qoob {
                 $wp_admin_bar->add_menu(array(
                     'id' => 'qoob-admin-bar-link',
                     'title' => __('qoob it', "qoob"),
-                    'href' => $this->getUrlQoobPage(get_the_ID()),
+                    'href' => $this->getUrlPage(get_the_ID()),
                     'meta' => array('class' => 'qoob-inline-link')
                 ));
             }
@@ -372,7 +377,7 @@ class Qoob {
     private function createQoobPage($lang) {
         global $wpdb;
 
-        $wpdb->insert($this->qoob_table_name, array(
+        $wpdb->insert($this->tableName, array(
             'pid' => $this->post_id,
             'lang' => $lang,
             'data' => '',
@@ -390,14 +395,14 @@ class Qoob {
     private function checkPage($lang = 'en') {
         global $wpdb;
 
-//getting existing pages by id
+        //getting existing pages by id
         $pages = $wpdb->get_results(
-                'SELECT * FROM ' . $this->qoob_table_name .
+                'SELECT * FROM ' . $this->tableName .
                 ' WHERE pid = ' . $this->post_id .
                 ' AND lang = "' . $lang . '"', "ARRAY_A"
         );
 
-//if pages don't exist - creating page in database
+        //if pages don't exist - creating page in database
         if (empty($pages)) {
             $this->createQoobPage($lang);
         }
@@ -445,8 +450,8 @@ class Qoob {
 
         add_filter('user_can_richedit', '__return_false');
 
-//Load JS and CSS for frontend
-        add_action('admin_enqueue_scripts', array($this, 'load_qoob_scripts'));
+        //Load JS and CSS for frontend
+        add_action('admin_enqueue_scripts', array($this, 'loadScripts'));
 
         add_filter('admin_title', array($this, 'setTitlePage'));
 
@@ -474,7 +479,7 @@ class Qoob {
     private function getBlock($id, $lang = 'en') {
         global $wpdb;
         $block = $wpdb->get_results(
-                "SELECT * FROM " . $this->qoob_table_name .
+                "SELECT * FROM " . $this->tableName .
                 " WHERE pid = " . $id .
                 " AND lang='" . $lang . "'" .
                 " ORDER BY date DESC LIMIT 1", "ARRAY_A");
@@ -488,7 +493,7 @@ class Qoob {
      * @param string $content The enclosed content (if the shortcode is used in its enclosing form)
      * @return string Html code our shortcode
      */
-    public function add_shortcode($atts, $content = null) {
+    public function addShortcode($atts, $content = null) {
         if (is_user_logged_in() && ( isset($_GET['qoob']) && $_GET['qoob'] == true)) {
             if ($this->statusShortcode == true) {
                 return;
@@ -509,12 +514,14 @@ class Qoob {
      *
      * @global object $wpdb
      */
-    public function creater_db_table() {
+    public function createrDbTable() {
         global $wpdb;
 
-        $this->qoob_table_name = $wpdb->prefix . "pages";
-        if ($wpdb->get_var("show tables like '$this->qoob_table_name'") != $this->qoob_table_name) {
-            $sql = "CREATE TABLE " . $this->qoob_table_name . " (
+        // set table name
+        $this->tableName = $wpdb->prefix . "pages";
+
+        if ($wpdb->get_var("show tables like '$this->tableName'") != $this->tableName) {
+            $sql = "CREATE TABLE " . $this->tableName . " (
                 id int(9) NOT NULL AUTO_INCREMENT,
                 pid INT(9) NOT NULL,
                 data TEXT NOT NULL,
@@ -534,18 +541,17 @@ class Qoob {
     /**
      * Load javascript and css on iframe
      */
-    public function iframe_scripts() {
-// Load style
+    public function iframeScripts() {
+        // Load style
         wp_enqueue_style('qoob.iframe.style', $this->getUrlQoob() . "css/qoob.css");
-
-// Load js
+        // Load js
         wp_enqueue_script('control.edit.page.iframe', $this->getUrlAssets() . 'js/control-edit-page-iframe.js', array('jquery'), '', true);
     }
 
     /**
      * Load js and css on frontend pages
      */
-    function frontend_scripts() {
+    public function frontendScripts() {
         // load qoob blocks asset's styles
         $this->loadAssetsScripts();
         // load qoob styles
@@ -556,7 +562,7 @@ class Qoob {
      * Load javascript and css on admin page
      *
      */
-    public function qoob_admin_scripts() {
+    public function adminScripts() {
         if (get_post_type() == 'page') {
             wp_enqueue_script('qoob.admin', $this->getUrlAssets() . 'js/qoob-admin.js', array('jquery'), '', true);
             wp_enqueue_style('qoob.admin.style', $this->getUrlAssets() . "css/qoob-admin.css");
@@ -571,9 +577,9 @@ class Qoob {
     /**
      * Load javascript and css for qoob page
      */
-    public function load_qoob_scripts() {
-// add ajax url
-        $url = add_query_arg( 'qoob', 'true', $this->post_url);
+    public function loadScripts() {
+        // add ajax url
+        $url = add_query_arg('qoob', 'true', $this->post_url);
         wp_localize_script('jquery', 'ajax', array(
             'url' => admin_url('admin-ajax.php'),
             'logged_in' => is_user_logged_in(),
@@ -582,13 +588,13 @@ class Qoob {
                 )
         );
 
-// qoob styles
+        // qoob styles
         wp_enqueue_style('qoob-style', $this->getUrlQoob() . "css/qoob.css");
 
-// load qoob blocks asset's styles
+        // load qoob blocks asset's styles
         $this->loadAssetsScripts();
 
-// core libs
+        // core libs
         wp_enqueue_script('jquery');
         wp_enqueue_script('jquery-ui-core');
         wp_enqueue_script('jquery-ui-draggable');
@@ -600,7 +606,7 @@ class Qoob {
         wp_enqueue_script('underscore');
         wp_enqueue_script('backbone');
         wp_enqueue_script('qoob-tinymce', $this->getUrlQoob() . 'js/libs/tinymce/tinymce.min.js', array('jquery'), '', true);
-        
+
         if (!WP_DEBUG) {
             wp_enqueue_script('qoob', $this->getUrlQoob() . '/qoob.min.js', array('jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'backbone', 'underscore'));
         } else {
@@ -676,7 +682,7 @@ class Qoob {
         global $wpdb;
 
         $blocks = $wpdb->get_results(
-                "SELECT * FROM " . $this->qoob_table_name .
+                "SELECT * FROM " . $this->tableName .
                 " WHERE pid=" . $_POST['page_id'] .
                 " AND lang='" . $_POST['lang'] .
                 "' ORDER BY date DESC LIMIT 1", "ARRAY_A");
@@ -730,7 +736,7 @@ class Qoob {
 
         // Getting same blocks with such id and language
         $blocks = $wpdb->get_results(
-                "SELECT * FROM " . $this->qoob_table_name .
+                "SELECT * FROM " . $this->tableName .
                 " WHERE pid=" . $post_id .
                 " AND lang='" . $lang .
                 "' ORDER BY date DESC", "ARRAY_A");
@@ -746,7 +752,7 @@ class Qoob {
 
             if ($last_revision_hash !== $current_revision_hash) {
                 $updated = $wpdb->insert(
-                        $this->qoob_table_name, array(
+                        $this->tableName, array(
                     'data' => $data,
                     'html' => $blocks_html,
                     'rev' => $current_revision_hash,
@@ -801,9 +807,8 @@ class Qoob {
      * @return array
      */
     private function getUrlQoobTemplates() {
-
-        if (!empty($this->qoobTmplUrls)) {
-            return $this->qoobTmplUrls;
+        if (!empty($this->tmplUrls)) {
+            return $this->tmplUrls;
         }
 
         $path = ABSPATH . 'wp-content/plugins/qoob.wordpress/qoob/tmpl';
@@ -811,19 +816,18 @@ class Qoob {
         foreach (new DirectoryIterator($path) as $folder) {
             if ($folder->isDot())
                 continue;
+
             if (is_dir($folder->getPathname())) {
 
                 $pathtofiles = ABSPATH . 'wp-content/plugins/qoob.wordpress/qoob/tmpl/' . $folder->getFilename();
                 foreach (new DirectoryIterator($pathtofiles) as $file) {
-
                     if ($file->isDot())
                         continue;
-
                     $filename = $file->getFilename();
 
                     $url = plugin_dir_url($filename) . 'qoob.wordpress/qoob/tmpl/' . $folder->getFilename() . '/' . $file->getFilename();
 
-                    $this->qoobTmplUrls[] = array(
+                    $this->tmplUrls[] = array(
                         'id' => $file->getFilename(),
                         'url' => $url
                     );
@@ -831,7 +835,7 @@ class Qoob {
             }
         }
 
-        return $this->qoobTmplUrls;
+        return $this->tmplUrls;
     }
 
     /**
@@ -839,7 +843,6 @@ class Qoob {
      * @return array
      */
     private function getItems() {
-
         if (isset($this->items)) {
             return $this->items;
         }
@@ -853,18 +856,18 @@ class Qoob {
             $block_url = $val['url'];
 
             $config_json = file_get_contents($block_url . 'config.json');
-//Parsing for url masks to replace            
+            //Parsing for url masks to replace            
             $config_json = preg_replace('/%theme_url%/', $theme_url, $config_json);
             $config_json = preg_replace('/%block_url%/', $block_url, $config_json);
             $config_json = preg_replace('/%blocks_url%/', $blocks_url, $config_json);
-//Decoding json config
+            //Decoding json config
             $config = QoobtUtils::decode($config_json, true);
             $config['id'] = $val['id'];
             $config['url'] = $val['url'];
             $items[] = $config;
         }
 
-// cash blocks for next ajax request
+        // cash blocks for next ajax request
         $this->items = $items;
 
         return $items;
@@ -895,7 +898,6 @@ class Qoob {
     private function getGroups() {
         $json = file_get_contents(get_template_directory_uri() . '/blocks/groups.json');
         $json = QoobtUtils::decode($json, true);
-
         return $json;
     }
 
@@ -913,7 +915,7 @@ class Qoob {
      * Load qoob data
      * @return json
      */
-    public function loadQoobData() {
+    public function loadData() {
         $blocks = $this->getItems();
         $groups = $this->getGroups();
 
@@ -934,23 +936,10 @@ class Qoob {
     }
 
     /**
-     * Get setting block
-     * @param string $templateId
-     * @return json
-     */
-    private function getConfigFile($itemId) {
-        $item = $this->getItem($itemId);
-        $json = file_get_contents($item['url'] . 'config.json');
-        $json = QoobtUtils::decode($json, true);
-
-        return $json;
-    }
-
-    /**
      * Get qoob tmpl files contents
      * @return array $tmpl Array of config's json
      */
-    private function getQoobTmplFiles() {
+    private function getTplFiles() {
 
         $tmpl = array();
         $urls = $this->getUrlQoobTemplates();
@@ -986,9 +975,8 @@ class Qoob {
     /**
      * Loading all qoob's templates  
      */
-    public function loadQoobTmpl() {
-
-        $templates = $this->getQoobTmplFiles();
+    public function loadTmpl() {
+        $templates = $this->getTplFiles();
 
         if (isset($templates)) {
             $tmpl = array();
@@ -1017,7 +1005,7 @@ class Qoob {
     private function deletePageRow($pid, $lang = 'en', $revision) {
         global $wpdb;
 
-        return $wpdb->delete($this->qoob_table_name, array(
+        return $wpdb->delete($this->tableName, array(
                     'pid' => $pid,
                     'lang' => $lang,
                     'rev' => $revision

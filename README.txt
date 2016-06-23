@@ -1,14 +1,14 @@
-=== Plugin Name ===
+=== Page Builder qoob ===
 Contributors: (this should be a list of wordpress.org userid's)
-Donate link: http://example.com/
-Tags: comments, spam
-Requires at least: 3.0.1
-Tested up to: 3.4
-Stable tag: 4.3
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Donate link: http://qoob.it/#donate
+Tags: page builder, responsive, widget, widgets, builder, page, admin, gallery, content, cms, pages, post, css, layout, grid
+Requires at least: 4.0
+Tested up to: 4.5.3
+Stable tag: trunk
+License: GPLv3
+License URI: http://www.gnu.org/licenses/gpl.html
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+Qoob page builder offers a huge amount of tools and features absolutely FREE. It is the easiest and the fastest website builder for WordPress. No need for coding skills. It is a perfect solution, that save you from any prior design and let you handle it without hiring a professional. Just upload your content and get a working cross-platform website, fully adjusted to all devices available on the market.
 
 == Description ==
 
@@ -67,20 +67,8 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
-= 1.0 =
-* A change since the previous version.
-* Another change.
-
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
-
-== Upgrade Notice ==
-
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
-
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
+= 1.0.0 =
+First release.
 
 == Arbitrary section ==
 

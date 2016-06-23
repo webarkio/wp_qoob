@@ -2,10 +2,10 @@
  * Class for work with ajax methods
  *  
  * @version 0.0.1
- * @class  WordpressDriver
+ * @class  QoobWordpressDriver
  */
-//module.exports.WordpressDriver = WordpressDriver;
-function WordpressDriver() {
+//module.exports.QoobWordpressDriver = QoobWordpressDriver;
+function QoobWordpressDriver() {
 }
 
 /**
@@ -13,7 +13,7 @@ function WordpressDriver() {
  * 
  * @returns {String}
  */
-WordpressDriver.prototype.getIframePageUrl = function (pageId) {
+QoobWordpressDriver.prototype.getIframePageUrl = function (pageId) {
     return ajax.iframe_url;
 };
 
@@ -22,7 +22,7 @@ WordpressDriver.prototype.getIframePageUrl = function (pageId) {
  * 
  * @returns {String}
  */
-WordpressDriver.prototype.exit = function (pageId) {
+QoobWordpressDriver.prototype.exit = function (pageId) {
     if (!jQuery('.autosave input').prop("checked")) {
         var alert_exit = confirm("Are you sure you want to exit without save?");
         if (!alert_exit) {
@@ -45,26 +45,24 @@ WordpressDriver.prototype.exit = function (pageId) {
  * @param {Array} data DOMElements and JSON
  * @param {savePageDataCallback} cb - A callback to run.
  */
-WordpressDriver.prototype.savePageData = function (pageId, data, cb) {
-    jQuery(document).ready(function ($) {
-        if (ajax.logged_in && ajax.qoob == true) {
-            var req = new XMLHttpRequest(),
+QoobWordpressDriver.prototype.savePageData = function (pageId, data, cb) {
+    if (ajax.logged_in && ajax.qoob == true) {
+        var req = new XMLHttpRequest(),
                 dataToSend = {
-                    action: 'save_page_data',
+                    action: 'qoob_save_page_data',
                     page_id: pageId,
                     blocks: data
                 },
-                params = QoobUtils.JSONParam(dataToSend);
-            req.open("POST", ajax.url, true);
-            req.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
-            req.onreadystatechange = function() {
-                if(req.readyState == 4 && req.status == 200) {
-                    cb(null, req.responseText);
-                }
-            };
-            req.send(params);
-        }
-    });
+        params = QoobUtils.JSONParam(dataToSend);
+        req.open("POST", ajax.url, true);
+        req.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+        req.onreadystatechange = function () {
+            if (req.readyState == 4 && req.status == 200) {
+                cb(null, req.responseText);
+            }
+        };
+        req.send(params);
+    }
 };
 
 
@@ -80,14 +78,14 @@ WordpressDriver.prototype.savePageData = function (pageId, data, cb) {
  * @param {integer} pageId
  * @param {loadPageDataCallback} cb - A callback to run.
  */
-WordpressDriver.prototype.loadPageData = function (pageId, cb) {
+QoobWordpressDriver.prototype.loadPageData = function (pageId, cb) {
     jQuery(document).ready(function ($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
                 url: ajax.url,
                 type: 'POST',
                 data: {
-                    action: 'load_page_data',
+                    action: 'qoob_load_page_data',
                     page_id: pageId,
                     lang: 'en'
                 },
@@ -109,14 +107,14 @@ WordpressDriver.prototype.loadPageData = function (pageId, cb) {
  * 
  * @param {loadFieldsTmplCallback} cb - A callback to run.
  */
-WordpressDriver.prototype.loadQoobTemplates = function (cb) {
+QoobWordpressDriver.prototype.loadQoobTemplates = function (cb) {
     jQuery(document).ready(function ($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
                 url: ajax.url,
                 type: 'POST',
                 data: {
-                    action: 'load_qoob_tmpl'
+                    action: 'qoob_load_tmpl'
                 },
                 dataType: 'json',
                 success: function (response) {
@@ -142,14 +140,14 @@ WordpressDriver.prototype.loadQoobTemplates = function (cb) {
  * 
  * @param {loadQoobDataCallback} cb - A callback to run.
  */
-WordpressDriver.prototype.loadQoobData = function (cb) {
+QoobWordpressDriver.prototype.loadQoobData = function (cb) {
     jQuery(document).ready(function ($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
                 url: ajax.url,
                 type: 'POST',
                 data: {
-                    action: 'load_qoob_data'
+                    action: 'qoob_load_data'
                 },
                 dataType: 'json',
                 success: function (response) {
@@ -179,14 +177,14 @@ WordpressDriver.prototype.loadQoobData = function (cb) {
  * @param {integer} templateId
  * @param {loadTemplateCallback} cb - A callback to run.
  */
-WordpressDriver.prototype.loadTemplate = function (itemId, cb) {
+QoobWordpressDriver.prototype.loadTemplate = function (itemId, cb) {
     jQuery(document).ready(function ($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
                 url: ajax.url,
                 type: 'POST',
                 data: {
-                    action: 'load_item',
+                    action: 'qoob_load_item',
                     item_id: itemId
                 },
                 cache: false,
@@ -196,41 +194,6 @@ WordpressDriver.prototype.loadTemplate = function (itemId, cb) {
                         cb(null, template);
                     } else {
                         cb(false);
-                    }
-                }
-            });
-        }
-    });
-};
-
-/**
- * Callback for get settings block for Id
- * 
- * @callback loadSettingsCallback
- */
-
-/**
- * Get settings block for Id
- * 
- * @param {integer} templateId
- * @param {loadSettingsCallback} cb - A callback to run.
- */
-WordpressDriver.prototype.loadSettings = function (templateId, cb) {
-    jQuery(document).ready(function ($) {
-        if (ajax.logged_in && ajax.qoob == true) {
-            $.ajax({
-                url: ajax.url,
-                type: 'POST',
-                data: {
-                    action: 'load_settings',
-                    template_id: templateId
-                },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.success) {
-                        cb(null, response.config);
-                    } else {
-                        cb(response.success);
                     }
                 }
             });

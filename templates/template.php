@@ -39,7 +39,7 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
         qoob = new Qoob({
             storage: new QoobStorage({
                 pageId: <?php echo $pageId; ?>,
-                driver: new WordpressDriver()
+                driver: new QoobWordpressDriver()
             })
         });
         qoob.activate();

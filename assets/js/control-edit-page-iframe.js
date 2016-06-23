@@ -9,10 +9,5 @@
 
     $(document).ready(function () {
         $('#wpadminbar').hide();
-        
-        // menu stop click
-        $('.navbar .menu-item a').click(function(e){
-            e.preventDefault();
-        });
     });
 })(window.jQuery);
