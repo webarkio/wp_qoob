@@ -335,7 +335,7 @@ class Qoob {
                 $wp_admin_bar->add_menu(array(
                     'id' => 'qoob-admin-bar-link',
                     'title' => __('qoob it', "qoob"),
-                    'href' => $this->getUrlQoobPage(get_the_ID()),
+                    'href' => $this->getUrlPage(get_the_ID()),
                     'meta' => array('class' => 'qoob-inline-link')
                 ));
             }
