@@ -2,9 +2,9 @@
  * Class for work with ajax methods
  *  
  * @version 0.0.1
- * @class  WordpressDriver
+ * @class  QoobWordpressDriver
  */
-//module.exports.WordpressDriver = WordpressDriver;
+//module.exports.QoobWordpressDriver = QoobWordpressDriver;
 function QoobWordpressDriver() {
 }
 
