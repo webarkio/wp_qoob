@@ -1,63 +1,73 @@
-=== Page Builder qoob ===
-Contributors: (this should be a list of wordpress.org userid's)
+=== qoob ===
+Contributors: webarkio
 Donate link: http://qoob.it/#donate
-Tags: page builder, responsive, widget, widgets, builder, page, admin, gallery, content, cms, pages, post, css, layout, grid
-Requires at least: 4.0
+Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout
+Requires at least: 4.1
 Tested up to: 4.5.3
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
-Qoob page builder offers a huge amount of tools and features absolutely FREE. It is the easiest and the fastest website builder for WordPress. No need for coding skills. It is a perfect solution, that save you from any prior design and let you handle it without hiring a professional. Just upload your content and get a working cross-platform website, fully adjusted to all devices available on the market.
+Qoob page builder offers a huge amount of tools and features absolutely FREE. It is the easiest and the fastest website builder for WordPress.
 
 == Description ==
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+= Advantages of Qoob =
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+*   The **visual editor** allows users quickly and easily create, edit, and format your page content. The editing interface will always reflect how your project will look for users, with no page reloads, no extra bars or wait time.
+*   **So easy** - Simply drag and drop the desired block to build your website in a **few clicks**.
+*   **Touch Screen Ready** - Qoob supports touchscreen devices including platforms such as iOS and Android devices.
+*   Qoob automatically optimizes your pages for easy **viewing on a variety of mobile devices**. You can hide items in the mobile version. In this case the main site will remain the same. Your website will look good on any device.
+*   **No programming and complete creative freedom**. This tool provides automatic coding. Whether you’re a professional web developer that never wrote a line of code, this qoob is for you.
+*   **It's free** - A free website builder Qoob offering a huge amount of tools and features with an intuitive interface.
 
-A few notes about the sections above:
-
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
-
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
-
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+If you have any questions that are beyond the scope of this help file, please feel free to post me to <https://github.com/maxazan/qoob/issues>. Thanks so much!
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
+= Installing Through The WordPress Admin =
 
-e.g.
+1. Head over to Plugins > Add New in the admin
+2. Search for "qoob"
+3. Install & activate the plugin
+4. Visit any page in your frontend
+5. Click the "Edit with qoob.it" button on the top of the page and start building your page!
 
-1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+= Installing Through FTP =
+
+1. Download the ZIP file and unpack it
+2. Upload the qoob to the `/wp-content/plugins/` directory
+3. Activate the plugin through the 'Plugins' menu in WordPress
+4. You are now ready to use the qoob builder by going to any page and clicking on qoob.it
+
+== Documentation ==
+
+[Documentation](http://qoob.it/documentation/) is available on qoob.
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
+= How to add the blocks =
 
-An answer to that question.
+= There are several ways for adding the block in qoob. =
+1. To add a block in the page, please, **click** on the block. Each new block is added to the end of the page, under the blocks that were added earlier. After that you can add blocks by **dragging**.
+2. You find a block in the group and **move** it to the necessary place. This place will be highlighted.
 
-= What about foo bar? =
+= How to edit the blocks =
 
-Answer to foo bar dilemma.
+You can edit information in each block of the page. For this purpose **click** the necessary block on the right of the page. In the left you can see settings of this block.
+
+= How to delete / move blocks =
+
+1. Click the necessary block.
+2. By pressing the **Delete / Move** button in the left bottom corner of settings you can change the view of the blocks in the page.
+
+= How to change the media center =
+1. **Click** the necessary block.
+2. In the settings **click** the image, video or icon to choose it. To return to the previous media, click on it again.
 
 == Screenshots ==
+1. The qoob builder interface.
+2. Sides of the qoob
 
 1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
 the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
@@ -68,35 +78,8 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 == Changelog ==
 
 = 1.0.0 =
-First release.
+* First release
 
-== Arbitrary section ==
+== Upgrade Notice ==
 
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
-
-== A brief Markdown Example ==
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
+- null
