@@ -5,15 +5,14 @@
  * @class  QoobWordpressDriver
  */
 //module.exports.QoobWordpressDriver = QoobWordpressDriver;
-function QoobWordpressDriver() {
-}
+function QoobWordpressDriver() {}
 
 /**
  * Get url iframe
  * 
  * @returns {String}
  */
-QoobWordpressDriver.prototype.getIframePageUrl = function (pageId) {
+QoobWordpressDriver.prototype.getIframePageUrl = function(pageId) {
     return ajax.iframe_url;
 };
 
@@ -22,7 +21,7 @@ QoobWordpressDriver.prototype.getIframePageUrl = function (pageId) {
  * 
  * @returns {String}
  */
-QoobWordpressDriver.prototype.exit = function (pageId) {
+QoobWordpressDriver.prototype.exit = function(pageId) {
     if (!jQuery('.autosave input').prop("checked")) {
         var alert_exit = confirm("Are you sure you want to exit without save?");
         if (!alert_exit) {
@@ -45,24 +44,26 @@ QoobWordpressDriver.prototype.exit = function (pageId) {
  * @param {Array} data DOMElements and JSON
  * @param {savePageDataCallback} cb - A callback to run.
  */
-QoobWordpressDriver.prototype.savePageData = function (pageId, data, cb) {
-    if (ajax.logged_in && ajax.qoob == true) {
-        var req = new XMLHttpRequest(),
-                dataToSend = {
-                    action: 'qoob_save_page_data',
-                    page_id: pageId,
-                    blocks: data
-                },
-        params = QoobUtils.JSONParam(dataToSend);
-        req.open("POST", ajax.url, true);
-        req.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
-        req.onreadystatechange = function () {
-            if (req.readyState == 4 && req.status == 200) {
-                cb(null, req.responseText);
-            }
-        };
-        req.send(params);
-    }
+QoobWordpressDriver.prototype.savePageData = function(pageId, data, cb) {
+    jQuery(document).ready(function($) {
+        if (ajax.logged_in && ajax.qoob == true) {
+            var dataToSend = JSON.stringify({
+                page_id: pageId,
+                blocks: data
+            });
+            $.ajax({
+                url: ajax.url + '?action=qoob_save_page_data',
+                type: 'POST',
+                data: dataToSend,
+                processData: false,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function(response) {
+                    cb(null, response.success);
+                }
+            });
+        }
+    });
 };
 
 
@@ -78,8 +79,8 @@ QoobWordpressDriver.prototype.savePageData = function (pageId, data, cb) {
  * @param {integer} pageId
  * @param {loadPageDataCallback} cb - A callback to run.
  */
-QoobWordpressDriver.prototype.loadPageData = function (pageId, cb) {
-    jQuery(document).ready(function ($) {
+QoobWordpressDriver.prototype.loadPageData = function(pageId, cb) {
+    jQuery(document).ready(function($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
                 url: ajax.url,
@@ -90,7 +91,7 @@ QoobWordpressDriver.prototype.loadPageData = function (pageId, cb) {
                     lang: 'en'
                 },
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     if (response.success) {
                         cb(null, response.data);
                     } else {
@@ -107,8 +108,8 @@ QoobWordpressDriver.prototype.loadPageData = function (pageId, cb) {
  * 
  * @param {loadFieldsTmplCallback} cb - A callback to run.
  */
-QoobWordpressDriver.prototype.loadQoobTemplates = function (cb) {
-    jQuery(document).ready(function ($) {
+QoobWordpressDriver.prototype.loadQoobTemplates = function(cb) {
+    jQuery(document).ready(function($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
                 url: ajax.url,
@@ -117,7 +118,7 @@ QoobWordpressDriver.prototype.loadQoobTemplates = function (cb) {
                     action: 'qoob_load_tmpl'
                 },
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     if (response.success) {
                         cb(null, response.qoobTemplate);
                     } else {
@@ -140,8 +141,8 @@ QoobWordpressDriver.prototype.loadQoobTemplates = function (cb) {
  * 
  * @param {loadQoobDataCallback} cb - A callback to run.
  */
-QoobWordpressDriver.prototype.loadQoobData = function (cb) {
-    jQuery(document).ready(function ($) {
+QoobWordpressDriver.prototype.loadQoobData = function(cb) {
+    jQuery(document).ready(function($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
                 url: ajax.url,
@@ -150,14 +151,14 @@ QoobWordpressDriver.prototype.loadQoobData = function (cb) {
                     action: 'qoob_load_data'
                 },
                 dataType: 'json',
-                success: function (response) {
+                success: function(response) {
                     if (response.success) {
                         cb(null, response.data);
                     } else {
                         cb(response.success);
                     }
                 },
-                error: function (xrh, error) {
+                error: function(xrh, error) {
                     //FIXME: 
                 }
             });
@@ -177,8 +178,8 @@ QoobWordpressDriver.prototype.loadQoobData = function (cb) {
  * @param {integer} templateId
  * @param {loadTemplateCallback} cb - A callback to run.
  */
-QoobWordpressDriver.prototype.loadTemplate = function (itemId, cb) {
-    jQuery(document).ready(function ($) {
+QoobWordpressDriver.prototype.loadTemplate = function(itemId, cb) {
+    jQuery(document).ready(function($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
                 url: ajax.url,
@@ -189,7 +190,7 @@ QoobWordpressDriver.prototype.loadTemplate = function (itemId, cb) {
                 },
                 cache: false,
                 dataType: 'html',
-                success: function (template) {
+                success: function(template) {
                     if (template != '') {
                         cb(null, template);
                     } else {

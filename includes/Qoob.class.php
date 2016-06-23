@@ -715,24 +715,12 @@ class Qoob {
         }
 
         global $wpdb;
-        $blocks_html = trim($_POST['blocks']['html']);
-        $lang = isset($_POST['lang']) ? $_POST['lang'] : 'en';
-        $post_id = $_POST['page_id'];
-        $updated = false;
-        $data = isset($_POST['blocks']['data']) ? $_POST['blocks']['data'] : '';
-        if ($data !== '') {
-            $blocks = $data['blocks'];
-            // Parsing masks of empty arrays
-            for ($i = 0; $i < count($blocks); $i++) {
-                foreach ($blocks[$i] as $key => $value) {
-                    if (is_string($value) && $value === '[]') {
-                        $blocks[$i][$key] = array();
-                    }
-                }
-            }
-            $data['blocks'] = $blocks;
-            $data = json_encode($data);
-        }
+        $post_data = json_decode( file_get_contents( 'php://input' ), true);
+        $blocks_html = trim($post_data['blocks']['html']);
+        $lang = isset($post_data['lang']) ? $post_data['lang'] : 'en';
+        $post_id = $post_data['page_id'];
+        $updated = false;     
+        $data = json_encode(isset($post_data['blocks']['data']) ? $post_data['blocks']['data'] : '');
 
         // Getting same blocks with such id and language
         $blocks = $wpdb->get_results(
