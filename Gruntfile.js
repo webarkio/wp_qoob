@@ -26,7 +26,20 @@ module.exports = function (grunt) {
                 },
                 expand: true,
                 cwd: '',
-                src: ['**/*', '!**/tests/**', '!node_modules/**', '!presentation/**', '!.git/**', '!build/**', '!docs/dest/**', '!dev/**', '!docs/**', '!Gruntfile.js', '!jsdoc.json', '!package.json', '!tests/**', '!phpdoc.xml', '!phpunit.xml'],
+                src: [
+                    '**/*',
+                    '!test/**',
+                    '!**/test/**',
+                    '!node_modules/**',
+                    '!presentation/**',
+                    '!.git/**',
+                    '!build/**',
+                    '!docs/dest/**',
+                    '!docs/**',
+                    '!Gruntfile.js',
+                    '!package.json',
+                    '!**/package.json'
+                ],
                 dest: 'qoob.wordpress/'
             }
         },
