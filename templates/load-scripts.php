@@ -33,7 +33,7 @@ foreach ($directory as $file) {
                     $script = preg_replace('/%theme_url%/', $theme_url, $script);
                     $script = preg_replace('/%block_url%/', $block_url, $script);
                     $script = preg_replace('/%blocks_url%/', $blocks_url, $script);
-                    $qoob_scripts .= $style;
+                    $qoob_scripts .= $script;
                 }
             }
         }
