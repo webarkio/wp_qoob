@@ -11,21 +11,20 @@ module.exports = function (grunt) {
             build: ['build/builder/*', 'build/builder/**', 'build/**']
         },
         compress: {
-            dev: {
-                options: {
-                    archive: 'build/qoob.wordpress-dev.zip'
-                },
-                expand: true,
-                cwd: '', 
-                src: ['**/*', '!node_modules/**'], 
-                dest: 'qoob.wordpress/'
-            },
+            // dev: {
+            //     options: {
+            //         archive: 'build/qoob.wordpress-dev.zip'
+            //     },
+            //     expand: true,
+            //     cwd: '', 
+            //     src: ['**/*', '!node_modules/**'], 
+            //     dest: 'qoob.wordpress/'
+            // },
             stable: {
                 options: {
-                    archive: 'build/qoob.wordpress.zip'
+                    archive: 'build/wp_qoob_<%= pkg.version %>.zip'
                 },
                 expand: true,
-                cwd: '',
                 src: [
                     '**/*',
                     '!test/**',
@@ -69,5 +68,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 
     //Build builder to theme tgm plugin
-    grunt.registerTask('build', ['clean:build', 'shell:gitpull', 'concat', 'compress:stable', 'compress:dev']);
+    grunt.registerTask('build', ['clean:build', 'shell:gitpull', 'concat', 'compress:stable']);
 };
