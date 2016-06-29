@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  *
  * @author     webark.io <info@webark.io>
- * @link       http://cube.webark.io/
- * @copyright  2014-2015 Webark.io
- * @license    http://cube.webark.io/LISENCE
+ * @link       http://qoob.it/
+ * @copyright  2015-2016 Webark.io
+ * @license    http://qoob.it/LISENCE
  */
 
 /**
@@ -714,13 +714,13 @@ class Qoob {
         }
 
         global $wpdb;
-        $post_data = json_decode( file_get_contents( 'php://input' ), true);
-        
+        $post_data = json_decode(file_get_contents('php://input'), true);
+
         $blocks_html = trim($post_data['blocks']['html']);
-        
+
         $lang = isset($post_data['lang']) ? $post_data['lang'] : 'en';
         $post_id = $post_data['page_id'];
-        $updated = false;     
+        $updated = false;
         $data = json_encode(isset($post_data['blocks']['data']) ? $post_data['blocks']['data'] : '');
 
         // Getting same blocks with such id and language
@@ -740,14 +740,12 @@ class Qoob {
             $current_revision_hash = md5($blocks_html);
 
             if ($last_revision_hash !== $current_revision_hash) {
-                $updated = $wpdb->insert(
-                        $this->tableName, array(
-                    'data' => $data,
-                    'html' => $blocks_html,
-                    'rev' => $current_revision_hash,
-                    'pid' => $post_id,
-                    'lang' => $lang)
-                );
+                $wpdb->flush();
+
+                $updated = $wpdb->query($wpdb->prepare(
+                                "INSERT INTO $this->tableName ( pid, data, html, rev, lang ) 
+            VALUES ( %d, %s, %s, %s, %s)", $post_id, $data, $blocks_html, $current_revision_hash, $lang
+                ));
 
                 // When the amount of revisions are more then needed, 
                 // we are deleting first revision in the list
