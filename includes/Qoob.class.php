@@ -499,12 +499,11 @@ class Qoob {
                 return;
             }
             return $this->addMainQoobBlock();
-            $this->statusShortcode = true;
         } else {
             global $post;
             $id = $post->ID;
             $block = $this->getBlock($id);
-            $html = stripslashes($block['html']);
+            $html = do_shortcode(stripslashes($block['html']));
             return $html;
         }
     }
@@ -716,7 +715,9 @@ class Qoob {
 
         global $wpdb;
         $post_data = json_decode( file_get_contents( 'php://input' ), true);
+        
         $blocks_html = trim($post_data['blocks']['html']);
+        
         $lang = isset($post_data['lang']) ? $post_data['lang'] : 'en';
         $post_id = $post_data['page_id'];
         $updated = false;     
