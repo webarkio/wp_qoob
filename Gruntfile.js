@@ -8,7 +8,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         clean: {
-            build: ['build/builder/*', 'build/builder/**', 'build/**']
+            build: []
         },
         compress: {
             // dev: {
@@ -39,7 +39,7 @@ module.exports = function (grunt) {
                     '!package.json',
                     '!**/package.json'
                 ],
-                dest: 'qoob.wordpress/'
+                dest: 'wp_qoob/'
             }
         },
         shell: {
