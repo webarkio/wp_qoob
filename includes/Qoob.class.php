@@ -798,7 +798,7 @@ class Qoob {
             return $this->tmplUrls;
         }
 
-        $path = ABSPATH . 'wp-content/plugins/qoob.wordpress/qoob/tmpl';
+        $path = plugin_dir_path(__FILE__) . '/../qoob/tmpl';
 
         foreach (new DirectoryIterator($path) as $folder) {
             if ($folder->isDot())
@@ -806,13 +806,13 @@ class Qoob {
 
             if (is_dir($folder->getPathname())) {
 
-                $pathtofiles = ABSPATH . 'wp-content/plugins/qoob.wordpress/qoob/tmpl/' . $folder->getFilename();
+                $pathtofiles = $path. '/' . $folder->getFilename();
                 foreach (new DirectoryIterator($pathtofiles) as $file) {
                     if ($file->isDot())
                         continue;
                     $filename = $file->getFilename();
 
-                    $url = plugin_dir_url($filename) . 'qoob.wordpress/qoob/tmpl/' . $folder->getFilename() . '/' . $file->getFilename();
+                    $url = plugin_dir_url(__FILE__) . '/../qoob/tmpl/' . $folder->getFilename() . '/' . $file->getFilename();
 
                     $this->tmplUrls[] = array(
                         'id' => $file->getFilename(),
