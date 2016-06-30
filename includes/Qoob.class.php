@@ -96,6 +96,10 @@ class Qoob {
 
         // registration ajax actions
         $this->registrationAjax();
+
+        // Creating blocks paths
+        $this->blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(dirname(__FILE__)) . 'blocks');
+        $this->blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(dirname(__FILE__)) . 'blocks');
     }
 
     /**
@@ -770,14 +774,14 @@ class Qoob {
             return $this->urls;
         }
 
-        $path = get_template_directory() . '/blocks';
+        $path = $this->blocks_path;
 
         foreach (new DirectoryIterator($path) as $file) {
             if ($file->isDot())
                 continue;
 
             if ($file->isDir()) {
-                $url = get_template_directory_uri() . '/blocks/' . $file->getFilename() . '/';
+                $url = $this->blocks_url . '/' . $file->getFilename() . '/';
 
                 $this->urls[] = array(
                     'id' => $file->getFilename(),
@@ -839,7 +843,7 @@ class Qoob {
 
         foreach ($urls as $val) {
             $theme_url = get_template_directory_uri();
-            $blocks_url = get_template_directory_uri() . '/blocks';
+            $blocks_url = $this->blocks_url;
             $block_url = $val['url'];
 
             $config_json = file_get_contents($block_url . 'config.json');
@@ -883,7 +887,7 @@ class Qoob {
      * @return array
      */
     private function getGroups() {
-        $json = file_get_contents(get_template_directory_uri() . '/blocks/groups.json');
+        $json = file_get_contents($this->blocks_url . '/groups.json');
         $json = QoobtUtils::decode($json, true);
         return $json;
     }
