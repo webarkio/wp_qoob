@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the Qoob builder package
  *
@@ -11,7 +10,6 @@
  * @copyright  2015-2016 Webark.io
  * @license    http://qoob.it/LISENCE
  */
-
 /**
  * Qoob
  *
@@ -20,58 +18,48 @@
  * @version    @package_version@
  */
 class Qoob {
-
     /**
      * Name shortcode
      */
     const NAME_SHORTCODE = 'qoob-page';
-
     /**
      * Revisions count for page in database
      */
     const REVISIONS_COUNT = 20;
-
     /**
      * Table name plugin
      * @var string
      */
     var $tableName;
-
     /**
      * State first shortcode
      * @var boolean
      */
     private $statusShortcode = false;
-
     /**
      * All items url's
      * @var array
      */
     private $urls = array();
-
     /**
      * All fields items url's
      * @var array
      */
     private $tmplUrls = array();
-
     /**
      * Default post types
      * @var string
      */
     private $defaultPostTypes = array('page');
-
     /**
      * Register actions for module
      */
     public function register() {
         // Create table in DB
         $this->createrDbTable();
-
         if (is_admin()) {
             // Load backend
             add_action('admin_enqueue_scripts', array($this, 'adminScripts'));
-
             //Load JS and CSS
             if (isset($_GET['qoob']) && $_GET['qoob'] == true) {
                 add_action('current_screen', array($this, 'initEditPage'));
@@ -80,28 +68,22 @@ class Qoob {
             // add edit link to admin bar
             add_action('admin_bar_menu', array(&$this, "addAdminBarLink"), 999);
         }
-
         // Load js in frame
         if (isset($_GET['qoob']) && $_GET['qoob'] == true) {
             add_filter('the_title', array($this, 'setDefaultTitle'));
             add_action('wp_enqueue_scripts', array($this, 'iframeScripts'));
         }
         add_action('wp_enqueue_scripts', array($this, 'frontendScripts'));
-
         // Add edit link
         add_filter('page_row_actions', array($this, 'addEditLinkAction'));
-
         //register shortcode
         add_shortcode(self::NAME_SHORTCODE, array($this, 'addShortcode'));
-
         // registration ajax actions
         $this->registrationAjax();
-
         // Creating blocks paths
         $this->blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(dirname(__FILE__)) . 'blocks');
         $this->blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(dirname(__FILE__)) . 'blocks');
     }
-
     /**
      * Registration ajax actions
      */
@@ -112,7 +94,6 @@ class Qoob {
         add_action('wp_ajax_qoob_save_page_data', array($this, 'savePageData'));
         add_action('wp_ajax_qoob_load_tmpl', array($this, 'loadTmpl'));
     }
-
     /**
      * Get path of current file
      * 
@@ -122,7 +103,6 @@ class Qoob {
         $class = new ReflectionClass($this);
         return $class->getFileName();
     }
-
     /**
      * Get current module path
      * 
@@ -139,7 +119,6 @@ class Qoob {
     public function getPath() {
         return realpath(dirname($this->getPathCurrentFile()) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
-
     /**
      * Get path to current module assets dir
      * 
@@ -157,7 +136,6 @@ class Qoob {
     public function getPathAssets() {
         return $this->getPath() . "assets" . DIRECTORY_SEPARATOR;
     }
-
     /**
      * Get current module assets directory URL
      * 
@@ -176,7 +154,6 @@ class Qoob {
     public function getUrlAssets() {
         return QoobtUtils::getUrlFromPath($this->getPathAssets());
     }
-
     /**
      * Get path to current module qoob dir
      * 
@@ -191,7 +168,6 @@ class Qoob {
     public function getPathQoob() {
         return $this->getPath() . "qoob" . DIRECTORY_SEPARATOR;
     }
-
     /**
      * Get current module qoob directory URL
      * 
@@ -208,7 +184,6 @@ class Qoob {
     public function getUrlQoob() {
         return QoobtUtils::getUrlFromPath($this->getPathQoob());
     }
-
     /**
      * Get path to current module templates dir
      * 
@@ -227,7 +202,6 @@ class Qoob {
     public function getPathTemplates() {
         return $this->getPath() . "templates" . DIRECTORY_SEPARATOR;
     }
-
     /**
      * Get url to current module templates dir
      * 
@@ -242,7 +216,6 @@ class Qoob {
     public function getUrlTemplates() {
         return QoobtUtils::getUrlFromPath($this->getPathTemplates());
     }
-
     /**
      * Set default title for page
      *
@@ -252,7 +225,6 @@ class Qoob {
     public function setDefaultTitle($title) {
         return !is_string($title) || strlen($title) == 0 ? __('(no title)', 'qoob') : $title;
     }
-
     /**
      * Get qoob url edit page 
      *
@@ -262,7 +234,6 @@ class Qoob {
     public function getUrlPage($id) {
         return admin_url() . 'post.php?post_id=' . $id . '&post_type=' . get_post_type($id) . '&qoob=true';
     }
-
     /**
      * Add link to posts list
      * 
@@ -272,17 +243,14 @@ class Qoob {
     public function addEditLinkAction($actions) {
         //TODO: check if page has qoob shortcode show Edit with qoob
         $post = get_post();
-
         $id = (strlen($post->ID) > 0 ? $post->ID : get_the_ID());
         $url = $this->getUrlPage($id);
-
         if (preg_match("/" . self::NAME_SHORTCODE . "/", $post->post_content)) {
             return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob it', 'qoob') . '</a>') + $actions;
         } else {
             return $actions;
         }
     }
-
     /**
      * Initialize page qoob
      */
@@ -290,7 +258,6 @@ class Qoob {
         $this->setPost();
         $this->renderPage();
     }
-
     /**
      * Set post data for page
      *
@@ -301,7 +268,6 @@ class Qoob {
         $this->post = get_post();
         $this->post_id = isset($_GET['post_id']) ? $_GET['post_id'] : '';
         $post_id = isset($_POST['post_id']) ? $_POST['post_id'] : '';
-
         if ($post_id) {
             $this->post_id = $post_id;
         }
@@ -312,7 +278,6 @@ class Qoob {
         $post = $this->post;
         $this->post_id = $this->post->ID;
     }
-
     /**
      * Get state show button
      * @param null $post_id
@@ -325,7 +290,6 @@ class Qoob {
         }
         return in_array(get_post_type(), $this->defaultPostTypes);
     }
-
     /**
      * Add link to admin bar
      * @param WP_Admin_Bar $wp_admin_bar
@@ -345,7 +309,6 @@ class Qoob {
             }
         }
     }
-
     /**
      * Used for wp filter 'wp_insert_post_empty_content' to allow empty post insertion.
      *
@@ -355,7 +318,6 @@ class Qoob {
     public function allowInsertEmptyPost($allow_empty) {
         return false;
     }
-
     /**
      * Add shortcode to content
      *
@@ -368,11 +330,9 @@ class Qoob {
             'post_title' => ($this->post->post_title != '' ? $this->post->post_title : ''),
             'post_content' => '[' . self::NAME_SHORTCODE . ']',
         );
-
 // Update the post into the database
         wp_update_post($post_data);
     }
-
     /**
      * Create new page in Qoob db table
      *
@@ -380,7 +340,6 @@ class Qoob {
      */
     private function createQoobPage($lang) {
         global $wpdb;
-
         $wpdb->insert($this->tableName, array(
             'pid' => $this->post_id,
             'lang' => $lang,
@@ -389,7 +348,6 @@ class Qoob {
             'rev' => 0,
         ));
     }
-
     /**
      * Get id from shortcode attr
      *
@@ -398,20 +356,17 @@ class Qoob {
      */
     private function checkPage($lang = 'en') {
         global $wpdb;
-
         //getting existing pages by id
         $pages = $wpdb->get_results(
                 'SELECT * FROM ' . $this->tableName .
                 ' WHERE pid = ' . $this->post_id .
                 ' AND lang = "' . $lang . '"', "ARRAY_A"
         );
-
         //if pages don't exist - creating page in database
         if (empty($pages)) {
             $this->createQoobPage($lang);
         }
     }
-
     /**
      * Create qoob page
      *
@@ -421,19 +376,15 @@ class Qoob {
         global $current_user;
         global $post;
         wp_get_current_user();
-
         $this->checkPage();
         if (!preg_match('/\[qoob-page\]/', $post->post_content)) {
             $this->addShortcodeToContent();
         }
-
         $this->current_user = $current_user;
         $this->post_url = str_replace(array('http://', 'https://'), '//', get_permalink($this->post_id));
-
         if (!current_user_can('edit_post', $this->post_id)) {
             header('Location: ' . $this->post_url);
         }
-
         if ($this->post && $this->post->post_status === 'auto-draft') {
             $post_data = array(
                 'ID' => $this->post_id,
@@ -445,25 +396,18 @@ class Qoob {
             $this->post->post_status = 'draft';
             $this->post->post_title = '';
         }
-
         $this->post_type = get_post_type_object($this->post->post_type);
-
         wp_enqueue_media(array('post' => $this->post_id));
         remove_all_actions('admin_notices', 3);
         remove_all_actions('network_admin_notices', 3);
-
         add_filter('user_can_richedit', '__return_false');
-
         //Load JS and CSS for frontend
         add_action('admin_enqueue_scripts', array($this, 'loadScripts'));
-
         add_filter('admin_title', array($this, 'setTitlePage'));
-
         is_array($this) && extract($this);
         require_once $this->getPathTemplates() . 'template.php';
         die();
     }
-
     /**
      * Set title edit page
      *
@@ -472,7 +416,6 @@ class Qoob {
     public function setTitlePage() {
         return __('Edit Page with qoob', 'qoob');
     }
-
     /**
      * Get block from id
      *
@@ -487,10 +430,8 @@ class Qoob {
                 " WHERE pid = " . $id .
                 " AND lang='" . $lang . "'" .
                 " ORDER BY date DESC LIMIT 1", "ARRAY_A");
-
         return $block[0];
     }
-
     /**
      * Create shortcode
      * @param array $atts An associative array of attributes, or an empty string if no attributes are given
@@ -511,7 +452,6 @@ class Qoob {
             return $html;
         }
     }
-
     /**
      * Create plugin table
      *
@@ -519,10 +459,8 @@ class Qoob {
      */
     public function createrDbTable() {
         global $wpdb;
-
         // set table name
         $this->tableName = $wpdb->prefix . "pages";
-
         if ($wpdb->get_var("show tables like '$this->tableName'") != $this->tableName) {
             $sql = "CREATE TABLE " . $this->tableName . " (
                 id int(9) NOT NULL AUTO_INCREMENT,
@@ -535,12 +473,10 @@ class Qoob {
                 PRIMARY KEY (id),
                 KEY id(id)
             );";
-
             require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
             dbDelta($sql);
         }
     }
-
     /**
      * Load javascript and css on iframe
      */
@@ -550,7 +486,6 @@ class Qoob {
         // Load js
         wp_enqueue_script('control.edit.page.iframe', $this->getUrlAssets() . 'js/control-edit-page-iframe.js', array('jquery'), '', true);
     }
-
     /**
      * Load js and css on frontend pages
      */
@@ -560,7 +495,6 @@ class Qoob {
         // load qoob styles
         wp_enqueue_style('qoob.frontend.style', $this->getUrlAssets() . "css/qoob.css");
     }
-
     /**
      * Load javascript and css on admin page
      *
@@ -576,7 +510,6 @@ class Qoob {
             }
         }
     }
-
     /**
      * Load javascript and css for qoob page
      */
@@ -590,13 +523,10 @@ class Qoob {
             'qoob' => ( isset($_GET['qoob']) && $_GET['qoob'] == true ? true : false )
                 )
         );
-
         // qoob styles
         wp_enqueue_style('qoob-style', $this->getUrlQoob() . "css/qoob.css");
-
         // load qoob blocks asset's styles
         $this->loadAssetsScripts();
-
         // core libs
         wp_enqueue_script('jquery');
         wp_enqueue_script('jquery-ui-core');
@@ -609,7 +539,6 @@ class Qoob {
         wp_enqueue_script('underscore');
         wp_enqueue_script('backbone');
         wp_enqueue_script('qoob-tinymce', $this->getUrlQoob() . 'js/libs/tinymce/tinymce.min.js', array('jquery'), '', true);
-
         if (!WP_DEBUG) {
             wp_enqueue_script('qoob', $this->getUrlQoob() . '/qoob.min.js', array('jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'backbone', 'underscore'));
         } else {
@@ -622,11 +551,9 @@ class Qoob {
             wp_enqueue_script('bootstrap', $this->getUrlQoob() . 'js/libs/bootstrap.min.js', array('jquery'), '', true);
             wp_enqueue_script('bootstrap-select', $this->getUrlQoob() . 'js/libs/bootstrap-select.min.js', array('jquery', 'bootstrap'), '', true);
             wp_enqueue_script('bootstrap-progressbar', $this->getUrlQoob() . 'js/libs/bootstrap-progressbar.js', array('jquery', 'bootstrap'), '', true);
-
             // Application scripts
             wp_enqueue_script('block-view', $this->getUrlQoob() . 'js/views/qoob-block-view.js', array('jquery'), '', true);
             wp_enqueue_script('block-wrapper-view', $this->getUrlQoob() . 'js/views/qoob-block-wrapper-view.js', array('jquery'), '', true);
-
             wp_enqueue_script('field-text', $this->getUrlQoob() . 'js/views/fields/field-text.js', array('jquery', 'field-view'), '', true);
             wp_enqueue_script('field-text-autocomplete', $this->getUrlQoob() . 'js/views/fields/field-text-autocomplete.js', array('jquery', 'field-view'), '', true);
             wp_enqueue_script('field-checkbox', $this->getUrlQoob() . 'js/views/fields/field-checkbox.js', array('jquery', 'field-view'), '', true);
@@ -643,7 +570,6 @@ class Qoob {
             wp_enqueue_script('page-model', $this->getUrlQoob() . 'js/models/page-model.js', array('jquery'), '', true);
             wp_enqueue_script('block-model', $this->getUrlQoob() . 'js/models/block-model.js', array('jquery'), '', true);
             wp_enqueue_script('field-view', $this->getUrlQoob() . 'js/views/qoob-field-view.js', array('jquery'), '', true);
-
             wp_enqueue_script('qoob-menu-groups-view', $this->getUrlQoob() . 'js/views/qoob-menu-groups-view.js', array('jquery'), '', true);
             wp_enqueue_script('settings-view', $this->getUrlQoob() . 'js/views/qoob-settings-view.js', array('jquery'), '', true);
             wp_enqueue_script('qoob-menu-blocks-preview-view', $this->getUrlQoob() . 'js/views/qoob-menu-blocks-preview-view.js', array('jquery'), '', true);
@@ -651,7 +577,6 @@ class Qoob {
             wp_enqueue_script('qoob-menu-view', $this->getUrlQoob() . 'js/views/qoob-menu-view.js', array('jquery'), '', true);
             wp_enqueue_script('qoob-toolbar-view', $this->getUrlQoob() . 'js/views/qoob-toolbar-view.js', array('jquery'), '', true);
             wp_enqueue_script('qoob-edit-mode-button-view', $this->getUrlQoob() . 'js/views/qoob-edit-mode-button-view.js', array('jquery'), '', true);
-
             wp_enqueue_script('qoob-viewport-view', $this->getUrlQoob() . 'js/views/qoob-viewport-view.js', array('jquery'), '', true);
             wp_enqueue_script('qoob-controller', $this->getUrlQoob() . 'js/controllers/qoob-controller.js', array('jquery'), '', true);
             wp_enqueue_script('field-accordion-item-flip-view', $this->getUrlQoob() . 'js/views/fields/field-accordion-item-flip-settings.js', array('jquery', 'field-view'), '', true);
@@ -669,32 +594,26 @@ class Qoob {
             wp_enqueue_script('underscore-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-underscore.js', array('underscore'), '', true);
         }
     }
-
     /**
      * add html instead shortcode
      */
     public function addMainQoobBlock() {
         echo '<div id="qoob-blocks"></div>';
     }
-
     /**
      * Load data page
      * @return json
      */
     public function loadPageData() {
         global $wpdb;
-
         $blocks = $wpdb->get_results(
                 "SELECT * FROM " . $this->tableName .
                 " WHERE pid=" . $_POST['page_id'] .
                 " AND lang='" . $_POST['lang'] .
                 "' ORDER BY date DESC LIMIT 1", "ARRAY_A");
-
         $block = !empty($blocks) ? $blocks[0] : null;
-
         if (isset($block) && isset($block['data'])) {
             $data = stripslashes_deep(json_decode($block['data'], true));
-
             $response = array(
                 'success' => true,
                 'data' => $data
@@ -702,11 +621,9 @@ class Qoob {
         } else {
             $response = array('success' => false);
         }
-
         wp_send_json($response);
         exit();
     }
-
     /**
      * Save data page
      * @return json
@@ -716,41 +633,32 @@ class Qoob {
         if (!current_user_can('manage_options')) {
             return;
         }
-
         global $wpdb;
         $post_data = json_decode(file_get_contents('php://input'), true);
-
         $blocks_html = trim($post_data['blocks']['html']);
-
         $lang = isset($post_data['lang']) ? $post_data['lang'] : 'en';
         $post_id = $post_data['page_id'];
         $updated = false;
         $data = json_encode(isset($post_data['blocks']['data']) ? $post_data['blocks']['data'] : '');
-
         // Getting same blocks with such id and language
         $blocks = $wpdb->get_results(
                 "SELECT * FROM " . $this->tableName .
                 " WHERE pid=" . $post_id .
                 " AND lang='" . $lang .
                 "' ORDER BY date DESC", "ARRAY_A");
-
         if (!empty($blocks)) {
             // Last page revisioned
             $last_block = $blocks[0];
-
             // Comparing page to last page saved
             // If html hashes are equal - don't need to save the new revision
             $last_revision_hash = $last_block['rev'];
             $current_revision_hash = md5($blocks_html);
-
             if ($last_revision_hash !== $current_revision_hash) {
                 $wpdb->flush();
-
                 $updated = $wpdb->query($wpdb->prepare(
                                 "INSERT INTO $this->tableName ( pid, data, html, rev, lang ) 
             VALUES ( %d, %s, %s, %s, %s)", $post_id, $data, $blocks_html, $current_revision_hash, $lang
                 ));
-
                 // When the amount of revisions are more then needed, 
                 // we are deleting first revision in the list
                 if (count($blocks) >= self::REVISIONS_COUNT) {
@@ -759,12 +667,10 @@ class Qoob {
                 }
             }
         }
-
         $responce = array('success' => (boolean) $updated);
         wp_send_json($responce);
         exit();
     }
-
     /**
      * Get url items
      * @return array
@@ -773,26 +679,20 @@ class Qoob {
         if (!empty($this->urls)) {
             return $this->urls;
         }
-
         $path = $this->blocks_path;
-
         foreach (new DirectoryIterator($path) as $file) {
             if ($file->isDot())
                 continue;
-
             if ($file->isDir()) {
                 $url = $this->blocks_url . '/' . $file->getFilename() . '/';
-
                 $this->urls[] = array(
                     'id' => $file->getFilename(),
                     'url' => $url
                 );
             }
         }
-
         return $this->urls;
     }
-
     /**
      * Get url qoob templates
      * @return array
@@ -801,23 +701,17 @@ class Qoob {
         if (!empty($this->tmplUrls)) {
             return $this->tmplUrls;
         }
-
         $path = plugin_dir_path(dirname(__FILE__)) . 'qoob/tmpl';
-
         foreach (new DirectoryIterator($path) as $folder) {
             if ($folder->isDot())
                 continue;
-
             if (is_dir($folder->getPathname())) {
-
                 $pathtofiles = $path. '/' . $folder->getFilename();
                 foreach (new DirectoryIterator($pathtofiles) as $file) {
                     if ($file->isDot())
                         continue;
                     $filename = $file->getFilename();
-
                     $url = plugin_dir_url(dirname(__FILE__)) . 'qoob/tmpl/' . $folder->getFilename() . '/' . $file->getFilename();
-
                     $this->tmplUrls[] = array(
                         'id' => $file->getFilename(),
                         'url' => $url
@@ -825,10 +719,8 @@ class Qoob {
                 }
             }
         }
-
         return $this->tmplUrls;
     }
-
     /**
      * Get all blocks in folder
      * @return array
@@ -837,16 +729,14 @@ class Qoob {
         if (isset($this->items)) {
             return $this->items;
         }
-
         $items = array();
         $urls = $this->getUrlItems();
-
         foreach ($urls as $val) {
             $theme_url = get_template_directory_uri();
             $blocks_url = $this->blocks_url;
-            $block_url = $val['url'];
-
-            $config_json = file_get_contents($block_url . 'config.json');
+            $block_url = substr($val['url'], 0, -1);
+            
+            $config_json = file_get_contents($block_url . '/' . 'config.json');
             //Parsing for url masks to replace            
             $config_json = preg_replace('/%theme_url%/', $theme_url, $config_json);
             $config_json = preg_replace('/%block_url%/', $block_url, $config_json);
@@ -857,13 +747,10 @@ class Qoob {
             $config['url'] = $val['url'];
             $items[] = $config;
         }
-
         // cash blocks for next ajax request
         $this->items = $items;
-
         return $items;
     }
-
     /**
      * Get block by $id
      * 
@@ -873,7 +760,6 @@ class Qoob {
      */
     private function getItem($id) {
         $templates = $this->getUrlItems();
-
         foreach ($templates as $key => $val) {
             if ($val['id'] === $id) {
                 return $val;
@@ -881,7 +767,6 @@ class Qoob {
         }
         return null;
     }
-
     /**
      * Get groups blocks
      * @return array
@@ -891,7 +776,6 @@ class Qoob {
         $json = QoobtUtils::decode($json, true);
         return $json;
     }
-
     /**
      * Enqueueing scripts and styles, contained in theme block's assets
      * 
@@ -901,7 +785,6 @@ class Qoob {
         wp_enqueue_style('blocks-custom-styles', $this->getUrlTemplates() . 'load-styles.php');
         wp_enqueue_script('blocks-custom-scripts', $this->getUrlTemplates() . 'load-scripts.php', array(), false, true);
     }
-
     /**
      * Load qoob data
      * @return json
@@ -909,7 +792,6 @@ class Qoob {
     public function loadData() {
         $blocks = $this->getItems();
         $groups = $this->getGroups();
-
         if (isset($blocks)) {
             $response = array(
                 'success' => true,
@@ -921,28 +803,23 @@ class Qoob {
         } else {
             $response = array('success' => false);
         }
-
         wp_send_json($response);
         exit();
     }
-
     /**
      * Get qoob tmpl files contents
      * @return array $tmpl Array of config's json
      */
     private function getTplFiles() {
-
         $tmpl = array();
         $urls = $this->getUrlQoobTemplates();
         foreach ($urls as $val) {
-
             $html_content = file_get_contents($val['url']);
             $id = str_replace('.html', '', $val['id']);
             $tmpl[$id] = $html_content;
         }
         return $tmpl;
     }
-
     /**
      * Get content hbs file's
      * @return html
@@ -952,7 +829,6 @@ class Qoob {
         $config = json_decode(file_get_contents($item['url'] . 'config.json'));
         return file_get_contents($item['url'] . $config->template);
     }
-
     /**
      * Load item
      * @return html
@@ -962,13 +838,11 @@ class Qoob {
         echo $item;
         exit();
     }
-
     /**
      * Loading all qoob's templates  
      */
     public function loadTmpl() {
         $templates = $this->getTplFiles();
-
         if (isset($templates)) {
             $tmpl = array();
             foreach ($templates as $key => $value) {
@@ -984,7 +858,6 @@ class Qoob {
         wp_send_json($response);
         exit();
     }
-
     /**
      * Deleting page row
      * @global object $wpdb
@@ -995,12 +868,10 @@ class Qoob {
      */
     private function deletePageRow($pid, $lang = 'en', $revision) {
         global $wpdb;
-
         return $wpdb->delete($this->tableName, array(
                     'pid' => $pid,
                     'lang' => $lang,
                     'rev' => $revision
         ));
     }
-
 }
