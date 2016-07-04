@@ -13,6 +13,6 @@
     }],
     "defaults": {
         "title": "Attention!",
-        "text": "It's demo block. To get full expressions of creating content with Qoob builder, please go and <a href='#'>download</a> one of our themes, containing great predefined blocks. Or you can use this <a href='#'>guide</a> and create your own blocks, designed for your own theme."
+        "text": "It's demo block. To get full expressions of creating content with Qoob builder, please go and <a href='http://qoob.it'>download</a> one of our themes, containing great predefined blocks. Or you can use this <a href='http://qoob.it'>guide</a> and create your own blocks, designed for your own theme."
     }
 }
