@@ -21,7 +21,7 @@ Qoob page builder offers a huge amount of tools and features absolutely FREE.
 *   **No programming and complete creative freedom**. This tool provides automatic coding. Whether you’re a professional web developer that never wrote a line of code, this qoob is for you.
 *   **It's free** - A free website builder Qoob offering a huge amount of tools and features with an intuitive interface.
 
-If you have any questions that are beyond the scope of this help file, please feel free to post me to <https://github.com/maxazan/qoob/issues>. Thanks so much!
+If you have any questions that are beyond the scope of this help file, please feel free to post me to <https://github.com/webarkio/wp_qoob/issues>. Thanks so much!
 
 == Installation ==
 
@@ -42,7 +42,7 @@ If you have any questions that are beyond the scope of this help file, please fe
 
 == Documentation ==
 
-[Documentation](http://qoob.it/documentation/) is available on qoob.
+[Documentation](http://qoob.it/documentation/user-installation.html) is available on qoob.
 
 == Frequently Asked Questions ==
 
@@ -53,11 +53,9 @@ If you have any questions that are beyond the scope of this help file, please fe
 2. You find a block in the group and **move** it to the necessary place. This place will be highlighted.
 
 = How to edit the blocks =
-
 You can edit information in each block of the page. For this purpose **click** the necessary block on the right of the page. In the left you can see settings of this block.
 
 = How to delete / move blocks =
-
 1. Click the necessary block.
 2. By pressing the **Delete / Move** button in the left bottom corner of settings you can change the view of the blocks in the page.
 
@@ -68,12 +66,6 @@ You can edit information in each block of the page. For this purpose **click** t
 == Screenshots ==
 1. The qoob builder interface.
 2. Sides of the qoob
-
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
 
 == Changelog ==
 
