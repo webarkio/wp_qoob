@@ -8,7 +8,7 @@ Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
-Qoob page builder offers a huge amount of tools and features absolutely FREE. It is the easiest and the fastest website builder for WordPress.
+Qoob page builder offers a huge amount of tools and features absolutely FREE.
 
 == Description ==
 
@@ -77,7 +77,7 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
-= 1.0.0 =
+= 1.0.1 =
 * First release
 
 == Upgrade Notice ==
