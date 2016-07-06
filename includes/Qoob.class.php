@@ -57,6 +57,7 @@ class Qoob {
     public function register() {
         // Create table in DB
         $this->createrDbTable();
+
         if (is_admin()) {
             // Load backend
             add_action('admin_enqueue_scripts', array($this, 'adminScripts'));
@@ -852,6 +853,7 @@ class Qoob {
         wp_enqueue_style('blocks-custom-styles', admin_url('admin-ajax.php') . '?action=load_blocks_styles');
         wp_enqueue_script('blocks-custom-scripts', admin_url('admin-ajax.php') . '?action=load_blocks_scripts', array('jquery'));
     }
+    
     /**
      * Load qoob data
      * @return json
@@ -940,5 +942,57 @@ class Qoob {
                     'lang' => $lang,
                     'rev' => $revision
         ));
+    }
+
+    /**
+    * Get scripts or styles, contained in theme block's assets
+    * @param string $assets_type Asset's type
+    * @return scring
+    */
+    public function load_blocks_scripts($assets_type) {
+        $qoob_scripts = '';
+        $blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(dirname(__FILE__)) . 'blocks');
+        $blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(dirname(__FILE__)) . 'blocks');
+
+        $directory = new DirectoryIterator($blocks_path);
+
+        foreach ($directory as $file) {
+            if ($file->isDot()) {
+                continue;
+            }
+
+            if ($file->isDir()) {
+                // masks urls
+                $theme_url = get_template_directory_uri();
+                $block_url = $blocks_url . '/' . $file->getFilename();
+                // get block's config file
+                $config_json = file_get_contents($block_url . '/config.json');
+
+                // parsing config masks            
+                $config_json = preg_replace('/%theme_url%/', $theme_url, $config_json);
+                $config_json = preg_replace('/%block_url%/', $block_url, $config_json);
+                $config_json = preg_replace('/%blocks_url%/', $blocks_url, $config_json);
+                // getting assets
+                $config = QoobtUtils::decode($config_json, true);
+                if (isset($config['assets'])) {
+                    $assets = $config['assets'];
+                    // var_dump($assets);
+                    for ($i = 0; $i < count($assets); $i++) {
+                        if ($assets[$i]['type'] === $assets_type) {
+                            
+                            // parsing styles masks
+                            
+                            $script = file_get_contents($assets[$i]['src']);
+                            $script = preg_replace('/%theme_url%/', $theme_url, $script);
+                            $script = preg_replace('/%block_url%/', $block_url, $script);
+                            $script = preg_replace('/%blocks_url%/', $blocks_url, $script);
+                            $qoob_scripts .= $script;
+                        }
+                    }
+                }
+            }
+        }
+        // printing scripts
+        return $qoob_scripts;
     }
 }
