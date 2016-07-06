@@ -93,7 +93,69 @@ class Qoob {
         add_action('wp_ajax_qoob_load_item', array($this, 'loadItem'));
         add_action('wp_ajax_qoob_save_page_data', array($this, 'savePageData'));
         add_action('wp_ajax_qoob_load_tmpl', array($this, 'loadTmpl'));
+        add_action('wp_ajax_load_blocks_scripts', array($this, 'loadBlocksAssets'));
+        add_action('wp_ajax_load_blocks_styles', array($this, 'loadBlocksAssets'));
+    
     }
+
+    public function loadBlocksAssets() {
+        if ($_GET['action'] === 'load_blocks_scripts') {
+            $type = 'script';
+        } else if (($_GET['action'] === 'load_blocks_styles')) {
+            $type = 'style';
+        }
+
+        $qoob_scripts = '';
+        $blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(dirname(__FILE__)) . 'blocks');
+        $blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(dirname(__FILE__)) . 'blocks');
+
+        $directory = new DirectoryIterator($blocks_path);
+
+        foreach ($directory as $file) {
+            if ($file->isDot()) {
+                continue;
+            }
+
+            if ($file->isDir()) {
+                // masks urls
+                $theme_url = get_template_directory_uri();
+                $block_url = $blocks_url . '/' . $file->getFilename();
+                // get block's config file
+                $config_json = file_get_contents($block_url . '/config.json');
+
+                // parsing config masks            
+                $config_json = preg_replace('/%theme_url%/', $theme_url, $config_json);
+                $config_json = preg_replace('/%block_url%/', $block_url, $config_json);
+                $config_json = preg_replace('/%blocks_url%/', $blocks_url, $config_json);
+                // getting assets
+                $config = QoobtUtils::decode($config_json, true);
+                if (isset($config['assets'])) {
+                    $assets = $config['assets'];
+                    // var_dump($assets);
+                    for ($i = 0; $i < count($assets); $i++) {
+                        if ($assets[$i]['type'] === $type) {
+                            
+                            // parsing styles masks
+                            $script = file_get_contents($assets[$i]['src']);
+                            $script = preg_replace('/%theme_url%/', $theme_url, $script);
+                            $script = preg_replace('/%block_url%/', $block_url, $script);
+                            $script = preg_replace('/%blocks_url%/', $blocks_url, $script);
+                            $qoob_scripts .= $script;
+                        }
+                    }
+                }
+            }
+        }
+        if ($type === 'script') {
+            header('Content-Type: application/javascript');
+        } else if ($type === 'style') {
+            header('Content-Type: text/css');
+        }
+        // printing scripts
+        echo $qoob_scripts;
+        die();
+    }
+
     /**
      * Get path of current file
      * 
@@ -494,6 +556,7 @@ class Qoob {
         $this->loadAssetsScripts();
         // load qoob styles
         wp_enqueue_style('qoob.frontend.style', $this->getUrlAssets() . "css/qoob.css");
+
     }
     /**
      * Load javascript and css on admin page
@@ -592,7 +655,11 @@ class Qoob {
             wp_enqueue_script('qoob', $this->getUrlQoob() . 'js/qoob.js', array('jquery'), '', true);
             wp_enqueue_script('handlebar-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-handlebars.js', array('handlebars'), '', true);
             wp_enqueue_script('underscore-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-underscore.js', array('underscore'), '', true);
+    
+    
+
         }
+
     }
     /**
      * add html instead shortcode
@@ -782,8 +849,8 @@ class Qoob {
      * @param Array $blocks blocks that contain wordpress theme
      */
     private function loadAssetsScripts() {
-        wp_enqueue_style('blocks-custom-styles', $this->getUrlTemplates() . 'load-styles.php');
-        wp_enqueue_script('blocks-custom-scripts', $this->getUrlTemplates() . 'load-scripts.php', array(), false, true);
+        wp_enqueue_style('blocks-custom-styles', admin_url('admin-ajax.php') . '?action=load_blocks_styles');
+        wp_enqueue_script('blocks-custom-scripts', admin_url('admin-ajax.php') . '?action=load_blocks_scripts', array('jquery'));
     }
     /**
      * Load qoob data
