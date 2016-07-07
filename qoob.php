@@ -108,6 +108,11 @@ class Qoob {
     
     }
 
+    /**
+     * Concating parsing and loading styles and scripts,
+     * that qoob blocks contain in their assets
+     *
+     */
     public function loadBlocksAssets() {
         if ($_GET['action'] === 'load_blocks_scripts') {
             $type = 'script';
@@ -163,32 +168,6 @@ class Qoob {
         // printing scripts
         echo $qoob_scripts;
         die();
-    }
-
-    /**
-     * Get path of current file
-     * 
-     * @return string full path to current or extended file
-     */
-    protected function getPathCurrentFile() {
-        $class = new ReflectionClass($this);
-        return $class->getFileName();
-    }
-    /**
-     * Get current module path
-     * 
-     * This method is easiest way to find out where is module located. This is 
-     * very useful method, because qoob builder can work the same as plugin and 
-     * as part of theme. 
-     * 
-     * <pre><code>$qoob = new Qoob();
-     * $path = $qoob->getPath(); //Get path of core module
-     * </code></pre>
-     * 
-     * @return String Path to root of current module
-     */
-    public function getPath() {
-        return realpath(dirname($this->getPathCurrentFile()) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
     /**
      * Get current module assets directory URL
