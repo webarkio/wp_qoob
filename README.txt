@@ -47,9 +47,14 @@ If you have any questions that are beyond the scope of this help file, please fe
 
 == Frequently Asked Questions ==
 
+= How to create a page with qoob =
+Qoob is the editor consisting of blocks. Work in Qoob simplifies the task of page creation.
+1. Go to Page -> Add New
+2. Click on button "qoob it"
+
 = How to add the blocks =
 
-= There are several ways for adding the block in qoob. =
+There are several ways for adding the block in qoob.
 1. To add a block in the page, please, **click** on the block. Each new block is added to the end of the page, under the blocks that were added earlier. After that you can add blocks by **dragging**.
 2. You find a block in the group and **move** it to the necessary place. This place will be highlighted.
 
