@@ -1,4 +1,4 @@
-=== qoob ===
+=== Qoob - Realtime Frontend Page Builder ===
 Contributors: webarkio
 Donate link: http://qoob.it/#donate
 Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout

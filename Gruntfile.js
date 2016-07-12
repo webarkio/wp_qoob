@@ -84,9 +84,9 @@ module.exports = function(grunt) {
                     mode: true
                 },
                 expand: true,
-                cwd: 'tmp/<%= pkg.plugin_name %>/assets/',
+                cwd: 'assets/screenshots/',
                 src: '**',
-                dest: '/assets/screenshots',
+                dest: 'tmp/<%= pkg.plugin_name %>/assets/',
                 flatten: true,
                 filter: 'isFile'
             },
@@ -111,7 +111,17 @@ module.exports = function(grunt) {
                 ],
                 dest: 'tmp/<%= pkg.plugin_name %>/trunk/'
             }
-        }
+        },
+        push_svn: {
+            options: {
+                remove: true
+            },
+            main: {
+                src: 'tmp/<%= pkg.plugin_name %>',
+                dest: 'https://plugins.svn.wordpress.org/qoob/',
+                tmp: 'build/make_svn'
+            }
+        },
     });
     // Load concating js plugin
     grunt.loadNpmTasks('grunt-contrib-concat');
@@ -123,12 +133,14 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-svn-checkout');
     // copy files
     grunt.loadNpmTasks('grunt-contrib-copy');
+    // push svn
+    grunt.loadNpmTasks('grunt-push-svn');
 
     //Build builder to theme tgm plugin
     grunt.registerTask('build', ['clean:build', 'shell:gitpull', 'concat', 'compress:stable']);
 
     // Deploy to trunk
-    grunt.registerTask('deploy', ['build', 'mkdir', 'svn_checkout', 'copy:svn_assets', 'copy:svn_trunk']);
+    grunt.registerTask('deploy', ['build', 'mkdir', 'svn_checkout', 'copy:svn_assets', 'copy:svn_trunk', 'clean:tmp']);
 
     // grunt.registerTask('deploy', ['build', 'mkdir', 'svn_checkout', 'copy:svn_assets', 'copy:svn_trunk', 'clean:tmp']);
 

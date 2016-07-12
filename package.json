@@ -32,7 +32,7 @@
     "load-grunt-tasks": "^3.2.0",
     "grunt-mkdir": "^0.1.2",
     "grunt-push-svn": "^0.2.2",
-    "grunt-svn-checkout": "^0.3.0"
-
+    "grunt-svn-checkout": "^0.3.0",
+    "grunt-push-svn": "^0.2.2"
   }
 }
