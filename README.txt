@@ -1,7 +1,7 @@
 === Qoob - Realtime Frontend Page Builder ===
 Contributors: webarkio
 Donate link: http://qoob.it/#donate
-Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout
+Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder
 Requires at least: 4.1
 Tested up to: 4.5.3
 Stable tag: trunk
@@ -9,6 +9,7 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
 Qoob page builder offers a huge amount of tools and features absolutely FREE.
+
 
 == Description ==
 
@@ -64,7 +65,9 @@ You can edit information in each block of the page. For this purpose **click** t
 2. In the settings **click** the image, video or icon to choose it. To return to the previous media, click on it again.
 
 == Screenshots ==
+
 1. The qoob builder interface.
+
 2. Sides of the qoob
 
 == Changelog ==
