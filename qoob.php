@@ -526,6 +526,7 @@ class Qoob {
             'url' => admin_url('admin-ajax.php'),
             'logged_in' => is_user_logged_in(),
             'iframe_url' => $url,
+            'theme_url' => get_template_directory_uri(),
             'qoob' => ( isset($_GET['qoob']) && $_GET['qoob'] == true ? true : false )
                 )
         );
