@@ -85,8 +85,8 @@ class Qoob {
         // registration ajax actions
         $this->registrationAjax();
         // Creating blocks paths
-        $this->blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(dirname(__FILE__)) . 'blocks');
-        $this->blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(dirname(__FILE__)) . 'blocks');
+        $this->blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(__FILE__) . 'blocks');
+        $this->blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(__FILE__) . 'blocks');
     }
     /**
      * Registration ajax actions
@@ -115,8 +115,8 @@ class Qoob {
         }
 
         $qoob_scripts = '';
-        $blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(dirname(__FILE__)) . 'blocks');
-        $blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(dirname(__FILE__)) . 'blocks');
+        $blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(__FILE__) . 'blocks');
+        $blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(__FILE__) . 'blocks');
 
         $directory = new DirectoryIterator($blocks_path);
 
@@ -888,8 +888,8 @@ class Qoob {
     */
     public function load_blocks_scripts($assets_type) {
         $qoob_scripts = '';
-        $blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(dirname(__FILE__)) . 'blocks');
-        $blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(dirname(__FILE__)) . 'blocks');
+        $blocks_path = $this->blocks_path;
+        $blocks_url = $this->blocks_url;
 
         $directory = new DirectoryIterator($blocks_path);
 
