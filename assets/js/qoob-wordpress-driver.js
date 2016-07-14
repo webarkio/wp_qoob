@@ -22,15 +22,7 @@ QoobWordpressDriver.prototype.getIframePageUrl = function(pageId) {
  * @returns {String}
  */
 QoobWordpressDriver.prototype.exit = function(pageId) {
-    if (!jQuery('.autosave input').prop("checked")) {
-        var alert_exit = confirm("Are you sure you want to exit without save?");
-        if (!alert_exit) {
-            return false;
-        }
-    }
-
-    var url = 'post.php?post=' + pageId + '&action=edit';
-    window.location.href = url;
+    window.location.href = 'post.php?post=' + pageId + '&action=edit';
 };
 
 /** 
