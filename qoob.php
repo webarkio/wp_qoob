@@ -465,7 +465,7 @@ class Qoob {
                 id int(9) NOT NULL AUTO_INCREMENT,
                 pid INT(9) NOT NULL,
                 data TEXT NOT NULL,
-                html TEXT NOT NULL,
+                html MEDIUMTEXT NOT NULL,
                 rev CHAR(32) NOT NULL,
                 date DATETIME NOT NULL DEFAULT NOW(),
                 lang VARCHAR(9) NOT NULL DEFAULT 'en', 
