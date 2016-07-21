@@ -142,8 +142,4 @@ module.exports = function(grunt) {
     // Deploy to trunk
     grunt.registerTask('deploy', ['build', 'mkdir', 'svn_checkout', 'copy:svn_assets', 'copy:svn_trunk', 'push_svn', 'clean:tmp']);
 
-    // grunt.registerTask('deploy', ['build', 'mkdir', 'svn_checkout', 'copy:svn_assets', 'copy:svn_trunk', 'clean:tmp']);
-
-    // 'commit',
-
 };
