@@ -10,7 +10,21 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         clean: {
             build: ['build/*'],
-            tmp: ['tmp/']
+            tmp: ['tmp/'],
+            docs: ['docs/dest/*', 'docs/dest/**'],
+        },
+        assemble: {
+            options: {
+                layout: "default.hbs",
+                layoutdir: 'docs/src/layouts',
+                data: 'docs/src/data/*.json',
+                flatten: true
+            },
+            pages: {
+                files: {
+                    'docs/dest/': ['docs/src/*.hbs']
+                }
+            }
         },
         compress: {
             // dev: {
@@ -48,6 +62,9 @@ module.exports = function(grunt) {
         shell: {
             gitpull: {
                 command: 'git pull'
+            },
+            api: {
+                command: 'node node_modules/jsdoc/jsdoc.js -c jsdoc.json -d docs/dest/api -t docs/jsdoc/template/jaguar'
             }
         },
         concat: {
@@ -110,6 +127,44 @@ module.exports = function(grunt) {
                     '!tmp/**'
                 ],
                 dest: 'tmp/<%= pkg.plugin_name %>/trunk/'
+            },
+            style: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'docs/src/css/',
+                        src: ['**'],
+                        dest: 'docs/dest/css/'
+                    }
+                ],
+            },
+            fonts: {
+                files: [{
+                        expand: true,
+                        cwd: 'docs/src/fonts/',
+                        src: ['**'],
+                        dest: 'docs/dest/fonts/'
+                    }]
+            },
+            js: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'docs/src/js/',
+                        src: ['**'],
+                        dest: 'docs/dest/js/'
+                    }
+                ]
+            },
+            img: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'docs/src/img/',
+                        src: ['**'],
+                        dest: 'docs/dest/img/'
+                    }
+                ],
             }
         },
         push_svn: {
@@ -121,7 +176,7 @@ module.exports = function(grunt) {
                 dest: 'https://plugins.svn.wordpress.org/qoob/',
                 tmp: 'build/make_svn'
             }
-        },
+        }
     });
     // Load concating js plugin
     grunt.loadNpmTasks('grunt-contrib-concat');
@@ -135,6 +190,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     // push svn
     grunt.loadNpmTasks('grunt-push-svn');
+    // load assemble
+    grunt.loadNpmTasks('grunt-assemble');
 
     //Build builder to theme tgm plugin
     grunt.registerTask('build', ['clean:build', 'shell:gitpull', 'concat', 'compress:stable']);
@@ -142,4 +199,9 @@ module.exports = function(grunt) {
     // Deploy to trunk
     grunt.registerTask('deploy', ['build', 'mkdir', 'svn_checkout', 'copy:svn_assets', 'copy:svn_trunk', 'push_svn', 'clean:tmp']);
 
+    //Deploy docs
+    grunt.registerTask('docs', ['clean:docs', 'assemble', 'copy:style', 'copy:fonts', 'copy:js', 'copy:img', 'api']);
+
+    //Create only JS API docs
+    grunt.registerTask('api', ['shell:api']);
 };

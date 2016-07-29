@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>{{title}}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/monokai_sublime.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+  <header class="banner navbar navbar-default navbar-static-top" role="banner">
+    <div class="container">
+      <div class="navbar-header">        
+      <a class="navbar-logo" href="http://qoob.it">
+          <img src="img/logo_one.png" width="52" height="52">
+      </a>
+      <a class="navbar-brand" href="{{project.url}}">{{project.name}}</a> 
+      </div>
+
+      <nav class="collapse navbar-collapse" role="navigation">
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap container" role="document">
+      <div class="content row">
+        <aside class="sidebar col-md-3" role="complementary">
+          {{#is main_menu "user"}}
+          <section>
+            <ul class="list-group menu_list">
+              {{#each user_menu}}
+                {{#if submenu}}
+                  <li class="cat-item list-group-item has_children {{#is ../../active_menu title}}active{{/is}}">
+                    <a href="#">{{title}}</a>
+                    <ul class="children">
+                      {{#each submenu}}
+                        <li class="cat-item list-group-item"><a href="{{url}}">{{title}}</a></li>
+                      {{/each }}
+                    </ul>
+                  </li>
+                {{else}}
+                  <li class="cat-item list-group-item {{#is ../../active_menu title}}current-cat{{/is}}"><a href="{{url}}">{{title}}</a></li>
+                {{/if}}
+              {{/each }}
+            </ul>
+          </section>
+          {{/is}}
+        {{#is main_menu "dev"}}
+          <section>
+            <ul class="list-group menu_list">
+              {{#each dev_menu}}
+                {{#if submenu}}
+                  <li class="cat-item list-group-item has_children {{#is ../../active_menu title}}active{{/is}}">
+                    <a href="#">{{title}}</a>
+                    <ul class="children">
+                      {{#each submenu}}
+                        <li class="cat-item list-group-item"><a href="{{url}}">{{title}}</a></li>
+                      {{/each }}
+                    </ul>
+                  </li>
+                {{else}}
+                  <li class="cat-item list-group-item {{#is ../../active_menu title}}current-cat{{/is}}"><a href="{{url}}">{{title}}</a></li>
+                {{/if}}
+              {{/each }}
+            </ul>
+          </section>
+{{/is}}
+
+        </aside><!-- /.sidebar -->
+        <main class="main col-md-9 " role="main">
+            <div class="col-md-12">
+              <div class="entry-content">
+                {{> body }}
+              </div>
+            </div><!-- .col-md-# -->
+        </main><!-- /.main -->
+      </div><!-- /.content -->
+  </div>
+
+      <!-- FOOTER -->
+      <div class="container">
+      <footer>
+        <p class="text-right">&copy; 2016</p>
+      </footer>
+      </div>
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>
