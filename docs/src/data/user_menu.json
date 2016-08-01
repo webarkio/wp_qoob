@@ -1,0 +1,10 @@
+[{
+    "title": "Usage",
+    "submenu": [{
+        "title": "WP installation",
+        "url": "user-installation.html"
+    },{
+        "title":"How to use",
+        "url": "user-structure.html"
+    }]
+  }]  
