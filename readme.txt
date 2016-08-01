@@ -1,12 +1,5 @@
-#### Qoob - Realtime Frontend Page Builder
-Contributors: webarkio
-Donate link: http://qoob.it/#donate
-Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder
-Requires at least: 4.1
-Tested up to: 4.5.3
-Stable tag: trunk
-License: GPLv3
-License URI: http://www.gnu.org/licenses/gpl.html
+Qoob - Realtime Frontend Page Builder
+====================================
 
 Thank you for choosing Qoob - a high-performance page builder.
 It offers a huge amount of tools and features absolutely FREE.
