@@ -1,4 +1,4 @@
-=== Qoob - Realtime Frontend Page Builder ===
+### Qoob - Realtime Frontend Page Builder
 Contributors: webarkio
 Donate link: http://qoob.it/#donate
 Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder
@@ -17,7 +17,7 @@ Description
 
 It is the easiest and the fastest website builder for WordPress. No need for coding skills. It is a perfect solution, that save you from any prior design and let you handle it without hiring a professional. Just upload your content and get a working cross-platform website, fully adjusted to all devices available on the market. Our [qoob.it](http://qoob.it/) website was built with the help of "qoob" plugin.
 
-# Advantages of Qoob #
+# Advantages of Qoob
 
 *   The **visual editor** allows users quickly and easily create, edit, and format your page content. The editing interface will always reflect how your project will look for users, with no page reloads, no extra bars or wait time.
 *   **So easy** - Simply drag and drop the desired block to build your website in a **few clicks**.
@@ -31,7 +31,7 @@ If you have any questions that are beyond the scope of this help file, please fe
 Installation
 ------------
 
-# Installing Through The WordPress Admin #
+# Installing Through The WordPress Admin
 
 1. Head over to Plugins > Add New in the admin
 2. Search for "qoob"
@@ -39,7 +39,7 @@ Installation
 4. Visit any page in your frontend
 5. Click the "Edit with qoob.it" button on the top of the page and start building your page!
 
-# Installing Through FTP #
+# Installing Through FTP
 
 1. Download the ZIP file and unpack it
 2. Upload the qoob to the `/wp-content/plugins/` directory
@@ -54,32 +54,32 @@ Documentation
 Frequently Asked Questions
 --------------------------
 
-# How to create a page with qoob #
+# How to create a page with qoob
 Qoob is the editor consisting of blocks. Work in Qoob simplifies the task of page creation.
 
 1. Go to Page -> Add New
 2. Click on button "qoob it"
 
-# How to add the blocks #
+# How to add the blocks
 
 There are several ways for adding the block in qoob.
 
 1. To add a block in the page, please, **click** on the block. Each new block is added to the end of the page, under the blocks that were added earlier. After that you can add blocks by **dragging**.
 2. You find a block in the group and **move** it to the necessary place. This place will be highlighted.
 
-# How to edit the blocks #
+# How to edit the blocks
 You can edit information in each block of the page. For this purpose **click** the necessary block on the right of the page. In the left you can see settings of this block.
 
-# How to delete / move blocks #
+# How to delete / move blocks
 1. Click the necessary block.
 2. By pressing the **Delete / Move** button in the left bottom corner of settings you can change postion of the block or delete it from the page.
 
-# How to change the media center #
+# How to change the media center
 1. **Click** the necessary block.
 2. In the settings **click** the image, video or icon to choose it. To return to the previous media, click on it again.
 
 Changelog
 ---------
 
-# 1.0.1 #
+# 1.0.1
 * First release
