@@ -58,8 +58,7 @@ class Qoob {
      * Register actions for module
      */
     public function __construct() {
-        // Create table in DB
-        $this->createrDbTable();
+        //TODO: register and add custom fields to post type 'page'
 
         if (is_admin()) {
             // Load backend
@@ -320,55 +319,6 @@ class Qoob {
         return false;
     }
     /**
-     * Add shortcode to content
-     *
-     * @param int $pageId
-     */
-    private function addShortcodeToContent() {
-        $post_data = array(
-            'ID' => $this->post_id,
-            'post_status' => ($this->post->post_status == 'publish' ? 'publish' : 'draft'),
-            'post_title' => ($this->post->post_title != '' ? $this->post->post_title : ''),
-            'post_content' => '[' . self::NAME_SHORTCODE . ']',
-        );
-// Update the post into the database
-        wp_update_post($post_data);
-    }
-    /**
-     * Create new page in Qoob db table
-     *
-     * @return int id new page
-     */
-    private function createQoobPage($lang) {
-        global $wpdb;
-        $wpdb->insert($this->tableName, array(
-            'pid' => $this->post_id,
-            'lang' => $lang,
-            'data' => '',
-            'html' => '',
-            'rev' => 0,
-        ));
-    }
-    /**
-     * Get id from shortcode attr
-     *
-     * @param string $post_content
-     * @return string id from page
-     */
-    private function checkPage($lang = 'en') {
-        global $wpdb;
-        //getting existing pages by id
-        $pages = $wpdb->get_results(
-                'SELECT * FROM ' . $this->tableName .
-                ' WHERE pid = ' . $this->post_id .
-                ' AND lang = "' . $lang . '"', "ARRAY_A"
-        );
-        //if pages don't exist - creating page in database
-        if (empty($pages)) {
-            $this->createQoobPage($lang);
-        }
-    }
-    /**
      * Create qoob page
      *
      * @global object $current_user
@@ -377,10 +327,7 @@ class Qoob {
         global $current_user;
         global $post;
         wp_get_current_user();
-        $this->checkPage();
-        if (!preg_match('/\[qoob-page\]/', $post->post_content)) {
-            $this->addShortcodeToContent();
-        }
+        //TODO: check for data custom field
         $this->current_user = $current_user;
         $this->post_url = str_replace(array('http://', 'https://'), '//', get_permalink($this->post_id));
         if (!current_user_can('edit_post', $this->post_id)) {
@@ -451,31 +398,6 @@ class Qoob {
             $block = $this->getBlock($id);
             $html = do_shortcode(stripslashes($block['html']));
             return $html;
-        }
-    }
-    /**
-     * Create plugin table
-     *
-     * @global object $wpdb
-     */
-    public function createrDbTable() {
-        global $wpdb;
-        // set table name
-        $this->tableName = $wpdb->prefix . "pages";
-        if ($wpdb->get_var("show tables like '$this->tableName'") != $this->tableName) {
-            $sql = "CREATE TABLE " . $this->tableName . " (
-                id int(9) NOT NULL AUTO_INCREMENT,
-                pid INT(9) NOT NULL,
-                data TEXT NOT NULL,
-                html MEDIUMTEXT NOT NULL,
-                rev CHAR(32) NOT NULL,
-                date DATETIME NOT NULL DEFAULT NOW(),
-                lang VARCHAR(9) NOT NULL DEFAULT 'en', 
-                PRIMARY KEY (id),
-                KEY id(id)
-            );";
-            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-            dbDelta($sql);
         }
     }
     /**
@@ -610,12 +532,17 @@ class Qoob {
      * @return json
      */
     public function loadPageData() {
-        global $wpdb;
-        $blocks = $wpdb->get_results(
-                "SELECT * FROM " . $this->tableName .
-                " WHERE pid=" . $_POST['page_id'] .
-                " AND lang='" . $_POST['lang'] .
-                "' ORDER BY date DESC LIMIT 1", "ARRAY_A");
+        // global $wpdb;
+        // $blocks = $wpdb->get_results(
+        //         "SELECT * FROM " . $this->tableName .
+        //         " WHERE pid=" . $_POST['page_id'] .
+        //         " AND lang='" . $_POST['lang'] .
+        //         "' ORDER BY date DESC LIMIT 1", "ARRAY_A");
+            
+        // TODO: get customfield 'data' value
+        $page = get_page($_POST['page_id']);
+        $block_data = $page['custom_field'];
+
         $block = !empty($blocks) ? $blocks[0] : null;
 
         if (isset($block) && isset($block['data'])) {
