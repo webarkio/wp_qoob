@@ -99,6 +99,8 @@ class Qoob {
         add_action('wp_ajax_qoob_load_tmpl', array($this, 'loadTmpl'));
         add_action('wp_ajax_load_blocks_scripts', array($this, 'loadBlocksAssets'));
         add_action('wp_ajax_load_blocks_styles', array($this, 'loadBlocksAssets'));
+        add_action('wp_ajax_nopriv_load_blocks_scripts', array($this, 'loadBlocksAssets'));
+        add_action('wp_ajax_nopriv_load_blocks_styles', array($this, 'loadBlocksAssets'));
     
     }
 
