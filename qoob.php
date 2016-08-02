@@ -68,11 +68,24 @@ class Qoob {
         add_action('wp_enqueue_scripts', array($this, 'frontendScripts'));
         // Add edit link
         add_filter('page_row_actions', array($this, 'addEditLinkAction'));
+        // Adding filter to check content
+        add_filter('the_content', array($this, 'filterContent'));
         // registration ajax actions
         $this->registrationAjax();
         // Creating blocks paths
         $this->blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(__FILE__) . 'blocks');
         $this->blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(__FILE__) . 'blocks');
+    }
+    /**
+     * Filtering the content for theme templating
+     *
+     */
+    public function filterContent($content = null) {
+        if (is_user_logged_in() && (isset($_GET['qoob']) && $_GET['qoob'] == true) ) {
+            return '<div id="qoob-blocks"></div>';
+        } else {
+            return do_shortcode(stripslashes(get_the_content()));
+        }
     }
     /**
      * Registration ajax actions
