@@ -103,8 +103,8 @@ class Qoob {
                     );
                     wp_update_post( $update_args );
                 }
-                $wpdb->query("DROP TABLE IF EXISTS wp_pages"); 
             }
+            $wpdb->query("DROP TABLE wp_pages"); 
         }
         
      }
