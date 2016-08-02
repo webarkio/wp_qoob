@@ -76,6 +76,35 @@ class Qoob {
         $this->blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(__FILE__) . 'blocks');
         $this->blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(__FILE__) . 'blocks');
     }
+
+    /**
+     * Activation hook callback
+     */
+     static function install() {
+        global $wpdb;
+        if($wpdb->get_var("SHOW TABLES LIKE 'wp_pages'") == 'wp_pages') {
+            $pages = $wpdb->get_results(
+                    "SELECT * FROM (SELECT pid, data, html FROM wp_pages WHERE data != '' ORDER BY date DESC) as ordered_table" .
+                    " GROUP BY pid", "ARRAY_A"
+                    );
+            for ($i = 0; $i < count($pages); $i++) {
+                $post_id = $pages[$i]['pid'];
+                if ( !is_null(get_post($post_id)) ) {
+                    // Add or update post meta field
+                    add_post_meta($post_id, 'qoob_data', $pages[$i]['data']);
+                    // Updating post content
+                    $update_args = array(
+                      'ID'           => $post_id,
+                      'post_content' => $pages[$i]['html'],
+                    );
+                    wp_update_post( $update_args );
+                }
+                $wpdb->query("DROP TABLE IF EXISTS wp_pages"); 
+            }
+        }
+        
+     }
+
     /**
      * Filtering the content for theme templating
      *
@@ -775,6 +804,6 @@ class Qoob {
         return $qoob_scripts;
     }
 }
-
-
+//Activating pugin
+register_activation_hook( __FILE__, array( 'Qoob', 'install' ) );
 $qoob = new Qoob();
