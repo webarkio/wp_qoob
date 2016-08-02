@@ -88,7 +88,7 @@ class Qoob {
                     " GROUP BY pid", "ARRAY_N"
                     );
             for ($i = 0; $i < count($pids); $i++) {
-                $pid = $pids[$i];
+                $pid = $pids[$i][0];
                 if ( !is_null(get_post($pid)) ) {
                     $last_page_node = $wpdb->get_row(
                         "SELECT * FROM wp_pages" .
