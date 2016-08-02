@@ -83,19 +83,23 @@ class Qoob {
      static function install() {
         global $wpdb;
         if($wpdb->get_var("SHOW TABLES LIKE 'wp_pages'") == 'wp_pages') {
-            $pages = $wpdb->get_results(
-                    "SELECT * FROM (SELECT pid, data, html FROM wp_pages WHERE data != '' ORDER BY date DESC) as ordered_table" .
-                    " GROUP BY pid", "ARRAY_A"
+            $pids = $wpdb->get_results(
+                    "SELECT pid FROM wp_pages" .
+                    " GROUP BY pid", "ARRAY_N"
                     );
-            for ($i = 0; $i < count($pages); $i++) {
-                $post_id = $pages[$i]['pid'];
-                if ( !is_null(get_post($post_id)) ) {
+            for ($i = 0; $i < count($pids); $i++) {
+                $pid = $pids[$i];
+                if ( !is_null(get_post($pid)) ) {
+                    $last_page_node = $wpdb->get_row(
+                        "SELECT * FROM wp_pages" .
+                        " WHERE pid=" . $pid . " ORDER BY date DESC LIMIT 1", "ARRAY_A"
+                        );
                     // Add or update post meta field
-                    add_post_meta($post_id, 'qoob_data', $pages[$i]['data']);
+                    add_post_meta($pid, 'qoob_data', $last_page_node['data']);
                     // Updating post content
                     $update_args = array(
-                      'ID'           => $post_id,
-                      'post_content' => $pages[$i]['html'],
+                      'ID'           => $pid,
+                      'post_content' => $last_page_node['html'],
                     );
                     wp_update_post( $update_args );
                 }
