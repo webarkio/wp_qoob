@@ -75,6 +75,8 @@ class Qoob {
         // Controlling revisions
         add_action('save_post', array($this, 'savePostMeta'));
         add_action( 'wp_restore_post_revision', array($this, 'restoreRevision'), 10, 2 );
+        // Add metabox
+        add_action( 'add_meta_boxes', array($this, 'infoMetabox') );
         // registration ajax actions
         $this->registrationAjax();
         // Creating blocks paths
@@ -102,16 +104,15 @@ class Qoob {
                         "SELECT * FROM wp_pages" .
                         " WHERE pid=" . $pid . " ORDER BY date DESC LIMIT 1", "ARRAY_A"
                         );
+
+                    // Saving received meta
+                    update_post_meta( $pid, 'qoob_data', $last_page_node['data'] );
                     
                     // Updating post content
                     $update_args = array(
                       'ID'           => $pid,
                       'post_content' => $last_page_node['html'],
                     );
-
-                    // Saving received meta
-                    add_metadata( 'post', $pid, 'my_meta', $last_page_node['data'] );
-
                     wp_update_post( $update_args );
 
                 }
@@ -122,6 +123,27 @@ class Qoob {
         }
         
      }
+
+    /**
+     * Add metabox with info about current Qoob page
+    */
+    public function infoMetabox() {
+        global $post;
+
+        $data = get_post_meta($post->ID, 'qoob_data', true);
+
+        // If have blocks - remove tinymce editor
+        if ( $data != '{"blocks":[]}' && $data != '')
+            add_meta_box( 'qoob-page-info', __( 'Attention!', 'qoob' ), array($this, 'infoMetaboxDisplay'), 'page' );
+    }
+
+    /*
+     * Display metabox
+    */
+    public function infoMetaboxDisplay() {
+        echo '<p>Current page has been edited with Qoob Page Builder. To edit this page as regular one - go to Qoob editor by pressing "qoob it" button and remove all blocks.</p>';
+    }
+
      /**
       * Saving post meta to revision
       * @param  int $post_id ID of the current post
