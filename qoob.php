@@ -3,7 +3,7 @@
   Plugin Name: qoob
   Plugin URI: http://qoob.it/
   Description: Qoob - by far the easiest free page builder plugin for WP
-  Version: 1.0.1
+  Version: 1.0.2
   Author: webark.io
   Author URI: http://webark.io/
  */
@@ -26,19 +26,9 @@ class Qoob {
      */
     const NAME_SHORTCODE = 'qoob-page';
     /**
-     * Revisions count for page in database
-     */
-    const REVISIONS_COUNT = 20;
-    /**
      * Table name plugin
      * @var string
      */
-    var $tableName;
-    /**
-     * State first shortcode
-     * @var boolean
-     */
-    private $statusShortcode = false;
     /**
      * All items url's
      * @var array
@@ -58,8 +48,6 @@ class Qoob {
      * Register actions for module
      */
     public function __construct() {
-        // Create table in DB
-        $this->createrDbTable();
 
         if (is_admin()) {
             // Load backend
@@ -80,18 +68,163 @@ class Qoob {
         add_action('wp_enqueue_scripts', array($this, 'frontendScripts'));
         // Add edit link
         add_filter('page_row_actions', array($this, 'addEditLinkAction'));
-        //register shortcode
-        add_shortcode(self::NAME_SHORTCODE, array($this, 'addShortcode'));
+        // Adding filter to check content
+        add_filter('the_content', array($this, 'filterContent'));
+        // Remove tinymce if page was used as Qoob page
+        add_action('load-page.php', array($this, 'onPageEdit'));
+        // Controlling revisions
+        add_action('save_post', array($this, 'savePostMeta'));
+        add_action( 'wp_restore_post_revision', array($this, 'restoreRevision'), 10, 2 );
+        // Add metabox
+        add_action( 'add_meta_boxes', array($this, 'infoMetabox') );
         // registration ajax actions
         $this->registrationAjax();
         // Creating blocks paths
         $this->blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(__FILE__) . 'blocks');
         $this->blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(__FILE__) . 'blocks');
     }
+
+    /**
+     * Activation hook callback
+     */
+     static function install() {
+        global $wpdb;
+        if($wpdb->get_var("SHOW TABLES LIKE 'wp_pages'") == 'wp_pages') {
+            $pids = $wpdb->get_results(
+                    "SELECT pid FROM wp_pages" .
+                    " GROUP BY pid", "ARRAY_N"
+                    );
+            for ($i = 0; $i < count($pids); $i++) {
+                
+                $pid = $pids[$i][0];
+                
+                if ( !is_null(get_post($pid)) ) {
+                    
+                    $last_page_node = $wpdb->get_row(
+                        "SELECT * FROM wp_pages" .
+                        " WHERE pid=" . $pid . " ORDER BY date DESC LIMIT 1", "ARRAY_A"
+                        );
+
+                    // Saving received meta
+                    update_post_meta( $pid, 'qoob_data', $last_page_node['data'] );
+                    
+                    // Updating post content
+                    $update_args = array(
+                      'ID'           => $pid,
+                      'post_content' => $last_page_node['html'],
+                    );
+                    wp_update_post( $update_args );
+
+                }
+
+            }
+
+            $wpdb->query("DROP TABLE wp_pages"); 
+        }
+        
+     }
+
+    /**
+     * Add metabox with info about current Qoob page
+    */
+    public function infoMetabox() {
+        global $post;
+
+        $data = get_post_meta($post->ID, 'qoob_data', true);
+
+        // If have blocks - remove tinymce editor
+        if ( $data != '{"blocks":[]}' && $data != '')
+            add_meta_box( 'qoob-page-info', __( 'Attention!', 'qoob' ), array($this, 'infoMetaboxDisplay'), 'page' );
+    }
+
+    /*
+     * Display metabox
+    */
+    public function infoMetaboxDisplay() {
+        echo '<p>Current page has been edited with Qoob Page Builder. To edit this page as regular one - go to Qoob editor by pressing "qoob it" button and remove all blocks.</p>';
+    }
+
+     /**
+      * Saving post meta to revision
+      * @param  int $post_id ID of the current post
+      */
+    public function savePostMeta($post_id) {
+        $parent_id = wp_is_post_revision( $post_id );
+
+        if ( $parent_id ) {
+
+            $parent  = get_post( $parent_id );
+            $qoob_data = get_post_meta( $parent->ID, 'qoob_data', true );
+
+            if ( $qoob_data !== false )
+                add_metadata( 'post', $post_id, 'qoob_data', $qoob_data );
+        }
+    }
+
+    /**
+     * [restoreRevision description]
+     * @param  int $post_id     Post id
+     * @param  int $revision_id Current revision id
+     */
+    public function restoreRevision( $post_id, $revision_id ) {
+        $post     = get_post( $post_id );
+        $revision = get_post( $revision_id );
+        $data  = get_metadata( 'post', $revision->ID, 'qoob_data', true );
+
+        if ( $data !== false )
+            update_post_meta( $post_id, 'qoob_data', $data );
+        else
+            delete_post_meta( $post_id, 'qoob_data' );
+    }
+
+    /**
+     * Filtering the content for theme templating
+     *
+     */
+    public function filterContent($content = null) {
+        $result = '';
+        if (is_user_logged_in() && (isset($_GET['qoob']) && $_GET['qoob'] == true) )
+            $result = '<div id="qoob-blocks"></div>';
+        else {
+
+            global $post;
+            $data = get_post_meta($post->ID, 'qoob_data', true);
+
+            // If have blocks - use get_the_content() function. In other way - return basic content
+            if ( $data != '{"blocks":[]}' && $data != '') {
+                $result = do_shortcode(stripslashes(get_the_content()));
+            } else {
+                $result = do_shortcode($content);
+            } 
+
+        }
+
+        return $result;
+    }
+
+    /**
+     * Filtering metaboxes on page edit screen
+     */
+    public function onPageEdit() {
+        if (isset($_GET['post'])) {
+
+            // Getting qoob_html from metadata
+            $post_id =  $_GET['post'];
+            $data = get_post_meta($post_id, 'qoob_data', true);
+
+            // If have blocks - remove tinymce editor
+            if ( $data != '{"blocks":[]}' && $data != '') {
+                remove_post_type_support('page', 'editor');
+            }
+
+        }
+    }
+
     /**
      * Registration ajax actions
      */
     public function registrationAjax() {
+
         add_action('wp_ajax_qoob_load_page_data', array($this, 'loadPageData'));
         add_action('wp_ajax_qoob_load_data', array($this, 'loadData'));
         add_action('wp_ajax_qoob_load_item', array($this, 'loadItem'));
@@ -320,55 +453,6 @@ class Qoob {
         return false;
     }
     /**
-     * Add shortcode to content
-     *
-     * @param int $pageId
-     */
-    private function addShortcodeToContent() {
-        $post_data = array(
-            'ID' => $this->post_id,
-            'post_status' => ($this->post->post_status == 'publish' ? 'publish' : 'draft'),
-            'post_title' => ($this->post->post_title != '' ? $this->post->post_title : ''),
-            'post_content' => '[' . self::NAME_SHORTCODE . ']',
-        );
-// Update the post into the database
-        wp_update_post($post_data);
-    }
-    /**
-     * Create new page in Qoob db table
-     *
-     * @return int id new page
-     */
-    private function createQoobPage($lang) {
-        global $wpdb;
-        $wpdb->insert($this->tableName, array(
-            'pid' => $this->post_id,
-            'lang' => $lang,
-            'data' => '',
-            'html' => '',
-            'rev' => 0,
-        ));
-    }
-    /**
-     * Get id from shortcode attr
-     *
-     * @param string $post_content
-     * @return string id from page
-     */
-    private function checkPage($lang = 'en') {
-        global $wpdb;
-        //getting existing pages by id
-        $pages = $wpdb->get_results(
-                'SELECT * FROM ' . $this->tableName .
-                ' WHERE pid = ' . $this->post_id .
-                ' AND lang = "' . $lang . '"', "ARRAY_A"
-        );
-        //if pages don't exist - creating page in database
-        if (empty($pages)) {
-            $this->createQoobPage($lang);
-        }
-    }
-    /**
      * Create qoob page
      *
      * @global object $current_user
@@ -377,10 +461,7 @@ class Qoob {
         global $current_user;
         global $post;
         wp_get_current_user();
-        $this->checkPage();
-        if (!preg_match('/\[qoob-page\]/', $post->post_content)) {
-            $this->addShortcodeToContent();
-        }
+        //TODO: check for data custom field
         $this->current_user = $current_user;
         $this->post_url = str_replace(array('http://', 'https://'), '//', get_permalink($this->post_id));
         if (!current_user_can('edit_post', $this->post_id)) {
@@ -416,67 +497,6 @@ class Qoob {
      */
     public function setTitlePage() {
         return __('Edit Page with qoob', 'qoob');
-    }
-    /**
-     * Get block from id
-     *
-     * @global object $wpdb
-     * @param type int
-     * @return string html
-     */
-    private function getBlock($id, $lang = 'en') {
-        global $wpdb;
-        $block = $wpdb->get_results(
-                "SELECT * FROM " . $this->tableName .
-                " WHERE pid = " . $id .
-                " AND lang='" . $lang . "'" .
-                " ORDER BY date DESC LIMIT 1", "ARRAY_A");
-        return $block[0];
-    }
-    /**
-     * Create shortcode
-     * @param array $atts An associative array of attributes, or an empty string if no attributes are given
-     * @param string $content The enclosed content (if the shortcode is used in its enclosing form)
-     * @return string Html code our shortcode
-     */
-    public function addShortcode($atts, $content = null) {
-        if (is_user_logged_in() && ( isset($_GET['qoob']) && $_GET['qoob'] == true)) {
-            if ($this->statusShortcode == true) {
-                return;
-            }
-            return $this->addMainQoobBlock();
-        } else {
-            global $post;
-            $id = $post->ID;
-            $block = $this->getBlock($id);
-            $html = do_shortcode(stripslashes($block['html']));
-            return $html;
-        }
-    }
-    /**
-     * Create plugin table
-     *
-     * @global object $wpdb
-     */
-    public function createrDbTable() {
-        global $wpdb;
-        // set table name
-        $this->tableName = $wpdb->prefix . "pages";
-        if ($wpdb->get_var("show tables like '$this->tableName'") != $this->tableName) {
-            $sql = "CREATE TABLE " . $this->tableName . " (
-                id int(9) NOT NULL AUTO_INCREMENT,
-                pid INT(9) NOT NULL,
-                data TEXT NOT NULL,
-                html MEDIUMTEXT NOT NULL,
-                rev CHAR(32) NOT NULL,
-                date DATETIME NOT NULL DEFAULT NOW(),
-                lang VARCHAR(9) NOT NULL DEFAULT 'en', 
-                PRIMARY KEY (id),
-                KEY id(id)
-            );";
-            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-            dbDelta($sql);
-        }
     }
     /**
      * Load javascript and css on iframe
@@ -599,38 +619,35 @@ class Qoob {
         }
 
     }
-    /**
-     * add html instead shortcode
-     */
-    public function addMainQoobBlock() {
-        echo '<div id="qoob-blocks"></div>';
-    }
+
     /**
      * Load data page
      * @return json
      */
-    public function loadPageData() {
-        global $wpdb;
-        $blocks = $wpdb->get_results(
-                "SELECT * FROM " . $this->tableName .
-                " WHERE pid=" . $_POST['page_id'] .
-                " AND lang='" . $_POST['lang'] .
-                "' ORDER BY date DESC LIMIT 1", "ARRAY_A");
-        $block = !empty($blocks) ? $blocks[0] : null;
+    public function loadPageData() { 
+        $page_id = $_POST['page_id'];
+        $data = get_post_meta($page_id, 'qoob_data', true);
 
-        if (isset($block) && isset($block['data'])) {
-            $data = stripslashes_deep(json_decode($block['data'], true));
+        // Send decoded page data to the Qoob editor page
+        if ($data != '') {
+
+            $data = stripslashes_deep(json_decode($data, true));
 
             $response = array(
                 'success' => true,
                 'data' => $data
             );
+
         } else {
+
             $response = array('success' => false);
+
         }
+
         wp_send_json($response);
         exit();
     }
+
     /**
      * Save data page
      * @return json
@@ -643,37 +660,19 @@ class Qoob {
         global $wpdb;
         $post_data = json_decode(file_get_contents('php://input'), true);
         $blocks_html = trim($post_data['blocks']['html']);
-        $lang = isset($post_data['lang']) ? $post_data['lang'] : 'en';
         $post_id = $post_data['page_id'];
-        $updated = false;
-        $data = json_encode(isset($post_data['blocks']['data']) ? $post_data['blocks']['data'] : '');
-        // Getting same blocks with such id and language
-        $blocks = $wpdb->get_results(
-                "SELECT * FROM " . $this->tableName .
-                " WHERE pid=" . $post_id .
-                " AND lang='" . $lang .
-                "' ORDER BY date DESC", "ARRAY_A");
-        if (!empty($blocks)) {
-            // Last page revisioned
-            $last_block = $blocks[0];
-            // Comparing page to last page saved
-            // If html hashes are equal - don't need to save the new revision
-            $last_revision_hash = $last_block['rev'];
-            $current_revision_hash = md5($blocks_html);
-            if ($last_revision_hash !== $current_revision_hash) {
-                $wpdb->flush();
-                $updated = $wpdb->query($wpdb->prepare(
-                                "INSERT INTO $this->tableName ( pid, data, html, rev, lang ) 
-            VALUES ( %d, %s, %s, %s, %s)", $post_id, $data, $blocks_html, $current_revision_hash, $lang
-                ));
-                // When the amount of revisions are more then needed, 
-                // we are deleting first revision in the list
-                if (count($blocks) >= self::REVISIONS_COUNT) {
-                    $first_block_rev = $blocks[count($blocks) - 1]['rev'];
-                    $this->deletePageRow($post_id, $lang, $first_block_rev);
-                }
-            }
-        }
+        $qoob_data = json_encode(isset($post_data['blocks']['data']) ? $post_data['blocks']['data'] : '');
+        
+        // Saving metafield
+        update_post_meta( $post_id, 'qoob_data', $qoob_data );
+
+        // Updating post content and post content filtered
+        $update_args = array(
+          'ID'           => $post_id,
+          'post_content' => $blocks_html,
+        );
+        $updated = wp_update_post( $update_args );
+
         $responce = array('success' => (boolean) $updated);
         wp_send_json($responce);
         exit();
@@ -866,22 +865,6 @@ class Qoob {
         wp_send_json($response);
         exit();
     }
-    /**
-     * Deleting page row
-     * @global object $wpdb
-     * @param integer $pid Page id
-     * @param string $lang Page language
-     * @param integer $revision Number of revision
-     * @return type
-     */
-    private function deletePageRow($pid, $lang = 'en', $revision) {
-        global $wpdb;
-        return $wpdb->delete($this->tableName, array(
-                    'pid' => $pid,
-                    'lang' => $lang,
-                    'rev' => $revision
-        ));
-    }
 
     /**
     * Get scripts or styles, contained in theme block's assets
@@ -934,6 +917,6 @@ class Qoob {
         return $qoob_scripts;
     }
 }
-
-
+//Activating pugin
+register_activation_hook( __FILE__, array( 'Qoob', 'install' ) );
 $qoob = new Qoob();
