@@ -70,6 +70,11 @@ class Qoob {
         add_filter('page_row_actions', array($this, 'addEditLinkAction'));
         // Adding filter to check content
         add_filter('the_content', array($this, 'filterContent'));
+        // Remove tinymce if page was used as Qoob page
+        add_action('load-page.php', array($this, 'onPageEdit'));
+        // Controlling revisions
+        add_action('save_post', array($this, 'savePostMeta'));
+        add_action( 'wp_restore_post_revision', array($this, 'restoreRevision'), 10, 2 );
         // registration ajax actions
         $this->registrationAjax();
         // Creating blocks paths
@@ -88,38 +93,111 @@ class Qoob {
                     " GROUP BY pid", "ARRAY_N"
                     );
             for ($i = 0; $i < count($pids); $i++) {
+                
                 $pid = $pids[$i][0];
+                
                 if ( !is_null(get_post($pid)) ) {
+                    
                     $last_page_node = $wpdb->get_row(
                         "SELECT * FROM wp_pages" .
                         " WHERE pid=" . $pid . " ORDER BY date DESC LIMIT 1", "ARRAY_A"
                         );
-                    // Add or update post meta field
-                    add_post_meta($pid, 'qoob_data', $last_page_node['data']);
+                    
                     // Updating post content
                     $update_args = array(
                       'ID'           => $pid,
                       'post_content' => $last_page_node['html'],
                     );
+
+                    // Saving received meta
+                    add_metadata( 'post', $pid, 'my_meta', $last_page_node['data'] );
+
                     wp_update_post( $update_args );
+
                 }
+
             }
+
             $wpdb->query("DROP TABLE wp_pages"); 
         }
         
      }
+     /**
+      * Saving post meta to revision
+      * @param  int $post_id ID of the current post
+      */
+    public function savePostMeta($post_id) {
+        $parent_id = wp_is_post_revision( $post_id );
+
+        if ( $parent_id ) {
+
+            $parent  = get_post( $parent_id );
+            $qoob_data = get_post_meta( $parent->ID, 'qoob_data', true );
+
+            if ( $qoob_data !== false )
+                add_metadata( 'post', $post_id, 'qoob_data', $qoob_data );
+        }
+    }
+
+    /**
+     * [restoreRevision description]
+     * @param  int $post_id     Post id
+     * @param  int $revision_id Current revision id
+     */
+    public function restoreRevision( $post_id, $revision_id ) {
+        $post     = get_post( $post_id );
+        $revision = get_post( $revision_id );
+        $data  = get_metadata( 'post', $revision->ID, 'qoob_data', true );
+
+        if ( $data !== false )
+            update_post_meta( $post_id, 'qoob_data', $data );
+        else
+            delete_post_meta( $post_id, 'qoob_data' );
+    }
 
     /**
      * Filtering the content for theme templating
      *
      */
     public function filterContent($content = null) {
-        if (is_user_logged_in() && (isset($_GET['qoob']) && $_GET['qoob'] == true) ) {
-            return '<div id="qoob-blocks"></div>';
-        } else {
-            return do_shortcode(stripslashes(get_the_content()));
+        $result = '';
+        if (is_user_logged_in() && (isset($_GET['qoob']) && $_GET['qoob'] == true) )
+            $result = '<div id="qoob-blocks"></div>';
+        else {
+
+            global $post;
+            $data = get_post_meta($post->ID, 'qoob_data', true);
+
+            // If have blocks - use get_the_content() function. In other way - return basic content
+            if ( $data != '{"blocks":[]}' && $data != '') {
+                $result = do_shortcode(stripslashes(get_the_content()));
+            } else {
+                $result = do_shortcode($content);
+            } 
+
+        }
+
+        return $result;
+    }
+
+    /**
+     * Filtering metaboxes on page edit screen
+     */
+    public function onPageEdit() {
+        if (isset($_GET['post'])) {
+
+            // Getting qoob_html from metadata
+            $post_id =  $_GET['post'];
+            $data = get_post_meta($post_id, 'qoob_data', true);
+
+            // If have blocks - remove tinymce editor
+            if ( $data != '{"blocks":[]}' && $data != '') {
+                remove_post_type_support('page', 'editor');
+            }
+
         }
     }
+
     /**
      * Registration ajax actions
      */
@@ -519,28 +597,35 @@ class Qoob {
         }
 
     }
+
     /**
      * Load data page
      * @return json
      */
     public function loadPageData() { 
         $page_id = $_POST['page_id'];
-        $data = get_post_meta($page_id, 'qoob_data');
+        $data = get_post_meta($page_id, 'qoob_data', true);
 
-        if (!empty($data)) {
-            $data = $data[count($data) - 1];
+        // Send decoded page data to the Qoob editor page
+        if ($data != '') {
+
             $data = stripslashes_deep(json_decode($data, true));
 
             $response = array(
                 'success' => true,
                 'data' => $data
             );
+
         } else {
+
             $response = array('success' => false);
+
         }
+
         wp_send_json($response);
         exit();
     }
+
     /**
      * Save data page
      * @return json
@@ -555,9 +640,11 @@ class Qoob {
         $blocks_html = trim($post_data['blocks']['html']);
         $post_id = $post_data['page_id'];
         $qoob_data = json_encode(isset($post_data['blocks']['data']) ? $post_data['blocks']['data'] : '');
-        // Add or update post meta field
-        add_post_meta($post_id, 'qoob_data', $qoob_data);
-        // Updating post content
+        
+        // Saving metafield
+        update_post_meta( $post_id, 'qoob_data', $qoob_data );
+
+        // Updating post content and post content filtered
         $update_args = array(
           'ID'           => $post_id,
           'post_content' => $blocks_html,
