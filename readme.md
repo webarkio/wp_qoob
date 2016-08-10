@@ -77,5 +77,5 @@ Changelog
 ### 1.0.1
 * First release
 
-### 1.0.2
+### 1.1.0
 * Working with database has been refactored. Custom table 'wp_pages' has gone. Now we are using basic features (page post type and custom field) for data storing.
