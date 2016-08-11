@@ -54,7 +54,7 @@ module.exports = function(grunt) {
                     '!Gruntfile.js',
                     '!package.json',
                     '!assets/screenshots/**',
-                    '!**/package.json'
+                    '!**/package.json',
                     '!jsdoc.json'
                 ],
                 dest: 'wp_qoob/'
