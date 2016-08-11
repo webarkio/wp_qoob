@@ -94,22 +94,33 @@ class Qoob {
      * Update plugin on migrating between versions
      */
     public function pluginUpdate() {
-        $cur_version = get_site_option('qoob_version');
 
-        if( $cur_version === false || $cur_version != $this->qoob_version)
-            $this->install();
+        if ( get_site_option( 'qoob_version' ) !== $this->qoob_version ) {
+
+            $cur_version = get_site_option( 'qoob_version' ) ? get_site_option( 'qoob_version' ) : '0.0.0';
+            
+            if ( version_compare( '1.1.0', $cur_version ) > 0 )
+                $this->pluginUpdateTo_1_1_0();
+
+            update_option('qoob_version', $this->qoob_version);
+
+        }
+
     }
 
     /**
-     * Activation hook callback
+     * Update callback for versions lower then 1.1.0
      */
-    public function install() {
+    public function pluginUpdateTo_1_1_0() {
         global $wpdb;
+
         if($wpdb->get_var("SHOW TABLES LIKE 'wp_pages'") == 'wp_pages') {
+            
             $pids = $wpdb->get_results(
                     "SELECT pid FROM wp_pages" .
                     " GROUP BY pid", "ARRAY_N"
                     );
+
             for ($i = 0; $i < count($pids); $i++) {
                 
                 $pid = $pids[$i][0];
@@ -136,13 +147,8 @@ class Qoob {
             }
 
             $wpdb->query("DROP TABLE wp_pages"); 
-        }
 
-        if ( get_site_option('qoob_version') === false )
-            add_option('qoob_version', $this->qoob_version);
-        else
-            update_option('qoob_version', $this->qoob_version); 
-        
+        }
     }
 
     /**
