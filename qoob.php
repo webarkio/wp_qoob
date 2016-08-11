@@ -3,7 +3,7 @@
   Plugin Name: qoob
   Plugin URI: http://qoob.it/
   Description: Qoob - by far the easiest free page builder plugin for WP
-  Version: 1.1.0
+  Version: 1.1.1
   Author: webark.io
   Author URI: http://webark.io/
  */
@@ -45,6 +45,11 @@ class Qoob {
      */
     private $defaultPostTypes = array('page');
     /**
+     * Default post types
+     * @var string
+     */
+    private $qoob_version = '1.1.1';
+    /**
      * Register actions for module
      */
     public function __construct() {
@@ -77,6 +82,7 @@ class Qoob {
         add_action( 'wp_restore_post_revision', array($this, 'restoreRevision'), 10, 2 );
         // Add metabox
         add_action( 'add_meta_boxes', array($this, 'infoMetabox') );
+        add_action( 'plugins_loaded', array($this, 'pluginUpdate'), 10, 2);
         // registration ajax actions
         $this->registrationAjax();
         // Creating blocks paths
@@ -85,9 +91,19 @@ class Qoob {
     }
 
     /**
+     * Update plugin on migrating between versions
+     */
+    public function pluginUpdate() {
+        $cur_version = get_site_option('qoob_version');
+
+        if( $cur_version === false || $cur_version != $this->qoob_version)
+            $this->install();
+    }
+
+    /**
      * Activation hook callback
      */
-     static function install() {
+    public function install() {
         global $wpdb;
         if($wpdb->get_var("SHOW TABLES LIKE 'wp_pages'") == 'wp_pages') {
             $pids = $wpdb->get_results(
@@ -121,8 +137,13 @@ class Qoob {
 
             $wpdb->query("DROP TABLE wp_pages"); 
         }
+
+        if ( get_site_option('qoob_version') === false )
+            add_option('qoob_version', $this->qoob_version);
+        else
+            update_option('qoob_version', $this->qoob_version); 
         
-     }
+    }
 
     /**
      * Add metabox with info about current Qoob page
@@ -917,6 +938,5 @@ class Qoob {
         return $qoob_scripts;
     }
 }
-//Activating pugin
-register_activation_hook( __FILE__, array( 'Qoob', 'install' ) );
+
 $qoob = new Qoob();
