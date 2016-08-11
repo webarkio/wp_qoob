@@ -73,14 +73,11 @@ You can edit information in each block of the page. For this purpose **click** t
 
 Changelog
 ---------
+### 1.1.1
+* Migrating issue
 
 ### 1.1.0
 * Working with database has been refactored. Custom table 'wp_pages' has gone. Now we are using basic features (page post type and custom field) for data storing.
-
-Migrating issue:
-* disable plugin
-* update one to the new version
-* activate it again
 
 ### 1.0.1
 * First release
