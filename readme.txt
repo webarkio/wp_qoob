@@ -73,6 +73,9 @@ You can edit information in each block of the page. For this purpose **click** t
 2. Sides of the qoob
 
 == Changelog ==
+= 1.1.2 =
+* Fix saving of qoob data through basic wp function update_post_meta()
+
 = 1.1.1 =
 * Migrating issue
 
