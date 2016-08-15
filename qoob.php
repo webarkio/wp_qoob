@@ -406,7 +406,9 @@ class Qoob {
         $post = get_post();
         $id = (strlen($post->ID) > 0 ? $post->ID : get_the_ID());
         $url = $this->getUrlPage($id);
-        if (preg_match("/" . self::NAME_SHORTCODE . "/", $post->post_content)) {
+        //Check for qoob page
+        $meta = get_post_meta($id, 'qoob_data', true);
+        if ($meta != '{"blocks":[]}' && $meta != '') {
             return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob it', 'qoob') . '</a>') + $actions;
         } else {
             return $actions;
