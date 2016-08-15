@@ -1,4 +1,4 @@
-=== Qoob - Realtime Frontend Page Builder ===
+﻿=== Qoob - Realtime Frontend Page Builder ===
 Contributors: webarkio
 Donate link: http://qoob.it/#donate
 Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder
@@ -81,6 +81,7 @@ You can edit information in each block of the page. For this purpose **click** t
 2. Sides of the qoob
 
 == Changelog ==
+
 = 1.1.3 =
 * 'Edit with qoob' button for pages in list
 
