@@ -83,11 +83,41 @@ class Qoob {
         // Add metabox
         add_action( 'add_meta_boxes', array($this, 'infoMetabox') );
         add_action( 'plugins_loaded', array($this, 'pluginUpdate'), 10, 2);
+        add_action( 'plugins_loaded', array($this, 'pluginAddPaths'), 10, 2);
         // registration ajax actions
         $this->registrationAjax();
         // Creating blocks paths
         $this->blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(__FILE__) . 'blocks');
         $this->blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(__FILE__) . 'blocks');
+    }
+
+    /**
+     * Add plugin paths to groups.json files to wp_options table
+     */
+    public function pluginAddPaths() {
+        $qoobGroupsPaths = get_site_option( 'qoob_libs' );
+
+        if ( !$qoobGroupsPaths ) {
+
+            update_option( 'qoob_libs', array(
+                'plugin' => array(
+                    'path' => plugin_dir_path( __FILE__ ) . 'blocks',
+                    'url' => plugin_dir_url( __FILE__ ) . 'blocks'
+                    )
+                )
+            );
+
+        } else if ( ( !isset( $qoobGroupsPaths['plugin'] ) || !isset( $qoobGroupsPaths['plugin']['path'] ) ) || 
+            $qoobGroupsPaths['plugin']['path'] !== plugin_dir_path(__FILE__) . 'blocks' ) {
+            
+            $qoobGroupsPaths['plugin'] = array(
+                'path' => plugin_dir_path(__FILE__) . 'blocks',
+                'url' => plugin_dir_url( __FILE__ ) . 'blocks'
+                );
+
+            update_option( 'qoob_libs', $qoobGroupsPaths );
+
+        }
     }
 
     /**
@@ -709,21 +739,36 @@ class Qoob {
      * @return array
      */
     private function getUrlItems() {
-        if (!empty($this->urls)) {
+
+        if ( !empty( $this->urls ) )
             return $this->urls;
-        }
-        $path = $this->blocks_path;
-        foreach (new DirectoryIterator($path) as $file) {
-            if ($file->isDot())
-                continue;
-            if ($file->isDir()) {
-                $url = $this->blocks_url . '/' . $file->getFilename() . '/';
-                $this->urls[] = array(
-                    'id' => $file->getFilename(),
-                    'url' => $url
-                );
+
+
+        $libs = get_site_option( 'qoob_libs' );
+
+        if ( !!$libs ) {
+
+            foreach ( $libs as $groupName => $groupPath) {
+                foreach (new DirectoryIterator($groupPath['path']) as $file) {
+                    
+                    if ( $file->isDot() )
+                        continue;
+
+                    if ( $file->isDir() ) {
+                        
+                        $this->urls[] = array(
+                            'id' => $file->getFilename(),
+                            'url' => $groupPath['url'] . '/' . $file->getFilename() . '/',
+                            'sourceName' => $groupName
+                        );
+
+                    }
+
+                }
             }
+
         }
+
         return $this->urls;
     }
     /**
@@ -759,29 +804,38 @@ class Qoob {
      * @return array
      */
     private function getItems() {
-        if (isset($this->items)) {
+        
+        if (isset($this->items))
             return $this->items;
-        }
+
         $items = array();
         $urls = $this->getUrlItems();
+        
         foreach ($urls as $val) {
+            
             $theme_url = get_template_directory_uri();
             $blocks_url = $this->blocks_url;
             $block_url = substr($val['url'], 0, -1);
             
             $config_json = file_get_contents($block_url . '/' . 'config.json');
+            
             //Parsing for url masks to replace            
             $config_json = preg_replace('/%theme_url%/', $theme_url, $config_json);
             $config_json = preg_replace('/%block_url%/', $block_url, $config_json);
             $config_json = preg_replace('/%blocks_url%/', $blocks_url, $config_json);
+            
             //Decoding json config
             $config = json_decode($config_json, true);
             $config['id'] = $val['id'];
             $config['url'] = $val['url'];
+            $config['sourceName'] = $val['sourceName'];
+
             $items[] = $config;
         }
+
         // cash blocks for next ajax request
         $this->items = $items;
+
         return $items;
     }
     /**
@@ -805,9 +859,27 @@ class Qoob {
      * @return array
      */
     private function getGroups() {
-        $json = file_get_contents($this->blocks_url . '/groups.json');
-        $json = json_decode($json, true);
-        return $json;
+        $groupsArray = array();
+        $groupsLibs = get_site_option( 'qoob_libs' );
+
+        foreach ( $groupsLibs as $groupName => $groupPath) {
+            
+            $json = file_get_contents( $groupPath['path'] . DIRECTORY_SEPARATOR . 'groups.json' );
+
+            if ( !!$json ) {
+                
+                $groupList = json_decode( $json, true );
+                
+                for ( $i = 0; $i < count($groupList); $i++ ) {
+                    $groupList[$i]['sourceName'] = $groupName;
+                    $groupsArray[] = $groupList[$i];
+                }
+
+            }
+
+        }
+
+        return $groupsArray;
     }
     /**
      * Enqueueing scripts and styles, contained in theme block's assets
