@@ -3,7 +3,7 @@
   Plugin Name: qoob
   Plugin URI: http://qoob.it/
   Description: Qoob - by far the easiest free page builder plugin for WP
-  Version: 1.1.2
+  Version: 1.1.3
   Author: webark.io
   Author URI: http://webark.io/
  */
@@ -48,7 +48,7 @@ class Qoob {
      * Default post types
      * @var string
      */
-    private $qoob_version = '1.1.2';
+    private $qoob_version = '1.1.3';
     /**
      * Register actions for module
      */
