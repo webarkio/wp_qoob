@@ -609,11 +609,14 @@ class Qoob {
      * Load data page
      * @return json
      */
-    public function loadPageData() {
+    public function loadPageData($pageId) {
+        if(!$pageId){
+            $page_id = $_POST['page_id'];
+        }
         global $wpdb;
         $blocks = $wpdb->get_results(
                 "SELECT * FROM " . $this->tableName .
-                " WHERE pid=" . $_POST['page_id'] .
+                " WHERE pid=" . $page_id .
                 " AND lang='" . $_POST['lang'] .
                 "' ORDER BY date DESC LIMIT 1", "ARRAY_A");
         $block = !empty($blocks) ? $blocks[0] : null;
@@ -635,13 +638,18 @@ class Qoob {
      * Save data page
      * @return json
      */
-    public function savePageData() {
+    public function savePageData($data=false) {
         // Checking for administration rights
         if (!current_user_can('manage_options')) {
             return;
         }
         global $wpdb;
-        $post_data = json_decode(file_get_contents('php://input'), true);
+        if($data) {
+            $post_data = json_decode(file_get_contents('php://input'), true);
+        } else {
+            $post_data = json_decode($data, true);
+        }
+        
         $blocks_html = trim($post_data['blocks']['html']);
         $lang = isset($post_data['lang']) ? $post_data['lang'] : 'en';
         $post_id = $post_data['page_id'];
