@@ -48,8 +48,13 @@ require_once(ABSPATH . 'wp-admin/admin-header.php');
 
 <div style="height: 1px; visibility: hidden; overflow: hidden;">
     <?php
-    // Fix: WP 4.0
-    wp_dequeue_script('editor-expand');
+        // Disable notice in edit-form-advanced.php
+        $is_IE = false;
+
+        require_once ABSPATH . 'wp-admin/edit-form-advanced.php';
+
+        // Fix: WP 4.0
+        wp_dequeue_script('editor-expand');
     ?>
 </div>
 
