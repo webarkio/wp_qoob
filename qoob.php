@@ -683,17 +683,18 @@ class Qoob {
      * Save data page
      * @return json
      */
-    public function savePageData($data=false) {
+    public function savePageData($data = false) {
         // Checking for administration rights
         if (!current_user_can('manage_options')) {
             return;
         }
-        global $wpdb;
-        if($data){
+
+        if($data == ''){
             $post_data = json_decode(file_get_contents('php://input'), true);
         }else{
             $post_data = json_decode($data, true);
         }
+
         $blocks_html = trim($post_data['blocks']['html']);
         $post_id = $post_data['page_id'];
         $qoob_data = wp_slash( json_encode( isset($post_data['blocks']['data']) ? $post_data['blocks']['data'] : '' ) );
@@ -704,7 +705,7 @@ class Qoob {
         // Updating post content and post content filtered
         $update_args = array(
           'ID'           => $post_id,
-          'post_content' => $blocks_html,
+          'post_content' => $blocks_html
         );
         $updated = wp_update_post( $update_args );
 
