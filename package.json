@@ -34,7 +34,8 @@
     "grunt-mkdir": "^0.1.2",
     "grunt-push-svn": "^0.2.2",
     "grunt-svn-checkout": "^0.3.0",
-    "grunt-push-svn": "^0.2.2"
+    "grunt-push-svn": "^0.2.2",
+    "bootstrap": "^3.3.2"
   },
   "dependencies": {
     "jsdoc": "^3.3.2"
