@@ -654,9 +654,11 @@ class Qoob {
      * @return json
      */
     public function loadPageData($page_id=false) { 
-        if(!$pageId){
+        if(!$page_id){
             $page_id = $_POST['page_id'];
-        }
+        } else
+        	$tested = true;
+
         $data = get_post_meta($page_id, 'qoob_data', true);
 
         // Send decoded page data to the Qoob editor page
@@ -675,8 +677,10 @@ class Qoob {
 
         }
 
+        if ( isset($tested) )
+        	return $data;
+
         wp_send_json($response);
-        exit();
     }
 
     /**
@@ -692,6 +696,7 @@ class Qoob {
         if($data == ''){
             $post_data = json_decode(file_get_contents('php://input'), true);
         }else{
+        	$tested = true;
             $post_data = json_decode($data, true);
         }
 
@@ -700,18 +705,22 @@ class Qoob {
         $qoob_data = wp_slash( json_encode( isset($post_data['blocks']['data']) ? $post_data['blocks']['data'] : '' ) );
 
         // Saving metafield
-        update_post_meta( $post_id, 'qoob_data', $qoob_data );
+        $updated = update_post_meta( $post_id, 'qoob_data', $qoob_data );
 
         // Updating post content and post content filtered
         $update_args = array(
           'ID'           => $post_id,
           'post_content' => $blocks_html
         );
+
         $updated = wp_update_post( $update_args );
 
         $responce = array('success' => (boolean) $updated);
+
+        if ( isset($tested) )
+        	return;
+        
         wp_send_json($responce);
-        exit();
     }
     /**
      * Get url items
