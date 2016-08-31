@@ -2,6 +2,7 @@
 
 /* Path to the WordPress codebase you'd like to test. Add a backslash in the end. */
 define( 'ABSPATH', realpath(dirname(__FILE__)."/../../../../../").DIRECTORY_SEPARATOR);
+define( 'PLUGIN_PATH', realpath(dirname(__FILE__)."/../../").DIRECTORY_SEPARATOR);
 
 // Test with multisite enabled.
 // Alternatively, use the tests/phpunit/multisite.xml configuration file.

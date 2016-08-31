@@ -82,6 +82,9 @@ You can edit information in each block of the page. For this purpose **click** t
 
 == Changelog ==
 
+= 1.1.4 =
+* Refactoring PHPUnit tests
+
 = 1.1.3 =
 * 'Edit with qoob' button for pages in list
 

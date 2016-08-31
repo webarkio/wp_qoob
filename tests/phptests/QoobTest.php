@@ -1,9 +1,11 @@
 <?php
 
+
+
 class MockQoob extends Qoob {
     public function __construct() {
-        $this->blocks_url = dirname(plugin_dir_path(__FILE__)).'/blocks';
-        $this->blocks_path = dirname(plugin_dir_path(__FILE__)).'/blocks';
+        $this->blocks_url = PLUGIN_PATH.'/blocks';
+        $this->blocks_path = PLUGIN_PATH.'/blocks';
     }
 }
 
@@ -37,7 +39,7 @@ class QoobTest extends WP_UnitTestCase { //WP_UnitTestCase
             'page_id' => $post_id,
             'blocks' => [
                             'html' => 'Some text',
-                            'data' => file_get_contents('tests/demo_test.txt')
+                            'data' => file_get_contents('tests/phptests/demo_test.txt')
                         ]
                 ];
 
@@ -49,7 +51,7 @@ class QoobTest extends WP_UnitTestCase { //WP_UnitTestCase
             $newData = $qoob->loadPageData($post_id);
         // } catch ( WPAjaxDieContinueException $e ) {}
 
-        $this->assertEquals($newData, file_get_contents('tests/demo_test.txt'));
+        $this->assertEquals($newData, file_get_contents('tests/phptests/demo_test.txt'));
     }
 
     //???
@@ -215,7 +217,7 @@ class QoobTest extends WP_UnitTestCase { //WP_UnitTestCase
         $result = $method->invoke($qoob);//calls a function
         $demo = array(
                         'id' => 'demo',
-                        'url' =>dirname (plugin_dir_path(__FILE__)).'/blocks/demo/'
+                        'url' =>PLUGIN_PATH.'/blocks/demo/'
                     );
 
         $this->assertEquals($result[0], $demo);
@@ -228,7 +230,7 @@ class QoobTest extends WP_UnitTestCase { //WP_UnitTestCase
         $method = $class->getMethod('getUrlQoobTemplates');
         $method->setAccessible(true);//makes the property available
         $result = $method->invoke($qoob);//calls a function
-        $path =  dirname (plugin_dir_path(__FILE__))."/qoob/tmpl/block/block-default-blank.html";
+        $path =  PLUGIN_PATH."/qoob/tmpl/block/block-default-blank.html";
         $demo = array(
                         'id' => 'block-default-blank.html',
                         'url' => $path
@@ -256,7 +258,7 @@ class QoobTest extends WP_UnitTestCase { //WP_UnitTestCase
         $result = $method->invoke($qoob,'demo');//calls a function
         $demo = array(
                     'id' => 'demo',
-                    'url' =>dirname (plugin_dir_path(__FILE__)).'/blocks/demo/'
+                    'url' =>PLUGIN_PATH.'/blocks/demo/'
                     );
 
         $this->assertEquals($result, $demo);

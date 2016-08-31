@@ -35,8 +35,8 @@ module.exports = function(grunt) {
                 expand: true,
                 src: [
                     '**/*',
-                    '!test/**',
-                    '!**/test/**',
+                    '!tests/**',
+                    '!**/tests/**',
                     '!node_modules/**',
                     '!presentation/**',
                     '!.git/**',
@@ -117,7 +117,7 @@ module.exports = function(grunt) {
                     '!package.json',
                     '!.gitignore',
                     '!.gitmodules',
-                    '!test/**',
+                    '!tests/**',
                     '!**/test/**',
                     '!build/**',
                     '!tmp/**'
