@@ -1,7 +1,7 @@
 <?php
 
 /* Path to the WordPress codebase you'd like to test. Add a backslash in the end. */
-define( 'ABSPATH', 'D:\webark\qoob.it\wp' . DIRECTORY_SEPARATOR);
+define( 'ABSPATH', realpath(dirname(__FILE__)."/../../../../../").DIRECTORY_SEPARATOR);
 
 // Test with multisite enabled.
 // Alternatively, use the tests/phpunit/multisite.xml configuration file.

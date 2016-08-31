@@ -13,7 +13,7 @@ define( 'WP_TESTS_DIR', realpath(dirname( __FILE__ ) . '/../phpunit/' ).DIRECTOR
 /**
  * The path to the main file of the plugin to test.
  */
-define( 'TEST_PLUGIN_FILE', realpath(dirname( __FILE__ ) . '/../' ).DIRECTORY_SEPARATOR."qoob.php" );
+define( 'TEST_PLUGIN_FILE', realpath(dirname( __FILE__ ) . '/../../' ).DIRECTORY_SEPARATOR."qoob.php" );
  
 /**
  * The WordPress tests functions.

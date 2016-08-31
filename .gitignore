@@ -10,3 +10,4 @@
 ########
 *.map
 .sass-cache
+/tests/phpunit/log
