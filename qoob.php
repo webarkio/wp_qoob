@@ -48,7 +48,7 @@ class Qoob {
      * Default post types
      * @var string
      */
-    private $qoob_version = '1.1.3';
+    private $qoob_version = '1.1.5';
     /**
      * Register actions for module
      */
