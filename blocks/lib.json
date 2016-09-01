@@ -1,0 +1,13 @@
+{"groups": [
+	{
+	    "id": "demo",
+	    "label": "Demo",
+	    "position": "0"
+	}
+],
+"blocks": [
+	{
+	    "name": "demo",
+	    "url": "%plugin_url%/blocks/demo/"
+	}
+]}

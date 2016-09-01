@@ -129,18 +129,18 @@ QoobWordpressDriver.prototype.loadQoobTemplates = function(cb) {
  */
 
 /**
- * Get qoob data
+ * Get qoob libs
  * 
  * @param {loadQoobDataCallback} cb - A callback to run.
  */
-QoobWordpressDriver.prototype.loadQoobData = function(cb) {
+QoobWordpressDriver.prototype.loadLibsInfo = function(cb) {
     jQuery(document).ready(function($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
                 url: ajax.url,
                 type: 'POST',
                 data: {
-                    action: 'qoob_load_data'
+                    action: 'qoob_load_libs_info'
                 },
                 dataType: 'json',
                 success: function(response) {
@@ -152,42 +152,6 @@ QoobWordpressDriver.prototype.loadQoobData = function(cb) {
                 },
                 error: function(xrh, error) {
                     //FIXME: 
-                }
-            });
-        }
-    });
-};
-
-/**
- * Callback for get page data
- * 
- * @callback loadTemplateCallback
- */
-
-/**
- * Get template for Id
- * 
- * @param {integer} templateId
- * @param {loadTemplateCallback} cb - A callback to run.
- */
-QoobWordpressDriver.prototype.loadTemplate = function(itemId, cb) {
-    jQuery(document).ready(function($) {
-        if (ajax.logged_in && ajax.qoob == true) {
-            $.ajax({
-                url: ajax.url,
-                type: 'POST',
-                data: {
-                    action: 'qoob_load_item',
-                    item_id: itemId
-                },
-                cache: false,
-                dataType: 'html',
-                success: function(template) {
-                    if (template != '') {
-                        cb(null, template);
-                    } else {
-                        cb(false);
-                    }
                 }
             });
         }
