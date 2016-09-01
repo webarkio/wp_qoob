@@ -118,7 +118,6 @@ module.exports = function(grunt) {
                     '!.gitignore',
                     '!.gitmodules',
                     '!tests/**',
-                    '!**/test/**',
                     '!build/**',
                     '!tmp/**'
                 ],
