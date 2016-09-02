@@ -1,13 +1,25 @@
-{"groups": [
-	{
-	    "id": "demo",
-	    "label": "Demo",
-	    "position": "0"
+{
+	"name": "default",
+	"groups": [
+		{
+		    "id": "demo",
+		    "label": "Demo",
+		    "position": "0"
+		}
+	],
+	"blocks": [
+		{
+		    "name": "demo",
+		    "url": "%lib_url%/demo/"
+		}
+	],
+	"res": {
+		"css": [
+			{
+				"name": "qoob_default_css",
+				"url": "%lib_url%/lib.css"
+			}
+		],
+		"js": []
 	}
-],
-"blocks": [
-	{
-	    "name": "demo",
-	    "url": "%plugin_url%/blocks/demo/"
-	}
-]}
+}
