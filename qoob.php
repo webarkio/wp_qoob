@@ -3,7 +3,7 @@
   Plugin Name: qoob
   Plugin URI: http://qoob.it/
   Description: Qoob - by far the easiest free page builder plugin for WP
-  Version: 1.1.2
+  Version: 1.1.5
   Author: webark.io
   Author URI: http://webark.io/
  */
@@ -48,7 +48,7 @@ class Qoob {
      * Default post types
      * @var string
      */
-    private $qoob_version = '1.1.2';
+    private $qoob_version = '1.1.5';
     /**
      * Register actions for module
      */
@@ -201,7 +201,7 @@ class Qoob {
      * Display metabox
     */
     public function infoMetaboxDisplay() {
-        echo '<p>Current page has been edited with Qoob Page Builder. To edit this page as regular one - go to Qoob editor by pressing "qoob it" button and remove all blocks.</p>';
+        echo '<p>Current page has been edited with Qoob Page Builder. To edit this page as regular one - go to Qoob editor by pressing "qoob" button and remove all blocks.</p>';
     }
 
      /**
@@ -371,8 +371,10 @@ class Qoob {
         $post = get_post();
         $id = (strlen($post->ID) > 0 ? $post->ID : get_the_ID());
         $url = $this->getUrlPage($id);
-        if (preg_match("/" . self::NAME_SHORTCODE . "/", $post->post_content)) {
-            return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob it', 'qoob') . '</a>') + $actions;
+        //Check for qoob page
+        $meta = get_post_meta($id, 'qoob_data', true);
+        if ($meta != '{"blocks":[]}' && $meta != '') {
+            return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>') + $actions;
         } else {
             return $actions;
         }
@@ -428,7 +430,7 @@ class Qoob {
             if ($this->showButton(get_the_ID())) {
                 $wp_admin_bar->add_menu(array(
                     'id' => 'qoob-admin-bar-link',
-                    'title' => __('qoob it', "qoob"),
+                    'title' => __('qoob', "qoob"),
                     'href' => $this->getUrlPage(get_the_ID()),
                     'meta' => array('class' => 'qoob-inline-link')
                 ));
@@ -616,8 +618,12 @@ class Qoob {
      * Load data page
      * @return json
      */
-    public function loadPageData() { 
-        $page_id = $_POST['page_id'];
+    public function loadPageData($page_id=false) { 
+        if(!$page_id){
+            $page_id = $_POST['page_id'];
+        } else
+        	$tested = true;
+
         $data = get_post_meta($page_id, 'qoob_data', true);
 
         // Send decoded page data to the Qoob editor page
@@ -636,36 +642,49 @@ class Qoob {
 
         }
 
+        if ( isset($tested) )
+        	return $data;
+
         wp_send_json($response);
-        exit();
     }
 
     /**
      * Save data page
      * @return json
      */
-    public function savePageData() {
+    public function savePageData($data = false) {
         // Checking for administration rights
         if (!current_user_can('manage_options')) {
             return;
         }
-        global $wpdb;
-        $post_data = json_decode(file_get_contents('php://input'), true);
+
+        if($data == ''){
+            $post_data = json_decode(file_get_contents('php://input'), true);
+        }else{
+        	$tested = true;
+            $post_data = json_decode($data, true);
+        }
+
         $blocks_html = trim($post_data['blocks']['html']);
         $post_id = $post_data['page_id'];
         $qoob_data = wp_slash( json_encode( isset($post_data['blocks']['data']) ? $post_data['blocks']['data'] : '' ) );
 
         // Saving metafield
-        update_post_meta( $post_id, 'qoob_data', $qoob_data );
+        $updated = update_post_meta( $post_id, 'qoob_data', $qoob_data );
 
         // Updating post content and post content filtered
         $update_args = array(
           'ID'           => $post_id,
-          'post_content' => $blocks_html,
+          'post_content' => $blocks_html
         );
+
         $updated = wp_update_post( $update_args );
 
         $responce = array('success' => (boolean) $updated);
+
+        if ( isset($tested) )
+        	return;
+        
         wp_send_json($responce);
     }
 

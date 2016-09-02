@@ -58,7 +58,6 @@ QoobWordpressDriver.prototype.savePageData = function(pageId, data, cb) {
     });
 };
 
-
 /**
  * Callback for get page data
  * 

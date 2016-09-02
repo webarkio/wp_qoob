@@ -4,8 +4,10 @@
 /node_modules
 /nbproject
 /build
+/phpunit/log
 
 # SASS #
 ########
 *.map
 .sass-cache
+/tests/phpunit/log

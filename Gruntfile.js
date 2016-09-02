@@ -12,6 +12,7 @@ module.exports = function(grunt) {
             build: ['build/*'],
             tmp: ['tmp/'],
             docs: ['docs/dest/*', 'docs/dest/**'],
+            phpunit: ["tests/phpunit/log/**"],
         },
         assemble: {
             options: {
@@ -27,15 +28,6 @@ module.exports = function(grunt) {
             }
         },
         compress: {
-            // dev: {
-            //     options: {
-            //         archive: 'build/qoob.wordpress-dev.zip'
-            //     },
-            //     expand: true,
-            //     cwd: '', 
-            //     src: ['**/*', '!node_modules/**'], 
-            //     dest: 'qoob.wordpress/'
-            // },
             stable: {
                 options: {
                     archive: 'build/wp_qoob_<%= pkg.version %>.zip'
@@ -43,8 +35,8 @@ module.exports = function(grunt) {
                 expand: true,
                 src: [
                     '**/*',
-                    '!test/**',
-                    '!**/test/**',
+                    '!tests/**',
+                    '!**/tests/**',
                     '!node_modules/**',
                     '!presentation/**',
                     '!.git/**',
@@ -63,6 +55,9 @@ module.exports = function(grunt) {
         shell: {
             gitpull: {
                 command: 'git pull'
+            },
+            phpunit: {
+                command: 'php tests/phpunit/phpunit.phar --configuration tests/phpunit/phpunit.xml'
             },
             api: {
                 command: 'node node_modules/jsdoc/jsdoc.js -c jsdoc.json -d docs/dest/api -t docs/jsdoc/template/jaguar'
@@ -122,8 +117,7 @@ module.exports = function(grunt) {
                     '!package.json',
                     '!.gitignore',
                     '!.gitmodules',
-                    '!test/**',
-                    '!**/test/**',
+                    '!tests/**',
                     '!build/**',
                     '!tmp/**'
                 ],
@@ -205,4 +199,7 @@ module.exports = function(grunt) {
 
     //Create only JS API docs
     grunt.registerTask('api', ['shell:api']);
+
+    //Run PHPUnit tests
+    grunt.registerTask('phpunit', ['clean:phpunit','shell:phpunit']);
 };

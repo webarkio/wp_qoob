@@ -1,0 +1,25 @@
+<phpunit 
+    bootstrap="../phptests/bootstrap.php"
+    backupGlobals="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    coverageHtml="out">
+    <testsuites>
+        <testsuite>
+            <file>../phptests/QoobTest.php</file>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <file>../../qoob.php</file>
+        </whitelist>
+    </filter>
+<logging>
+    <log type="coverage-html" target="log/report" lowUpperBound="35" highLowerBound="70"/>
+    <log type="junit" target="log/results.xml" logIncompleteSkipped="false"/>
+    <log type="testdox-html" target="log/results.html"/>
+    <log type="testdox-text" target="log/results.txt"/>
+</logging>	
+</phpunit>
