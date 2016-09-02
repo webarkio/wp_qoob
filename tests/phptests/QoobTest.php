@@ -78,7 +78,7 @@ class QoobTest extends WP_UnitTestCase { //WP_UnitTestCase
     public function testInfoMetaboxDisplay()
     {
         $qoob = new MockQoob();
-        $meta = '<p>Current page has been edited with Qoob Page Builder. To edit this page as regular one - go to Qoob editor by pressing "qoob it" button and remove all blocks.</p>';
+        $meta = '<p>Current page has been edited with Qoob Page Builder. To edit this page as regular one - go to Qoob editor by pressing "qoob" button and remove all blocks.</p>';
 
         $infometa = $qoob->infoMetaboxDisplay();
         $metabox = ob_get_contents();

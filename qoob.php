@@ -168,7 +168,7 @@ class Qoob {
      * Display metabox
     */
     public function infoMetaboxDisplay() {
-        echo '<p>Current page has been edited with Qoob Page Builder. To edit this page as regular one - go to Qoob editor by pressing "qoob it" button and remove all blocks.</p>';
+        echo '<p>Current page has been edited with Qoob Page Builder. To edit this page as regular one - go to Qoob editor by pressing "qoob" button and remove all blocks.</p>';
     }
 
      /**
@@ -409,7 +409,7 @@ class Qoob {
         //Check for qoob page
         $meta = get_post_meta($id, 'qoob_data', true);
         if ($meta != '{"blocks":[]}' && $meta != '') {
-            return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob it', 'qoob') . '</a>') + $actions;
+            return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>') + $actions;
         } else {
             return $actions;
         }
@@ -465,7 +465,7 @@ class Qoob {
             if ($this->showButton(get_the_ID())) {
                 $wp_admin_bar->add_menu(array(
                     'id' => 'qoob-admin-bar-link',
-                    'title' => __('qoob it', "qoob"),
+                    'title' => __('qoob', "qoob"),
                     'href' => $this->getUrlPage(get_the_ID()),
                     'meta' => array('class' => 'qoob-inline-link')
                 ));

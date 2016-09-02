@@ -54,7 +54,7 @@ If you have any questions that are beyond the scope of this help file, please fe
 Qoob is the editor consisting of blocks. Work in Qoob simplifies the task of page creation.
 
 1. Go to Page -> Add New
-2. Click on button "qoob it"
+2. Click on button "qoob"
 
 = How to add the blocks =
 
