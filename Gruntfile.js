@@ -12,7 +12,7 @@ module.exports = function(grunt) {
             build: ['build/*'],
             tmp: ['tmp/'],
             docs: ['docs/dest/*', 'docs/dest/**'],
-            phpunit: ["phpunit/log/**"],
+            phpunit: ["tests/phpunit/log/**"],
         },
         assemble: {
             options: {
@@ -35,8 +35,8 @@ module.exports = function(grunt) {
                 expand: true,
                 src: [
                     '**/*',
-                    '!test/**',
-                    '!**/test/**',
+                    '!tests/**',
+                    '!**/tests/**',
                     '!node_modules/**',
                     '!presentation/**',
                     '!.git/**',
@@ -57,7 +57,7 @@ module.exports = function(grunt) {
                 command: 'git pull'
             },
             phpunit: {
-                command: 'php phpunit/phpunit.phar'
+                command: 'php tests/phpunit/phpunit.phar --configuration tests/phpunit/phpunit.xml'
             },
             api: {
                 command: 'node node_modules/jsdoc/jsdoc.js -c jsdoc.json -d docs/dest/api -t docs/jsdoc/template/jaguar'
@@ -117,8 +117,7 @@ module.exports = function(grunt) {
                     '!package.json',
                     '!.gitignore',
                     '!.gitmodules',
-                    '!test/**',
-                    '!**/test/**',
+                    '!tests/**',
                     '!build/**',
                     '!tmp/**'
                 ],

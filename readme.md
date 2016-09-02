@@ -51,7 +51,7 @@ Frequently Asked Questions
 Qoob is the editor consisting of blocks. Work in Qoob simplifies the task of page creation.
 
 1. Go to Page -> Add New
-2. Click on button "qoob it"
+2. Click on button "qoob"
 
 ### How to add the blocks
 
@@ -70,20 +70,3 @@ You can edit information in each block of the page. For this purpose **click** t
 ### How to change the media center
 1. **Click** the necessary block.
 2. In the settings **click** the image, video or icon to choose it. To return to the previous media, click on it again.
-
-Changelog
----------
-### 1.1.3
-* 'Edit with qoob' button for pages in list
-
-### 1.1.2
-* Fix saving of qoob data through basic wp function update_post_meta()
-
-### 1.1.1
-* Migrating issue
-
-### 1.1.0
-* Working with database has been refactored. Custom table 'wp_pages' has gone. Now we are using basic features (page post type and custom field) for data storing.
-
-### 1.0.1
-* First release

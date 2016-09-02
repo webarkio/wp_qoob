@@ -1,9 +1,9 @@
-=== Qoob - Realtime Frontend Page Builder ===
+﻿=== Qoob - Realtime Frontend Page Builder ===
 Contributors: webarkio
 Donate link: http://qoob.it/#donate
 Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder
 Requires at least: 4.1
-Tested up to: 4.5.3
+Tested up to: 4.6
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -54,7 +54,7 @@ If you have any questions that are beyond the scope of this help file, please fe
 Qoob is the editor consisting of blocks. Work in Qoob simplifies the task of page creation.
 
 1. Go to Page -> Add New
-2. Click on button "qoob it"
+2. Click on button "qoob"
 
 = How to add the blocks =
 
@@ -81,6 +81,13 @@ You can edit information in each block of the page. For this purpose **click** t
 2. Sides of the qoob
 
 == Changelog ==
+
+= 1.1.5 =
+* Refactoring handlebars helper methods
+
+= 1.1.4 =
+* Refactoring PHPUnit tests
+
 = 1.1.3 =
 * 'Edit with qoob' button for pages in list
 
