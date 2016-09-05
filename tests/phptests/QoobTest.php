@@ -208,21 +208,6 @@ class QoobTest extends WP_UnitTestCase { //WP_UnitTestCase
     //function adminScripts()
     //function loadScripts()
 
-    public function testGetUrlItems()
-    {
-        $qoob = new MockQoob();
-        $class  = new ReflectionClass($qoob);
-        $method = $class->getMethod('getUrlItems');
-        $method->setAccessible(true);//makes the property available
-        $result = $method->invoke($qoob);//calls a function
-        $demo = array(
-                        'id' => 'demo',
-                        'url' =>PLUGIN_PATH.'/blocks/demo/'
-                    );
-
-        $this->assertEquals($result[0], $demo);
-    }
-
     public function testGetUrlQoobTemplates()
     {
         $qoob = new MockQoob();
@@ -230,7 +215,7 @@ class QoobTest extends WP_UnitTestCase { //WP_UnitTestCase
         $method = $class->getMethod('getUrlQoobTemplates');
         $method->setAccessible(true);//makes the property available
         $result = $method->invoke($qoob);//calls a function
-        $path =  PLUGIN_PATH."/qoob/tmpl/block/block-default-blank.html";
+        $path =  substr(PLUGIN_PATH, 0, -1) . "/qoob/tmpl/block/block-default-blank.html";
         $demo = array(
                         'id' => 'block-default-blank.html',
                         'url' => $path
@@ -239,111 +224,16 @@ class QoobTest extends WP_UnitTestCase { //WP_UnitTestCase
         $this->assertEquals($result[0], $demo);
     }
 
-    public function testGetItems()
-    {
-        $qoob = new MockQoob();
-        $class  = new ReflectionClass("MockQoob");
-        $method = $class->getMethod('getItems');
-        $method->setAccessible(true);//makes the property available
-        $result = $method->invoke($qoob);//calls a function
-        $this->assertEquals(array_key_exists('title',$result[0][defaults]), true);
-    }
-
-    public function testGetItem()
-    {
-        $qoob = new MockQoob();
-        $class  = new ReflectionClass("MockQoob");
-        $method = $class->getMethod('getItem');
-        $method->setAccessible(true);//makes the property available
-        $result = $method->invoke($qoob,'demo');//calls a function
-        $demo = array(
-                    'id' => 'demo',
-                    'url' =>PLUGIN_PATH.'/blocks/demo/'
-                    );
-
-        $this->assertEquals($result, $demo);
-    }
-
-    public function testGetGroups()
-    {
-        $qoob = new MockQoob();
-        $class  = new ReflectionClass("MockQoob");
-        $method = $class->getMethod('getGroups');
-        $method->setAccessible(true);//makes the property available
-        $result = $method->invoke($qoob);//calls a function
-
-        $demo = array(
-                        'id' => 'demo',
-                        'label' => 'Demo',
-                        'position' => '0'
-                    );
-
-        $this->assertEquals($result[0], $demo);
-    }
 
     //loadAssetsScripts()
     //function loadData()
 
-    // public function testLoadData()
-    // {
-    //     $qoob = new MockQoob(); 
-    //     ob_start();
-    //     $qoob->loadData();
-    //     file_put_contents('test.txt', ob_get_contents());
-    //     ob_end_close();
-
-    //     // $data = ob_get_contents();
-    //     // $data = json_encode($data);
-    //     //print_r($metabox);
-    //     //ob_end_clean();
- 
-    //     var_dump($data);
-    //     $this->assertEquals($data, 2);
-    // }
 
     //function getTplFiles()
 
-    public function testGetHtml()
-    {
-        $qoob = new MockQoob();
-        $class  = new ReflectionClass("MockQoob");
-        $method = $class->getMethod('getHtml');
-        $method->setAccessible(true);//makes the property available
-        $result = $method->invoke($qoob,'demo');//calls a function
-        $html = '<div class="demo-block">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="header-block">{{title}}</h1>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <p>
-                    {{{text}}}
-                </p>
-            </div>
-        </div>
-    </div>
-</div>';
-        $this->assertEquals($result, $html);
-    }
     //function loadItem()
 
     //function loadTmpl()
     //function load_blocks_scripts($assets_type)
-
-    // public function testLoadBlocksScripts()
-    // {
-    //     $qoob = new MockQoob();
-    //     $blocks_path = dirname(get_template_directory()) . '/wp_qoob_theme/blocks/entypo';
-    //     $blocks_url = dirname(get_template_directory()) . '/wp_qoob_theme/blocks/entypo';
-    //     $theme_url = dirname(get_template_directory()) . '/wp_qoob_theme/blocks/entypo';
-    //     $config_json = dirname(get_template_directory()) . '/wp_qoob_theme/blocks/entypo/config.json';
-    //     $w = $qoob->load_blocks_scripts('style');
-    //     print_r($blocks_path);
-    //     print_r($blocks_url);
-    //     $this->assertEquals($w,2);
-    // }
 
 }
