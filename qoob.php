@@ -409,7 +409,7 @@ class Qoob {
         //Check for qoob page
         $meta = get_post_meta($id, 'qoob_data', true);
         if ($meta != '{"blocks":[]}' && $meta != '') {
-            return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>') + $actions;
+            return $actions['edit_qoob'] = '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>';
         } else {
             return $actions;
         }
