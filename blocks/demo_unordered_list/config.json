@@ -1,0 +1,34 @@
+{
+    "name": "",
+    "groups": "demo",
+    "template": "template.hbs",
+    "settings": [{
+        "name": "title",
+        "label": "Title",
+        "type": "text"
+    }, {
+        "name": "elements",
+        "label": "List elements",
+        "type": "accordion",
+        "viewType": "expand",
+            "settings": [{
+                "name": "title",
+                "label": "Element text",
+                "type": "text"
+            }]
+    }],
+    "defaults": {
+        "title": "H2 HEADER VESTIBULUM AC DIAM SIT AMET QUAM SED SIT DUI",
+        "elements": [{
+            "title": "List element number one"
+        }, {
+            "title": "List element number two"
+        }, {
+            "title": "List element number three"
+        }, {
+            "title": "List element number four"
+        }, {
+            "title": "List element number five"
+        }]
+    }
+}

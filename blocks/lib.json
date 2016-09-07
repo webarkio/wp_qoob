@@ -11,6 +11,42 @@
 		{
 		    "name": "demo",
 		    "url": "%lib_url%/demo/"
+		},
+		{
+		    "name": "demo_2_col",
+		    "url": "%lib_url%/demo_2_col/"
+		},
+		{
+		    "name": "demo_3_col",
+		    "url": "%lib_url%/demo_3_col/"
+		},
+		{
+		    "name": "demo_blockquote",
+		    "url": "%lib_url%/demo_blockquote/"
+		},
+		{
+		    "name": "demo_call_to_action",
+		    "url": "%lib_url%/demo_call_to_action/"
+		},
+		{
+		    "name": "demo_call_to_action_noimg",
+		    "url": "%lib_url%/demo_call_to_action_noimg/"
+		},
+		{
+		    "name": "demo_ordered_list",
+		    "url": "%lib_url%/demo_ordered_list/"
+		},
+		{
+		    "name": "demo_txt_img_l",
+		    "url": "%lib_url%/demo_txt_img_l/"
+		},
+		{
+		    "name": "demo_txt_img_r",
+		    "url": "%lib_url%/demo_txt_img_r/"
+		},
+		{
+		    "name": "demo_unordered_list",
+		    "url": "%lib_url%/demo_unordered_list/"
 		}
 	],
 	"res": {

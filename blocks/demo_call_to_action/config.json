@@ -1,0 +1,39 @@
+{
+    "name": "",
+    "groups": "demo",
+    "template": "template.hbs",
+    "settings": [{
+        "name": "header",
+        "label": "Header",
+        "type": "text"
+    }, {
+        "name": "image",
+        "label": "Image",
+        "type": "image",
+        "tags": ["woman", "person"]
+    }, {
+        "name": "text",
+        "label": "Text",
+        "type": "textarea"
+    }, {
+        "name": "action_text",
+        "label": "Action button text",
+        "type": "text"
+    }, {
+        "name": "action_url",
+        "label": "Url for action button",
+        "type": "text"
+    }],
+    "assets": [{
+        "type": "image",
+        "src": "%block_url%/assets/img/placeholder.png",
+        "tags": ["woman"]
+    }],
+    "defaults": {
+        "header": "H2 HEADER VESTIBULUM AC DIAM SIT AMET QUAM SED SIT DUI",
+        "image": "%block_url%/assets/img/placeholder.png",
+        "action_text": "Try now",
+        "action_url": "http://qoob.it/",
+        "text": "<p>Cras ultricies ligula sed magna dictum porta. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Donec rutrum congue leo eget malesuada. Cras ultricies ligula sed magna dictum porta.</p><p>Quisque velit nisi, pretium ut lacinia in, elementum id enim. Donec rutrum congue leo eget malesuada.</p>"
+    }
+}

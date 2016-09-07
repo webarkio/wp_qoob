@@ -1,5 +1,4 @@
 <div class="demo-block">
-    <div>
         <div class="row">
             <div class="col-lg-12">
                 <h2>{{title}}</h2>
@@ -7,10 +6,11 @@
         </div>
         <div class="row">
             <div class="col-lg-12">
-                <p>
-                    {{{text}}}
-                </p>
+                <ul>
+                {{#each elements}}
+                    <li>{{{title}}}</li>
+                {{/each}}
+                </ul>
             </div>
         </div>
-    </div>
 </div>

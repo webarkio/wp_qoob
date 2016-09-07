@@ -517,6 +517,8 @@ class Qoob {
         $this->loadAssetsScripts();
         // load qoob styles
         wp_enqueue_style('qoob.frontend.style', $this->getUrlAssets() . "css/qoob.css");
+        // Bootstrap grid
+        wp_enqueue_style('bootstrap-grid', $this->getUrlAssets() . 'css/bootstrap-grid.css');
 
     }
     /**
