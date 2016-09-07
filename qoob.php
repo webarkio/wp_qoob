@@ -49,6 +49,14 @@ class Qoob {
      * @var string
      */
     private $qoob_version = '1.1.5';
+
+    /**
+     * Set current ersion of page
+     */
+    public function setVersion($version) {
+    	$this->qoob_version = $version;
+    }
+
     /**
      * Register actions for module
      */
@@ -249,7 +257,7 @@ class Qoob {
 
             global $post;
             $data = get_post_meta($post->ID, 'qoob_data', true);
-
+            
             // If have blocks - use get_the_content() function. In other way - return basic content
             if ( $data != '{"blocks":[]}' && $data != '') {
                 $result = do_shortcode(stripslashes(get_the_content()));
@@ -373,8 +381,9 @@ class Qoob {
         $url = $this->getUrlPage($id);
         //Check for qoob page
         $meta = get_post_meta($id, 'qoob_data', true);
+
         if ($meta != '{"blocks":[]}' && $meta != '') {
-            return array('edit_qoob' => '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>') + $actions;
+            return $actions['edit_qoob'] = '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>';
         } else {
             return $actions;
         }
@@ -482,7 +491,7 @@ class Qoob {
         add_filter('admin_title', array($this, 'setTitlePage'));
         is_array($this) && extract($this);
         require_once $this->getPathTemplates() . 'template.php';
-        die();
+        wp_die();
     }
     /**
      * Set title edit page
@@ -747,7 +756,7 @@ class Qoob {
      * Load qoob data
      * @return json
      */
-    public function loadLibsInfo() {
+    public function loadLibsInfo($return = null) {
         $libs = get_site_option( 'qoob_libs' );
 
         if (isset($libs)) {
@@ -760,6 +769,9 @@ class Qoob {
         } else {
             $response = array('success' => false);
         }
+
+        if (!!$return)
+        	return $response;
 
         wp_send_json($response);
     }
@@ -782,7 +794,7 @@ class Qoob {
     /**
      * Loading all qoob's templates  
      */
-    public function loadTmpl() {
+    public function loadTmpl($return = null) {
         $templates = $this->getTplFiles();
         if (isset($templates)) {
             $tmpl = array();
@@ -796,8 +808,11 @@ class Qoob {
         } else {
             $response = array('success' => false);
         }
+
+        if (!!$return)
+        	return $response;
+        
         wp_send_json($response);
-        exit();
     }
 }
 

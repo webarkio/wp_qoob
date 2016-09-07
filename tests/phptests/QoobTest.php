@@ -1,15 +1,40 @@
 <?php
 
-
-
 class MockQoob extends Qoob {
-    public function __construct() {
-        $this->blocks_url = PLUGIN_PATH.'/blocks';
-        $this->blocks_path = PLUGIN_PATH.'/blocks';
+
+    public function setUser($type = 'administrator') {
+        $user_id = wp_create_user( 'Test', 'test', 'test@gmail.com');
+        $wp_user_object = new WP_User($user_id);
+        $wp_user_object->set_role($type);
+        wp_set_current_user($user_id);
+    }
+
+    public function createPostDefault() {
+    	$post_data = array(
+             'post_title'    => 'Some title',
+             'post_type' => 'page'
+        );
+        $post_id = wp_insert_post( wp_slash($post_data) );
+
+        return $post_id;
+    }
+
+    public function saveDefaultBlocksData($post_id = null) {
+    	if (!is_null($post_id)) {
+	    	$data = [
+	        'page_id' => $post_id,
+	        'blocks' => [
+	                        'html' => 'Some text',
+	                        'data' => file_get_contents('tests/phptests/demo_test.txt')
+	                    ]
+	        ];
+	        $data = json_encode($data);
+	        $this->savePageData($data);
+    	}
     }
 }
 
-class QoobTest extends WP_UnitTestCase { //WP_UnitTestCase
+class QoobTest extends WP_UnitTestCase { 
 
     private $test;
 
@@ -18,65 +43,95 @@ class QoobTest extends WP_UnitTestCase { //WP_UnitTestCase
         $this->test = null;
     }
 
+    // public function testPluginUpdateTo_1_1_0() {
+    // 	global $wpdb;
+    // 	$qoob = new MockQoob();
+    // 	$post_id = $qoob->createPostDefault();
+    // 	$sqls = array();
+    //     $sqls[] = "CREATE TABLE wp_pages (
+    //         pid int(9) NOT NULL,
+    //         data text NOT NULL,
+    //         html text NOT NULL,
+    //         PRIMARY KEY (pid),
+    //         KEY pid(pid)
+    //     );";
+    //     $sqls[] = "INSERT INTO wp_pages (pid,html,data) VALUES (" . $post_id . ",'Some html markup of Qoob builder', '{key: value}');";
+    //     $wpdb->query($sqls[0]);
+    //     $wpdb->query($sqls[1]);
+    //     var_dump($wpdb->get_results("SELECT * FROM wp_pages"));
+    //     var_dump($wpdb->get_var("SHOW TABLES LIKE 'wp_posts'"));
+
+    // 	//$qoob->pluginUpdateTo_1_1_0();
+    // 	$post = get_post($post_id);
+    // 	die();
+    // }
+
     public function testLoadPageData() {
         $qoob = new MockQoob();
-
-        //Setting current user to aministrator
-        // $this->_setRole( 'administrator' );
-        $user_id = wp_create_user( 'Test', 'test', 'test@gmail.com');
-        $wp_user_object = new WP_User($user_id);
-        $wp_user_object->set_role('administrator');
-        wp_set_current_user($user_id);
-
-        //Creating post in database
-        $post_data = array(
-             'post_title'    => 'Some title'
-        );
-        $post_id = wp_insert_post( wp_slash($post_data) );
+        $qoob->setUser();
+        $post_id = $qoob->createPostDefault();
 
         $testString = '{"text": "Test string to save into metafield."}';
-        $data = [
-            'page_id' => $post_id,
-            'blocks' => [
-                            'html' => 'Some text',
-                            'data' => file_get_contents('tests/phptests/demo_test.txt')
-                        ]
-                ];
+     	$qoob->saveDefaultBlocksData($post_id);
 
-        $data = json_encode($data);
-
-        // $this->setExpectedException( 'WPAjaxDieContinueException' );
-        // try {
-            $qoob->savePageData($data);
-            $newData = $qoob->loadPageData($post_id);
-        // } catch ( WPAjaxDieContinueException $e ) {}
+        $newData = $qoob->loadPageData($post_id);
 
         $this->assertEquals($newData, file_get_contents('tests/phptests/demo_test.txt'));
     }
 
-    //???
-    public function testPluginUpdate()
-    {
+	public function testPluginAddPaths() {
+		$qoob = new MockQoob();
+		$lib = file_get_contents(PLUGIN_PATH . 'blocks/lib.json');
+		$libUrl = plugin_dir_url(PLUGIN_PATH) . 'wp_qoob/blocks';
+        $lib = preg_replace('/%theme_url%/', get_template_directory_uri(), $lib);
+        $lib = preg_replace('/%lib_url%/', $libUrl, $lib);
+        $qoobLib = array_merge( array('url' => $libUrl), json_decode($lib, true) );
+		$neededResult = array( $qoobLib );
+		// Checks
+		delete_option('qoob_libs');
+		$qoob->pluginAddPaths();
+		$newResult = get_site_option('qoob_libs');
+		$this->assertEquals($neededResult, $newResult);
+
+		$qoob->pluginAddPaths();
+		$newResult = get_site_option('qoob_libs');
+		$this->assertEquals($neededResult, $newResult);
+
+		update_option( 'qoob_libs', array(array('testLib' => 'test')) );
+		$neededResult = array(array('testLib' => 'test'), $qoobLib);
+		$qoob->pluginAddPaths();
+		$newResult = get_site_option('qoob_libs');
+		$this->assertEquals($neededResult, $newResult);
+	}
+
+    public function testPluginUpdate() {
         $qoob = new MockQoob();
-        $ver_old = get_site_option('qoob_version');
+        $ver = '0.9.0';
+        $qoob->setVersion($ver);
+        delete_option('qoob_version');
         $qoob->pluginUpdate();
-        $ver_up = get_site_option('qoob_version');
-        $this->assertEquals($ver_up, $ver_old);
+        $verUp = get_site_option('qoob_version');
+        $this->assertEquals($ver, $verUp);
     }
 
-    //???
     // public function testPluginUpdateTo()
-    // {
-    //     $qoob = new MockQoob();
-    //     $ver_last = $qoob->pluginUpdateTo_1_1_0();
-    //     $this->assertEquals($ver_last, '1.1.3');
-    // }
+
+    public function testinfoMetabox() {
+    	$qoob = new MockQoob();
+        $qoob->setUser();
+        $post_id = $qoob->createPostDefault();
+        $qoob->saveDefaultBlocksData($post_id);
+
+        // Set global $post variable for use in tested function
+        global $post;
+        global $wp_meta_boxes;
+        $post = get_post($post_id);
+        $qoob->infoMetabox();
+        $this->assertTrue(!is_null($wp_meta_boxes['page']['advanced']['default']['qoob-page-info']));
+    }
 
 
-    //testinfoMetabox()
-
-    public function testInfoMetaboxDisplay()
-    {
+    public function testInfoMetaboxDisplay() {
         $qoob = new MockQoob();
         $meta = '<p>Current page has been edited with Qoob Page Builder. To edit this page as regular one - go to Qoob editor by pressing "qoob" button and remove all blocks.</p>';
 
@@ -86,130 +141,195 @@ class QoobTest extends WP_UnitTestCase { //WP_UnitTestCase
         $this->assertEquals($metabox, $meta);
     }
 
-    //???
-    public function testSavePostMeta()
-    {
+    public function testSavePostMeta() {
         $qoob = new MockQoob();
-
-        //Creating post in database
-        $post_data = array(
-             'post_title'    => 'Some PostMeta',
-        );
-        $post_id = wp_insert_post( wp_slash($post_data) );
+        $post_id = $qoob->createPostDefault();
         add_post_meta($post_id, 'post_meta', 'Test fot SavePostMeta');
         $qoob->savePostMeta($post_id);
         $meta = get_post_meta($post_id);
         $this->assertEquals(array_key_exists('post_meta',$meta), true);
-
     }
 
-    // public function testrestoreRevision()
+    public function testRestoreRevision() {
+    	$qoob = new MockQoob();
 
-    // filterContent()
+        $post_id = $qoob->createPostDefault();
+        $qoob->saveDefaultBlocksData($post_id);
 
-    // onPageEdit()
+        $prevMeta = get_post_meta($post_id, 'qoob_data');
+        $prevMeta[0] = stripslashes($prevMeta[0]);
 
-    // registrationAjax()
+        $qoob->restoreRevision($post_id, $post_id);
 
-    // loadBlocksAssets()
+        $newMeta = get_post_meta($post_id, 'qoob_data');
 
-    public function testGetUrlAssets()
-    {
+        $this->assertEquals($prevMeta, $newMeta);
 
+        $qoob->restoreRevision($post_id, null);
+
+        $this->assertNotTrue(get_post_meta($post_id, 'qoob_data'));
+        
+    }
+
+    public function testFilterContent() {
+    	$qoob = new MockQoob();
+ 		$qoob->setUser();
+    	$post_id = $qoob->createPostDefault();
+    	
+    	$_GET['qoob'] = true;
+    	define( 'WP_ADMIN', true );
+    	$qoob = new MockQoob();
+    	$this->assertEquals('<div id="qoob-blocks"></div>', $qoob->filterContent());
+    	
+    	$_GET['qoob'] = false;
+    	$this->assertEquals('', $qoob->filterContent());
+
+    	$qoob->saveDefaultBlocksData($post_id);
+        global $post;
+        $post = get_post($post_id);
+    	$this->assertEquals('', $qoob->filterContent());
+    }
+
+    public function testoOnPageEdit() {
+    	$qoob = new MockQoob();
+    	$qoob->setUser();
+    	$post_id = $qoob->createPostDefault();
+    	$qoob->saveDefaultBlocksData($post_id);
+    	$_GET['post'] = $post_id;
+    	$qoob->onPageEdit();
+    	$this->assertNotTrue(post_type_supports( 'page', 'editor' ));
+    }
+
+    public function testGetUrlAssets() {
         $qoob = new MockQoob();
         $url = $qoob->getUrlAssets();
         $url_path = "http://example.org/wp-content/plugins/wp_qoob/assets/";
         $this->assertEquals($url, $url_path);
     }
 
-    public function testGetUrlQoob()
-    {
+    public function testGetUrlQoob() {
         $qoob = new MockQoob();
         $url = $qoob->getUrlQoob();
         $url_path = "http://example.org/wp-content/plugins/wp_qoob/qoob/";
         $this->assertEquals($url, $url_path);
     }
 
-    public function testGetPathTemplates()
-    {
+    public function testGetPathTemplates() {
         $qoob = new MockQoob();
         $template = $qoob->getPathTemplates();
         $this->assertEquals(!(strstr($template, 'wp_qoob/templates')), false);
     }
 
-    public function testSetDefaultTitle()
-    {
+    public function testSetDefaultTitle() {
         $qoob = new MockQoob();
         $title = $qoob->setDefaultTitle('Default');
         $this->assertEquals($title,'Default');
     }
 
-    public function testGetUrlPage()
-    {
+    public function testGetUrlPage() {
         $qoob = new MockQoob();
         $url = $qoob->getUrlPage('5');
         $url_path = "http://example.org/wp-admin/post.php?post_id=5&post_type=&qoob=true";
         $this->assertEquals($url, $url_path);
     }
 
-    public function testAddEditLinkAction()
-    {
+    public function testAddEditLinkAction() {
         $qoob = new MockQoob();
-        $url = $qoob->addEditLinkAction('edit');
+        $qoob->setUser();
+        $result = $qoob->addEditLinkAction('edit');
         $url_path = "edit";
-        $this->assertEquals($url, $url_path);
+        $this->assertEquals($result, $url_path);
+        $post_id = $qoob->createPostDefault();
+        $qoob->saveDefaultBlocksData($post_id);
+        global $post;
+        $post = get_post($post_id);   
+        $result = $qoob->addEditLinkAction(array());
+        $this->assertEquals($result, '<a href="http://example.org/wp-admin/post.php?post_id='.$post_id.'&post_type=page&qoob=true">' . __('Edit with qoob', 'qoob') . '</a>');
     }
 
-    //public function testinitEditPage()
+ //public function testInitEditPage()
 
-    //public function testsetPost()
+    public function testSetPost() {
+    	$qoob = new MockQoob();
+    	$qoob->setUser();
+    	$post_id = $qoob->createPostDefault();
+    	$qoob->saveDefaultBlocksData($post_id);
+    	global $post;
+    	$post = get_post($post_id);
+    	$_GET['post_id'] = $post_id;
+    	$qoob->setPost();
+    	$_GET['post_id'] = null;
+    	$_POST['post_id'] = $post_id;
+    	$qoob->setPost();
+    	$this->assertEquals($post, get_post($post_id));
+    }
 
-    public function testShowButton()
-    {
+    public function testShowButton() {
         $qoob = new MockQoob();
-
-        //Creating post in database
-        $post_data = array(
-             'post_title'    => 'Some title'
-        );
-        $post_id = wp_insert_post( wp_slash($post_data) );
-
-        $testString = '{"text": "Test string to save into metafield."}';
-        $data = [
-            'page_id' => $post_id,
-            'blocks' => [
-                'html' => 'Some text',
-                'data' => $testString
-                ]
-            ];
-
-        $data = json_encode($data);
-
+        $post_id = $qoob->createPostDefault();
+        $qoob->saveDefaultBlocksData($post_id);
         $show = $qoob->showButton($post_id);
         $this->assertEquals($show, false);
+        
+        $qoob->setUser();
+        $show2 = $qoob->showButton($post_id);
+        $this->assertEquals($show2, false);
     }
 
-    //public function testaddAdminBarLink()
+    //public function addAdminBarLink()
 
-    //allowInsertEmptyPost()
+    public function testAllowInsertEmptyPost() {
+    	$qoob = new MockQoob();
+    	$empty = $qoob->allowInsertEmptyPost(null);
+    	$this->assertEquals($empty, false);
+    }
 
-    //renderPage()
+    //public function testRenderPage()
 
-    public function testSetTitlePage()
-    {
+    public function testSetTitlePage() {
         $qoob = new MockQoob();
         $title = $qoob->setTitlePage();
         $title_page = "Edit Page with qoob";
         $this->assertEquals($title, $title_page);
     }
 
-    //function iframeScripts()
-    //function frontendScripts()
-    //function adminScripts()
-    //function loadScripts()
+    public function testIframeScripts() {
+    	$qoob = new MockQoob();
+    	$qoob->iframeScripts();
+    	$this->assertTrue(wp_script_is('control.edit.page.iframe'));
+    }
 
-    public function testGetUrlQoobTemplates()
-    {
+    public function testFrontendScripts() {
+    	$qoob = new MockQoob();
+    	$qoob->frontendScripts();
+    	$this->assertTrue(wp_style_is('qoob.frontend.style'));
+    }
+
+    public function testAdminScripts() {
+    	$qoob = new MockQoob();
+    	$qoob->setUser();
+    	$post_id = $qoob->createPostDefault();
+    	$qoob->saveDefaultBlocksData($post_id);
+    	global $post;
+    	$post = get_post($post_id);
+    	$_GET['qoob'] = true;
+    	$qoob->adminScripts();
+    	$this->assertTrue(wp_script_is('qoob.admin'));
+    	$this->assertTrue(wp_style_is('bootstrap'));
+    }
+
+    public function testLoadScripts() {
+    	$qoob = new MockQoob();
+    	$qoob->loadScripts();
+    	$this->assertTrue(wp_script_is('jquery'));
+    	if(!WP_DEBUG)
+	    	$this->assertTrue(wp_script_is('qoob'));
+    	else
+    		$this->assertTrue(wp_script_is('bootstrap')); 
+
+    }
+
+    public function testGetUrlQoobTemplates() {
         $qoob = new MockQoob();
         $class  = new ReflectionClass($qoob);
         $method = $class->getMethod('getUrlQoobTemplates');
@@ -220,20 +340,38 @@ class QoobTest extends WP_UnitTestCase { //WP_UnitTestCase
                         'id' => 'block-default-blank.html',
                         'url' => $path
                     );
-
         $this->assertEquals($result[0], $demo);
     }
 
 
-    //loadAssetsScripts()
-    //function loadData()
+    //public loadAssetsScripts()
+   public function testLoadLibsInfo() {
+   		$qoob = new MockQoob();
+   		$result = $qoob->loadLibsInfo(true);
+   		$this->assertTrue(isset($result['data']));
+   }
 
 
-    //function getTplFiles()
+    public function testGetTplFiles() {
+    	$qoob = new MockQoob();
+        $class  = new ReflectionClass($qoob);  
+        $method = $class->getMethod('getTplFiles');
+        $method->setAccessible(true);//makes the property available
+        $result = $method->invoke($qoob);//calls a function
 
-    //function loadItem()
+        $getUrlTem = $class->getMethod('getUrlQoobTemplates');
+        $getUrlTem->setAccessible(true);//makes the property available
+        $resGetUrlTem = $getUrlTem->invoke($qoob);//calls a function  
 
-    //function loadTmpl()
-    //function load_blocks_scripts($assets_type)
+        $this->assertEquals(array_key_exists('menu-blocks-preview',$result), true);
+        $this->assertEquals(count($result), count($resGetUrlTem));
+    }
+
+    public function testLoadTmpl() {
+    	$qoob = new MockQoob();
+    	$result = $qoob->loadTmpl(true);
+   		$this->assertTrue(isset($result['qoobTemplate']));
+    }
+
 
 }
