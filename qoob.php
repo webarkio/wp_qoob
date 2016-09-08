@@ -431,6 +431,8 @@ class Qoob {
      * @param WP_Admin_Bar $wp_admin_bar
      */
     public function addAdminBarLink($wp_admin_bar) {
+        var_dump($wp_admin_bar);
+        var_dump(is_singular());
         if (!is_object($wp_admin_bar)) {
             global $wp_admin_bar;
         }
@@ -459,7 +461,7 @@ class Qoob {
      *
      * @global object $current_user
      */
-    public function renderPage() {
+    public function renderPage($tested = false) {
         global $current_user;
         global $post;
         wp_get_current_user();
@@ -489,8 +491,11 @@ class Qoob {
         add_action('admin_enqueue_scripts', array($this, 'loadScripts'));
         add_filter('admin_title', array($this, 'setTitlePage'));
         is_array($this) && extract($this);
-        require_once $this->getPathTemplates() . 'template.php';
-        wp_die();
+        
+        if (!isset($tested))
+        	require_once $this->getPathTemplates() . 'template.php';
+        
+        return;
     }
     /**
      * Set title edit page

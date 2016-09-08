@@ -244,7 +244,7 @@ class QoobTest extends WP_UnitTestCase {
         global $post;
         $post = get_post($post_id);   
         $result = $qoob->addEditLinkAction(array());
-        $this->assertEquals($result, '<a href="http://example.org/wp-admin/post.php?post_id='.$post_id.'&post_type=page&qoob=true">' . __('Edit with qoob', 'qoob') . '</a>');
+        $this->assertTrue(isset($result['edit_qoob']));
     }
 
  //public function testInitEditPage()
@@ -276,7 +276,11 @@ class QoobTest extends WP_UnitTestCase {
         $this->assertEquals($show2, false);
     }
 
-    //public function addAdminBarLink()
+    public function testAddAdminBarLink() {
+    	$qoob = new MockQoob();
+    	$qoob->setUser();
+    	do_action('admin_bar_menu');
+    }
 
     public function testAllowInsertEmptyPost() {
     	$qoob = new MockQoob();
@@ -284,7 +288,17 @@ class QoobTest extends WP_UnitTestCase {
     	$this->assertEquals($empty, false);
     }
 
-    //public function testRenderPage()
+    public function testRenderPage() {
+    	global $post;
+    	$qoob = new MockQoob();
+    	$qoob->setUser();
+    	$post_id = $qoob->createPostDefault();
+    	$qoob->post = get_post($post_id);
+    	$qoob->post->post_status = 'auto-draft';
+    	$qoob->post_id = $post_id;
+    	$qoob->renderPage(true);
+    	$this->assertEquals('page', $qoob->post_type->name);
+    }
 
     public function testSetTitlePage() {
         $qoob = new MockQoob();
