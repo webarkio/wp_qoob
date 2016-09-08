@@ -2,6 +2,7 @@
 /*
   Plugin Name: qoob
   Plugin URI: http://qoob.it/
+  Domain Path: /languages
   Description: Qoob - by far the easiest free page builder plugin for WP
   Version: 1.1.5
   Author: webark.io
@@ -81,13 +82,25 @@ class Qoob {
         add_action('save_post', array($this, 'savePostMeta'));
         add_action( 'wp_restore_post_revision', array($this, 'restoreRevision'), 10, 2 );
         // Add metabox
-        add_action( 'add_meta_boxes', array($this, 'infoMetabox') );
-        add_action( 'plugins_loaded', array($this, 'pluginUpdate'), 10, 2);
+        add_action('add_meta_boxes', array($this, 'infoMetabox'));
+        add_action('plugins_loaded', array($this, 'pluginLoaded'), 10, 2);
         // registration ajax actions
         $this->registrationAjax();
         // Creating blocks paths
         $this->blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(__FILE__) . 'blocks');
         $this->blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(__FILE__) . 'blocks');
+    }
+
+    /**
+     * Add actions when class is loaded.
+     * @return void
+    */
+    public function pluginLoaded() {
+        // load localize
+        load_plugin_textdomain( 'qoob', FALSE, dirname( plugin_basename( __FILE__ ) ) . '/languages');
+
+        // start update when loaded
+        $this->pluginUpdate();
     }
 
     /**
@@ -103,9 +116,7 @@ class Qoob {
                 $this->pluginUpdateTo_1_1_0();
 
             update_option('qoob_version', $this->qoob_version);
-
         }
-
     }
 
     /**
@@ -161,7 +172,7 @@ class Qoob {
 
         // If have blocks - remove tinymce editor
         if ( $data != '{"blocks":[]}' && $data != '')
-            add_meta_box( 'qoob-page-info', __( 'Attention!', 'qoob' ), array($this, 'infoMetaboxDisplay'), 'page' );
+            add_meta_box('qoob-page-info', __('Attention!', 'qoob'), array($this, 'infoMetaboxDisplay'), 'page');
     }
 
     /*
@@ -552,7 +563,18 @@ class Qoob {
      */
     public function adminScripts() {
         if (get_post_type() == 'page') {
-            wp_enqueue_script('qoob.admin', $this->getUrlAssets() . 'js/qoob-admin.js', array('jquery'), '', true);
+            wp_register_script('qoob.admin', $this->getUrlAssets() . 'js/qoob-admin.js', array('jquery'), '', true);
+
+            // Localize the script with new data
+            $translation_array = array(
+                'button_text' => __('qoob', 'qoob')
+            );
+
+            wp_localize_script('qoob.admin', 'qoob_admin', $translation_array);
+
+            // Enqueued script with localized data.
+            wp_enqueue_script('qoob.admin');
+
             wp_enqueue_style('qoob.admin.style', $this->getUrlAssets() . "css/qoob-admin.css");
             if (isset($_GET['qoob']) && $_GET['qoob'] == true) {
                 wp_enqueue_style('wheelcolorpicker-minicolors', $this->getUrlQoob() . "css/wheelcolorpicker.css");
@@ -641,12 +663,64 @@ class Qoob {
             wp_enqueue_script('qoob-loader', $this->getUrlQoob() . 'js/qoob-loader.js', array('jquery'), '', true);
             wp_enqueue_script('qoob-storage', $this->getUrlQoob() . 'js/qoob-storage.js', array('jquery'), '', true);
             wp_enqueue_script('qoob-utils', $this->getUrlQoob() . 'js/qoob-utils.js', array('jquery'), '', true);
-            wp_enqueue_script('qoob', $this->getUrlQoob() . 'js/qoob.js', array('jquery'), '', true);
+
+            wp_register_script('qoob', $this->getUrlQoob() . 'js/qoob.js', array('jquery'), '', true);
+            // Localize the script with new data
+            wp_localize_script('qoob', 'qoob_lng', $this->translationArray());
+            // Enqueued script with localized data.
+            wp_enqueue_script('qoob');
+
             wp_enqueue_script('handlebar-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-handlebars.js', array('handlebars'), '', true);
             wp_enqueue_script('underscore-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-underscore.js', array('underscore'), '', true);
-
         }
+    }
 
+    /**
+     * Return localize array
+     * @return array
+     */
+    public function translationArray() {
+        $translation_array = array(
+            // general localization
+            'button_text' => __('qoob', 'qoob'),
+            'autosave' => __('Autosave', 'qoob'),
+            'save' => __('Save', 'qoob'),
+            'exit' => __('Exit', 'qoob'),
+            'confirm_delete_block' => __('Are you sure you want to delete the block?', 'qoob'),
+            // all fields view and tmpl
+            'fields' => array(
+                'media_title' => __('Select or Upload Media Of Your Chosen Persuasion', 'qoob'),
+                'media_text_button' => __('Use this media', 'qoob'),
+                'alert_error_format_file' => __('This file is not supposed to have correct format. Try another one.', 'qoob'),
+                'add_component' => __('Add component', 'qoob'),
+                'drag_to_delete' => __('Drag to delete', 'qoob'),
+                'all' => __('all', 'qoob'),
+                'tags' => __('Tags', 'qoob'),
+                'media_center' => __('Media Center', 'qoob'),
+                'image_url' => __('Image url', 'qoob'),
+                'video_url' => __('Video url', 'qoob'),
+                ),
+            // folder block
+            'block' => array(
+                    'block_droppable_preview' => __('Drag here to creative new block', 'qoob'),
+                    'block_default_blank' => __('First of all you need add block', 'qoob'),
+                    'block_pleasewait_preview' => __('Please wait', 'qoob'),
+                ),
+            // global menu
+            'menu' => array(
+                'back' => __('Back', 'qoob'),
+                'move' => __('Move', 'qoob'),
+                ),
+            // loader
+            'tips' => array(
+                'add_block_both_by_dragging' => __('You can add block both by dragging preview picture or by clicking on it.', 'qoob'),
+                'view_page_in_the_preview_mode' => __('You can view page in the preview mode by clicking the up-arrow in the up right corner of the screen.', 'qoob'),
+                'preview_mode_cant_reach_block_editting' => __("While you are in preview mode - you can't reach block editting.", 'qoob'),
+                'activate_autosave' => __("You can activate autosave of edited page by clicking 'Autosave' button in the toolbar in the top of your screen.", 'qoob'),
+                ),
+        );
+
+        return $translation_array;
     }
 
     /**
