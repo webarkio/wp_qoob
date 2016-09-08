@@ -14,19 +14,6 @@ module.exports = function(grunt) {
             docs: ['docs/dest/*', 'docs/dest/**'],
             phpunit: ["tests/phpunit/log/**"],
         },
-        assemble: {
-            options: {
-                layout: "default.hbs",
-                layoutdir: 'docs/src/layouts',
-                data: 'docs/src/data/*.json',
-                flatten: true
-            },
-            pages: {
-                files: {
-                    'docs/dest/': ['docs/src/*.hbs']
-                }
-            }
-        },
         compress: {
             stable: {
                 options: {
@@ -58,22 +45,6 @@ module.exports = function(grunt) {
             },
             phpunit: {
                 command: 'php tests/phpunit/phpunit.phar --configuration tests/phpunit/phpunit.xml'
-            },
-            api: {
-                command: 'node node_modules/jsdoc/jsdoc.js -c jsdoc.json -d docs/dest/api -t docs/jsdoc/template/jaguar'
-            }
-        },
-        concat: {
-            options: {
-                separator: ';\n'
-            },
-            dist: {
-                src: ['assets/js/qoob-wordpress-driver.js', 'qoob/js/libs/bootstrap.min.js', 'qoob/js/libs/bootstrap-progressbar.js',
-                    'qoob/js/libs/bootstrap-select.min.js', 'qoob/js/libs/handlebars.js', 'qoob/js/libs/handlebars-helper.js',
-                    'qoob/js/libs/jquery-ui-droppable-iframe.js', 'qoob/js/libs/jquery.wheelcolorpicker.js', 'qoob/js/models/**.js', 'qoob/js/views/**.js',
-                    'qoob/js/views/fields/**.js', 'qoob/js/extensions/**.js', 'qoob/js/controllers/qoob-controller.js', 'qoob/js/**.js', 'assets/js/control-edit-page.js'
-                ],
-                dest: 'qoob/qoob.min.js'
             }
         },
         mkdir: {
@@ -122,44 +93,6 @@ module.exports = function(grunt) {
                     '!tmp/**'
                 ],
                 dest: 'tmp/<%= pkg.plugin_name %>/trunk/'
-            },
-            style: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'docs/src/css/',
-                        src: ['**'],
-                        dest: 'docs/dest/css/'
-                    }
-                ],
-            },
-            fonts: {
-                files: [{
-                        expand: true,
-                        cwd: 'docs/src/fonts/',
-                        src: ['**'],
-                        dest: 'docs/dest/fonts/'
-                    }]
-            },
-            js: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'docs/src/js/',
-                        src: ['**'],
-                        dest: 'docs/dest/js/'
-                    }
-                ]
-            },
-            img: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'docs/src/img/',
-                        src: ['**'],
-                        dest: 'docs/dest/img/'
-                    }
-                ],
             }
         },
         push_svn: {
@@ -193,12 +126,6 @@ module.exports = function(grunt) {
 
     // Deploy to trunk
     grunt.registerTask('deploy', ['build', 'mkdir', 'svn_checkout', 'copy:svn_assets', 'copy:svn_trunk', 'push_svn', 'clean:tmp']);
-
-    //Deploy docs
-    grunt.registerTask('docs', ['clean:docs', 'assemble', 'copy:style', 'copy:fonts', 'copy:js', 'copy:img', 'api']);
-
-    //Create only JS API docs
-    grunt.registerTask('api', ['shell:api']);
 
     //Run PHPUnit tests
     grunt.registerTask('phpunit', ['clean:phpunit','shell:phpunit']);
