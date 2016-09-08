@@ -20,7 +20,7 @@
         "type": "text"
     }],
     "defaults": {
-        "header": "H1 HEADER VESTIBULUM AC DIAM SIT AMET QUAM SED SIT DUI",
+        "header": "Vestibulum ac diam amet quam sed sit dui",
         "action_text" : "Try now",
         "action_url" : "http://qoob.it/",
         "text" : "<p>Cras ultricies ligula sed magna dictum porta. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Donec rutrum congue leo eget malesuada. Cras ultricies ligula sed magna dictum porta. Cras ultricies ligula sed magna dictum porta. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Donec rutrum congue leo eget malesuada. Cras ultricies ligula sed magna dictum porta.</p><p>Quisque velit nisi, pretium ut lacinia in, elementum id enim. Donec rutrum congue leo eget malesuada. Cras ultricies ligula sed magna dictum porta. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Donec rutrum congue leo eget malesuada. Cras ultricies ligula sed magna dictum porta.</p>"
