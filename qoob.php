@@ -209,7 +209,7 @@ class Qoob {
      * Display metabox
     */
     public function infoMetaboxDisplay() {
-        echo '<p>Current page has been edited with Qoob Page Builder. To edit this page as regular one - go to Qoob editor by pressing "qoob" button and remove all blocks.</p>';
+        echo __('<p>Current page has been edited with Qoob Page Builder. To edit this page as regular one - go to Qoob editor by pressing "qoob" button and remove all blocks.</p>', 'qoob');
     }
 
      /**
@@ -431,8 +431,6 @@ class Qoob {
      * @param WP_Admin_Bar $wp_admin_bar
      */
     public function addAdminBarLink($wp_admin_bar) {
-        var_dump($wp_admin_bar);
-        var_dump(is_singular());
         if (!is_object($wp_admin_bar)) {
             global $wp_admin_bar;
         }
@@ -492,9 +490,8 @@ class Qoob {
         add_filter('admin_title', array($this, 'setTitlePage'));
         is_array($this) && extract($this);
         
-        if (!isset($tested))
+        if (!$tested)
         	require_once $this->getPathTemplates() . 'template.php';
-        
         return;
     }
     /**
