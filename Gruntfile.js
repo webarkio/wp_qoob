@@ -192,7 +192,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build', ['clean:build', 'shell:gitpull', 'concat', 'compress:stable']);
 
     // Deploy to trunk
-    grunt.registerTask('deploy', ['build', 'mkdir', 'svn_checkout', 'copy:svn_assets', 'copy:svn_trunk', 'push_svn', 'clean:tmp']);
+    grunt.registerTask('deploy', ['clean:build', 'shell:gitpull', 'concat', 'mkdir', 'svn_checkout', 'copy:svn_assets', 'copy:svn_trunk', 'push_svn', 'clean:tmp', 'clean:build']);
 
     //Deploy docs
     grunt.registerTask('docs', ['clean:docs', 'assemble', 'copy:style', 'copy:fonts', 'copy:js', 'copy:img', 'api']);
