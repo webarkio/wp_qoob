@@ -39,7 +39,9 @@ module.exports = function(grunt) {
                     '!**/package.json',
                     '!assets/screenshots/**',
                     '!jsdoc.json',
-                    '!**/jsdoc.json'
+                    '!**/jsdoc.json',
+                    '!test/**',
+                    '!**/test/**'
                 ],
                 dest: 'wp_qoob/'
             }
@@ -126,7 +128,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-push-svn');
 
     //Build builder to theme tgm plugin
-    grunt.registerTask('build', ['clean:build', 'shell:gitpull', 'shell: qoob_build', 'compress:stable']);
+    grunt.registerTask('build', ['clean:build', 'shell:gitpull', 'shell:qoob_build', 'compress:stable']);
 
     // Deploy to trunk
     grunt.registerTask('deploy', ['build', 'mkdir', 'svn_checkout', 'copy:svn_assets', 'copy:svn_trunk', 'push_svn', 'clean:tmp']);
