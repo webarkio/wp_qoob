@@ -11,7 +11,6 @@ module.exports = function(grunt) {
         clean: {
             build: ['build/*'],
             tmp: ['tmp/'],
-            docs: ['docs/dest/*', 'docs/dest/**'],
             phpunit: ["tests/phpunit/log/**"],
         },
         compress: {
@@ -25,26 +24,39 @@ module.exports = function(grunt) {
                     '!tests/**',
                     '!**/tests/**',
                     '!node_modules/**',
+                    '!**/node_modules/**',
                     '!presentation/**',
                     '!.git/**',
+                    '!**/.git/**',
                     '!build/**',
                     '!docs/dest/**',
+                    '!**/docs/dest/**',
                     '!docs/**',
+                    '!**/docs/**',
                     '!Gruntfile.js',
+                    '!**/Gruntfile.js',
                     '!package.json',
-                    '!assets/screenshots/**',
                     '!**/package.json',
-                    '!jsdoc.json'
+                    '!assets/screenshots/**',
+                    '!jsdoc.json',
+                    '!**/jsdoc.json'
                 ],
                 dest: 'wp_qoob/'
             }
         },
         shell: {
             gitpull: {
-                command: 'git pull'
+                command: 'git pull origin block_sources'
             },
             phpunit: {
                 command: 'php tests/phpunit/phpunit.phar --configuration tests/phpunit/phpunit.xml'
+            },
+            qoob_build: {
+                command: [
+                    'cd qoob',
+                    'grunt build',
+                    'cd ..'
+                ].join('&&')
             }
         },
         mkdir: {
@@ -106,23 +118,15 @@ module.exports = function(grunt) {
             }
         }
     });
-    // Load concating js plugin
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    //Load the shell plugin
+
     grunt.loadNpmTasks('grunt-shell');
-    //Clean plugin
     grunt.loadNpmTasks('grunt-contrib-clean');
-    // checkout svn
-    grunt.loadNpmTasks('grunt-svn-checkout');
-    // copy files
     grunt.loadNpmTasks('grunt-contrib-copy');
-    // push svn
+    grunt.loadNpmTasks('grunt-svn-checkout');
     grunt.loadNpmTasks('grunt-push-svn');
-    // load assemble
-    grunt.loadNpmTasks('grunt-assemble');
 
     //Build builder to theme tgm plugin
-    grunt.registerTask('build', ['clean:build', 'shell:gitpull', 'concat', 'compress:stable']);
+    grunt.registerTask('build', ['clean:build', 'shell:gitpull', 'shell: qoob_build', 'compress:stable']);
 
     // Deploy to trunk
     grunt.registerTask('deploy', ['build', 'mkdir', 'svn_checkout', 'copy:svn_assets', 'copy:svn_trunk', 'push_svn', 'clean:tmp']);
