@@ -41,7 +41,9 @@ module.exports = function(grunt) {
                     '!jsdoc.json',
                     '!**/jsdoc.json',
                     '!test/**',
-                    '!**/test/**'
+                    '!**/test/**',
+                    '!.gitignore',
+                    '!**/.gitignore'
                 ],
                 dest: 'wp_qoob/'
             }
@@ -98,11 +100,19 @@ module.exports = function(grunt) {
                     '!assets/screenshots/**', // will be copied in copy:svn_assets below
                     '!node_modules/**',
                     '!.git/**',
+                    '!**/.git/**',
                     '!Gruntfile.js',
+                    '!**/Gruntfile.js',
                     '!package.json',
+                    '!**/package.json',
                     '!.gitignore',
+                    '!**/.gitignore',
                     '!.gitmodules',
+                    '!**/.gitmodules',
                     '!tests/**',
+                    '!**/tests/**',
+                    '!test/**',
+                    '!**/test/**',
                     '!build/**',
                     '!tmp/**'
                 ],
