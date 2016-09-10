@@ -218,14 +218,13 @@ class Qoob {
       */
     public function savePostMeta($post_id) {
         $parent_id = wp_is_post_revision( $post_id );
-
         if ( $parent_id ) {
-
             $parent  = get_post( $parent_id );
             $qoob_data = get_post_meta( $parent->ID, 'qoob_data', true );
 
-            if ( $qoob_data !== false )
-                add_metadata( 'post', $post_id, 'qoob_data', $qoob_data );
+            if ( $qoob_data !== false ){
+                add_metadata( 'post', $post_id, 'qoob_data', $qoob_data, true);
+            }
         }
     }
 
@@ -294,7 +293,7 @@ class Qoob {
     public function registrationAjax() {
         add_action('wp_ajax_qoob_load_page_data', array($this, 'loadPageData'));
         add_action('wp_ajax_qoob_load_libs_info', array($this, 'loadLibsInfo'));
-        add_action('wp_ajax_qoob_save_page_data', array($this, 'savePageData'));
+        add_action('wp_ajax_qoob_save_page_data', array($this, 'savePageDataHook'));
         add_action('wp_ajax_qoob_load_tmpl', array($this, 'loadTmpl'));
     }
 
@@ -431,8 +430,8 @@ class Qoob {
      * @param WP_Admin_Bar $wp_admin_bar
      */
     public function addAdminBarLink($wp_admin_bar) {
-        var_dump($wp_admin_bar);
-        var_dump(is_singular());
+        // var_dump($wp_admin_bar);
+        // var_dump(is_singular());
         if (!is_object($wp_admin_bar)) {
             global $wp_admin_bar;
         }
@@ -664,22 +663,22 @@ class Qoob {
         wp_send_json($response);
     }
 
+
+	public function savePageDataHook(){
+		$this->savePageData(file_get_contents('php://input'));
+	}
+
     /**
      * Save data page
      * @return json
      */
-    public function savePageData($data = false) {
+    public function savePageData($data, $test=false) {
         // Checking for administration rights
         if (!current_user_can('manage_options')) {
             return;
         }
 
-        if($data == ''){
-            $post_data = json_decode(file_get_contents('php://input'), true);
-        }else{
-        	$tested = true;
-            $post_data = json_decode($data, true);
-        }
+		$post_data = json_decode($data, true);
 
         $blocks_html = trim($post_data['blocks']['html']);
         $post_id = $post_data['page_id'];
@@ -698,7 +697,8 @@ class Qoob {
 
         $responce = array('success' => (boolean) $updated);
 
-        if ( isset($tested) )
+        //Return if test
+        if ($test)
         	return;
         
         wp_send_json($responce);

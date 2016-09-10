@@ -9,7 +9,7 @@ class MockQoob extends Qoob {
         wp_set_current_user($user_id);
     }
 
-    public function createPostDefault() {
+    public function createDefaultPost() {
     	$post_data = array(
              'post_title'    => 'Some title',
              'post_type' => 'page'
@@ -18,6 +18,17 @@ class MockQoob extends Qoob {
 
         return $post_id;
     }
+
+
+    public function updateDefaultPost($post_id, $title) {
+    	$post_data = array(
+    		'ID'           => $post_id,
+             'post_title'    => $title
+//             'post_type' => 'page'
+        );
+        return wp_update_post( $post_data );
+    }
+
 
     public function saveDefaultBlocksData($post_id = null) {
     	if (!is_null($post_id)) {
@@ -29,7 +40,7 @@ class MockQoob extends Qoob {
 	                    ]
 	        ];
 	        $data = json_encode($data);
-	        $this->savePageData($data);
+	        $this->savePageData($data, true);
     	}
     }
 }
@@ -46,7 +57,7 @@ class QoobTest extends WP_UnitTestCase {
     // public function testPluginUpdateTo_1_1_0() {
     // 	global $wpdb;
     // 	$qoob = new MockQoob();
-    // 	$post_id = $qoob->createPostDefault();
+    // 	$post_id = $qoob->createDefaultPost();
     // 	$sqls = array();
     //     $sqls[] = "CREATE TABLE wp_pages (
     //         pid int(9) NOT NULL,
@@ -69,9 +80,8 @@ class QoobTest extends WP_UnitTestCase {
     public function testLoadPageData() {
         $qoob = new MockQoob();
         $qoob->setUser();
-        $post_id = $qoob->createPostDefault();
+        $post_id = $qoob->createDefaultPost();
 
-        $testString = '{"text": "Test string to save into metafield."}';
      	$qoob->saveDefaultBlocksData($post_id);
 
         $newData = $qoob->loadPageData($post_id);
@@ -119,7 +129,7 @@ class QoobTest extends WP_UnitTestCase {
     public function testinfoMetabox() {
     	$qoob = new MockQoob();
         $qoob->setUser();
-        $post_id = $qoob->createPostDefault();
+        $post_id = $qoob->createDefaultPost();
         $qoob->saveDefaultBlocksData($post_id);
 
         // Set global $post variable for use in tested function
@@ -142,18 +152,39 @@ class QoobTest extends WP_UnitTestCase {
     }
 
     public function testSavePostMeta() {
+    	$testMeta=array();
+    	$testMeta[]='Test fot SavePostMeta1';
+    	$testMeta[]='Test fot SavePostMeta2';
+    	$testMeta[]='Test fot SavePostMeta3';
+
         $qoob = new MockQoob();
-        $post_id = $qoob->createPostDefault();
-        add_post_meta($post_id, 'post_meta', 'Test fot SavePostMeta');
-        $qoob->savePostMeta($post_id);
-        $meta = get_post_meta($post_id);
-        $this->assertEquals(array_key_exists('post_meta',$meta), true);
+
+        $post_id = $qoob->createDefaultPost();
+        
+        add_post_meta($post_id, 'qoob_data', $testMeta[0]);
+        $qoob->updateDefaultPost($post_id, "title0");
+
+		update_post_meta($post_id, 'qoob_data', $testMeta[1]);
+		$qoob->updateDefaultPost($post_id, "title1");
+        
+		update_post_meta($post_id, 'qoob_data', $testMeta[2]);
+        $qoob->updateDefaultPost($post_id,"title2");
+        
+
+        $rev = wp_get_post_revisions( $post_id );
+
+        $key = 1;
+        foreach ($rev as $rev_post_id => $value) {
+        	$meta = get_post_meta($rev_post_id);
+        	$this->assertEquals($meta['qoob_data'][0], $testMeta[count($rev) - $key]);
+        	$key++;
+        }
     }
 
     public function testRestoreRevision() {
     	$qoob = new MockQoob();
 
-        $post_id = $qoob->createPostDefault();
+        $post_id = $qoob->createDefaultPost();
         $qoob->saveDefaultBlocksData($post_id);
 
         $prevMeta = get_post_meta($post_id, 'qoob_data');
@@ -174,7 +205,7 @@ class QoobTest extends WP_UnitTestCase {
     public function testFilterContent() {
     	$qoob = new MockQoob();
  		$qoob->setUser();
-    	$post_id = $qoob->createPostDefault();
+    	$post_id = $qoob->createDefaultPost();
     	
     	$_GET['qoob'] = true;
     	define( 'WP_ADMIN', true );
@@ -193,7 +224,7 @@ class QoobTest extends WP_UnitTestCase {
     public function testoOnPageEdit() {
     	$qoob = new MockQoob();
     	$qoob->setUser();
-    	$post_id = $qoob->createPostDefault();
+    	$post_id = $qoob->createDefaultPost();
     	$qoob->saveDefaultBlocksData($post_id);
     	$_GET['post'] = $post_id;
     	$qoob->onPageEdit();
@@ -239,7 +270,7 @@ class QoobTest extends WP_UnitTestCase {
         $result = $qoob->addEditLinkAction('edit');
         $url_path = "edit";
         $this->assertEquals($result, $url_path);
-        $post_id = $qoob->createPostDefault();
+        $post_id = $qoob->createDefaultPost();
         $qoob->saveDefaultBlocksData($post_id);
         global $post;
         $post = get_post($post_id);   
@@ -252,7 +283,7 @@ class QoobTest extends WP_UnitTestCase {
     public function testSetPost() {
     	$qoob = new MockQoob();
     	$qoob->setUser();
-    	$post_id = $qoob->createPostDefault();
+    	$post_id = $qoob->createDefaultPost();
     	$qoob->saveDefaultBlocksData($post_id);
     	global $post;
     	$post = get_post($post_id);
@@ -266,7 +297,7 @@ class QoobTest extends WP_UnitTestCase {
 
     public function testShowButton() {
         $qoob = new MockQoob();
-        $post_id = $qoob->createPostDefault();
+        $post_id = $qoob->createDefaultPost();
         $qoob->saveDefaultBlocksData($post_id);
         $show = $qoob->showButton($post_id);
         $this->assertEquals($show, false);
@@ -292,7 +323,7 @@ class QoobTest extends WP_UnitTestCase {
     	global $post;
     	$qoob = new MockQoob();
     	$qoob->setUser();
-    	$post_id = $qoob->createPostDefault();
+    	$post_id = $qoob->createDefaultPost();
     	$qoob->post = get_post($post_id);
     	$qoob->post->post_status = 'auto-draft';
     	$qoob->post_id = $post_id;
@@ -322,7 +353,7 @@ class QoobTest extends WP_UnitTestCase {
     public function testAdminScripts() {
     	$qoob = new MockQoob();
     	$qoob->setUser();
-    	$post_id = $qoob->createPostDefault();
+    	$post_id = $qoob->createDefaultPost();
     	$qoob->saveDefaultBlocksData($post_id);
     	global $post;
     	$post = get_post($post_id);
