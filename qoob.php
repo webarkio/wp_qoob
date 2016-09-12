@@ -1,14 +1,14 @@
 <?php
 /*
- * Plugin Name: qoob
- * Plugin URI: http://qoob.it/
- * Text Domain: qoob
- * Domain Path: /languages
- * Description: Qoob - by far the easiest free page builder plugin for WP
- * Version: 1.1.6
- * Author: webark.io
- * Author URI: http://webark.io/
- */
+Plugin Name: qoob
+Plugin URI: http://qoob.it/
+Text Domain: qoob
+Domain Path: /languages
+Description: Qoob - by far the easiest free page builder plugin for WP
+Version: 1.1.6
+Author: webark.io
+Author URI: http://webark.io/
+*/
 
 /**
  * This file is part of the Qoob builder package

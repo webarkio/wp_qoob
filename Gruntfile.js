@@ -9,8 +9,8 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         clean: {
-            build: ['build/*'],
-            tmp: ['tmp/'],
+            build: ['build/**'],
+            tmp: ['tmp/**'],
             docs: ['docs/dest/*', 'docs/dest/**'],
             phpunit: ["tests/phpunit/log/**"],
         },
