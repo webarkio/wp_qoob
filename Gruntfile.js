@@ -9,8 +9,8 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         clean: {
-            build: ['build/*'],
-            tmp: ['tmp/'],
+            build: ['build/**'],
+            tmp: ['tmp/**'],
             docs: ['docs/dest/*', 'docs/dest/**'],
             phpunit: ["tests/phpunit/log/**"],
         },
@@ -81,7 +81,12 @@ module.exports = function(grunt) {
                 options: {
                     create: ['tmp']
                 }
-            }
+            },
+			tags: {
+				options: {
+					create: ['tmp/qoob/tags/<%= pkg.version %>']
+				}
+			}
         },
         svn_checkout: {
             make_local: {
@@ -123,6 +128,12 @@ module.exports = function(grunt) {
                 ],
                 dest: 'tmp/<%= pkg.plugin_name %>/trunk/'
             },
+			tags: {
+				expand: true,
+				cwd: 'tmp/<%= pkg.plugin_name %>/trunk/',
+                src: ['**'],
+                dest: 'tmp/<%= pkg.plugin_name %>/tags/<%= pkg.version %>/'
+			},
             style: {
                 files: [
                     {
@@ -192,7 +203,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build', ['clean:build', 'shell:gitpull', 'concat', 'compress:stable']);
 
     // Deploy to trunk
-    grunt.registerTask('deploy', ['build', 'mkdir', 'svn_checkout', 'copy:svn_assets', 'copy:svn_trunk', 'push_svn', 'clean:tmp']);
+    grunt.registerTask('deploy', ['shell:gitpull', 'concat', 'mkdir:build', 'svn_checkout', 'mkdir:tags', 'copy:svn_assets', 'copy:svn_trunk', 'copy:tags', 'push_svn', 'clean:tmp', 'clean:build']);
 
     //Deploy docs
     grunt.registerTask('docs', ['clean:docs', 'assemble', 'copy:style', 'copy:fonts', 'copy:js', 'copy:img', 'api']);
