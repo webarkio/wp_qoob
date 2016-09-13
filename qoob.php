@@ -5,7 +5,7 @@ Plugin URI: http://qoob.it/
 Text Domain: qoob
 Domain Path: /languages
 Description: Qoob - by far the easiest free page builder plugin for WP
-Version: 1.1.6
+Version: 1.1.7
 Author: webark.io
 Author URI: http://webark.io/
 */
@@ -50,7 +50,7 @@ class Qoob {
      * Default post types
      * @var string
      */
-    private $qoob_version = '1.1.6';
+    private $qoob_version = '1.1.7';
     /**
      * Register actions for module
      */
@@ -615,7 +615,7 @@ class Qoob {
         wp_enqueue_script('backbone');
         wp_enqueue_script('qoob-tinymce', $this->getUrlQoob() . 'js/libs/tinymce/tinymce.min.js', array('jquery'), '', true);
         if (!WP_DEBUG) {
-            wp_enqueue_script('qoob', $this->getUrlQoob() . '/qoob.min.js', array('jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'backbone', 'underscore'));
+            wp_register_script('qoob', $this->getUrlQoob() . '/qoob.min.js', array('jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'backbone', 'underscore'));
         } else {
             wp_enqueue_script('control_edit_page', $this->getUrlAssets() . 'js/control-edit-page.js', array('qoob'), '', true);
             wp_enqueue_script('qoob-wordpress-driver', $this->getUrlAssets() . 'js/qoob-wordpress-driver.js', array('jquery'), '', true);
@@ -674,6 +674,11 @@ class Qoob {
             wp_enqueue_script('handlebar-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-handlebars.js', array('handlebars'), '', true);
             wp_enqueue_script('underscore-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-underscore.js', array('underscore'), '', true);
         }
+
+        // Localize the script with new data
+        wp_localize_script('qoob', 'qoob_lng', $this->translationArray());
+        // Enqueued script with localized data.
+        wp_enqueue_script('qoob');
     }
 
     /**
