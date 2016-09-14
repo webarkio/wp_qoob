@@ -1,0 +1,140 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Qoob - Page Builder\n"
+"POT-Creation-Date: 2016-09-09 11:05+0300\n"
+"PO-Revision-Date: 2016-09-09 11:05+0300\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.9\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;"
+"esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;"
+"esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: webark <info@webark.io>\n"
+"Language: de\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: qoob.php:174
+msgid "Attention!"
+msgstr ""
+
+#: qoob.php:397
+msgid "(no title)"
+msgstr ""
+
+#: qoob.php:422
+msgid "Edit with qoob"
+msgstr ""
+
+#: qoob.php:478 qoob.php:569 qoob.php:684
+msgid "qoob"
+msgstr ""
+
+#: qoob.php:538
+msgid "Edit Page with qoob"
+msgstr ""
+
+#: qoob.php:685
+msgid "Autosave"
+msgstr ""
+
+#: qoob.php:686
+msgid "Save"
+msgstr ""
+
+#: qoob.php:687
+msgid "Exit"
+msgstr ""
+
+#: qoob.php:688
+msgid "Are you sure you want to delete the block?"
+msgstr ""
+
+#: qoob.php:691
+msgid "Select or Upload Media Of Your Chosen Persuasion"
+msgstr ""
+
+#: qoob.php:692
+msgid "Use this media"
+msgstr ""
+
+#: qoob.php:693
+msgid "This file is not supposed to have correct format. Try another one."
+msgstr ""
+
+#: qoob.php:694
+msgid "Add component"
+msgstr ""
+
+#: qoob.php:695
+msgid "Drag to delete"
+msgstr ""
+
+#: qoob.php:696
+msgid "all"
+msgstr ""
+
+#: qoob.php:697
+msgid "Tags"
+msgstr ""
+
+#: qoob.php:698
+msgid "Media Center"
+msgstr ""
+
+#: qoob.php:699
+msgid "Image url"
+msgstr ""
+
+#: qoob.php:700
+msgid "Video url"
+msgstr ""
+
+#: qoob.php:704
+msgid "Drag here to creative new block"
+msgstr ""
+
+#: qoob.php:705
+msgid "First of all you need add block"
+msgstr ""
+
+#: qoob.php:706
+msgid "Please wait"
+msgstr ""
+
+#: qoob.php:710
+msgid "Back"
+msgstr ""
+
+#: qoob.php:711
+msgid "Move"
+msgstr ""
+
+#: qoob.php:715
+msgid ""
+"You can add block both by dragging preview picture or by clicking on it."
+msgstr ""
+
+#: qoob.php:716
+msgid ""
+"You can view page in the preview mode by clicking the up-arrow in the up "
+"right corner of the screen."
+msgstr ""
+
+#: qoob.php:717
+msgid "While you are in preview mode - you can't reach block editting."
+msgstr ""
+
+#: qoob.php:718
+msgid ""
+"You can activate autosave of edited page by clicking 'Autosave' button in "
+"the toolbar in the top of your screen."
+msgstr ""
+
+#: templates/template.php:30
+msgid "Did you know"
+msgstr ""

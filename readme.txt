@@ -82,6 +82,9 @@ You can edit information in each block of the page. For this purpose **click** t
 
 == Changelog ==
 
+= 1.1.6 =
+* Add localization
+
 = 1.1.5 =
 * Refactoring handlebars helper methods
 
