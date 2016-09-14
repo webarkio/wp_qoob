@@ -457,8 +457,10 @@ class Qoob {
         $this->loadAssetsScripts();
         // load qoob styles
         wp_enqueue_style('qoob.frontend.style', $this->getUrlAssets() . "css/qoob.css");
-        // Bootstrap grid
-        wp_enqueue_style('bootstrap-grid', $this->getUrlAssets() . 'css/bootstrap-grid.css');
+        // Bootstrap grid, carousel, glyphicons, etc. (Default styles and scripts for demo blocks)
+        wp_enqueue_style('bootstrap', $this->getUrlAssets() . 'css/bootstrap.min.css');
+        wp_enqueue_script('bootstrap', $this->getUrlAssets(). 'js/bootstrap.min.js');
+        wp_enqueue_style('glyphicons', $this->getUrlAssets() . '../blocks/glyphicons/assets/css/glyphicons.css');
     }
     /**
      * Load javascript and css on admin page
@@ -472,6 +474,7 @@ class Qoob {
                 wp_enqueue_style('wheelcolorpicker-minicolors', $this->getUrlQoob() . "css/wheelcolorpicker.css");
                 wp_enqueue_style('bootstrap', $this->getUrlQoob() . "css/bootstrap.min.css");
                 wp_enqueue_style('bootstrap-select', $this->getUrlQoob() . "css/bootstrap-select.min.css");
+                wp_enqueue_style('glyphicons', $this->getUrlAssets() . '../blocks/glyphicons/assets/css/glyphicons.css');
             }
         }
     }
@@ -662,7 +665,7 @@ class Qoob {
                         wp_enqueue_style($cssArr[$j]['name'], $cssArr[$j]['url']);
                 if (!empty($jsArr))
                     for ($k = 0; $k < count($jsArr); $k++)
-                        wp_enqueue_script($cssArr[$k]['name'], $cssArr[$k]['url']);
+                        wp_enqueue_script($cssArr[$k]['name'], $jsArr[$k]['url']);
             }
         }
     }

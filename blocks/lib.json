@@ -2,23 +2,44 @@
 	"name": "default",
 	"groups": [
 		{
-		    "id": "demo",
-		    "label": "Demo",
+		    "id": "text",
+		    "label": "Text",
 		    "position": "0"
+		},
+		{
+		    "id": "gallery",
+		    "label": "Gallery",
+		    "position": "1"
+		},
+		{
+		    "id": "slider",
+		    "label": "Slider",
+		    "position": "2"
+		},
+		{
+		    "id": "video",
+		    "label": "Video",
+		    "position": "3"
+		},
+		{
+		    "id": "call_to_action",
+		    "label": "Call to action",
+		    "position": "4"
+		},
+		{
+		    "id": "other",
+		    "label": "Other",
+		    "position": "5"
 		}
 	],
 	"blocks": [
 		{
-		    "name": "demo",
-		    "url": "%lib_url%/demo/"
+		    "name": "demo_text",
+		    "url": "%lib_url%/demo_text/"
 		},
 		{
-		    "name": "demo_2_col",
-		    "url": "%lib_url%/demo_2_col/"
-		},
-		{
-		    "name": "demo_3_col",
-		    "url": "%lib_url%/demo_3_col/"
+		    "name": "demo_text_2_col",
+		    "url": "%lib_url%/demo_text_2_col/"
 		},
 		{
 		    "name": "demo_blockquote",
@@ -29,24 +50,36 @@
 		    "url": "%lib_url%/demo_call_to_action/"
 		},
 		{
-		    "name": "demo_call_to_action_noimg",
-		    "url": "%lib_url%/demo_call_to_action_noimg/"
+		    "name": "demo_iconbox",
+		    "url": "%lib_url%/demo_iconbox/"
 		},
 		{
-		    "name": "demo_ordered_list",
-		    "url": "%lib_url%/demo_ordered_list/"
+		    "name": "glyphicons",
+		    "url": "%lib_url%/glyphicons/"
 		},
 		{
-		    "name": "demo_txt_img_l",
-		    "url": "%lib_url%/demo_txt_img_l/"
+		    "name": "demo_map",
+		    "url": "%lib_url%/demo_map/"
 		},
 		{
-		    "name": "demo_txt_img_r",
-		    "url": "%lib_url%/demo_txt_img_r/"
+		    "name": "demo_video",
+		    "url": "%lib_url%/demo_video/"
 		},
 		{
-		    "name": "demo_unordered_list",
-		    "url": "%lib_url%/demo_unordered_list/"
+		    "name": "demo_carousel",
+		    "url": "%lib_url%/demo_carousel/"
+		},
+		{
+		    "name": "demo_gallery",
+		    "url": "%lib_url%/demo_gallery/"
+		},
+		{
+			"name": "assets",
+			"url": "http://webark.com/qoob/blocks/default/media/"
+		},
+		{
+		    "name": "demo_slider",
+		    "url": "%lib_url%/demo_slider/"
 		}
 	],
 	"res": {
@@ -54,8 +87,21 @@
 			{
 				"name": "qoob_default_css",
 				"url": "%lib_url%/lib.css"
+			},
+			{
+				"name": "owl-carousel",
+				"url": "%lib_url%/demo_slider/assets/css/owl.carousel.css"
+			},
+			{
+				"name": "owl-carousel-theme",
+				"url": "%lib_url%/demo_slider/assets/css/owl.theme.css"
 			}
 		],
-		"js": []
+		"js": [
+			{
+				"name": "owl-carousel",
+				"url": "%lib_url%/demo_slider/assets/js/owl.carousel.min.js"
+			}
+		]
 	}
 }

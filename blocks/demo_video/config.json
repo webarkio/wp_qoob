@@ -1,0 +1,19 @@
+{
+    "name": "",
+    "groups": "video",
+    "template": "template.hbs",
+    "settings": [{
+        "name": "header",
+        "label": "Header",
+        "type": "text"
+    }, {
+        "name": "url",
+        "label": "Video",
+        "type": "video",
+        "tags": ["myVid"]
+    }],
+    "defaults": {
+        "header": "Watch our project",
+        "url": "%block_url(assets)%/assets/videos/cube_girl.mp4"
+    }
+}

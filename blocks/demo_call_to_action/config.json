@@ -1,20 +1,11 @@
 {
     "name": "",
-    "groups": "demo",
+    "groups": "call_to_action",
     "template": "template.hbs",
     "settings": [{
         "name": "header",
         "label": "Header",
         "type": "text"
-    }, {
-        "name": "image",
-        "label": "Image",
-        "type": "image",
-        "tags": ["woman", "person"]
-    }, {
-        "name": "text",
-        "label": "Text",
-        "type": "textarea"
     }, {
         "name": "action_text",
         "label": "Action button text",

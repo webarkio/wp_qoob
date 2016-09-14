@@ -1,6 +1,6 @@
 {
     "name": "",
-    "groups": "demo",
+    "groups": "other",
     "template": "template.hbs",
     "settings": [{
         "name": "title",
