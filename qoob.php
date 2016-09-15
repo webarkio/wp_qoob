@@ -469,7 +469,7 @@ class Qoob {
      */
     public function frontendScripts() {
         // load qoob blocks asset's styles
-        $this->loadAssetsScripts();
+        $this->loadAssetsScripts('frontend');
         // load qoob styles
         wp_enqueue_style('qoob.frontend.style', $this->getUrlAssets() . "css/qoob.css");
         // Bootstrap grid, carousel, glyphicons, etc. (Default styles and scripts for demo blocks)
@@ -497,6 +497,7 @@ class Qoob {
 
             wp_enqueue_style('qoob.admin.style', $this->getUrlAssets() . "css/qoob-admin.css");
             if (isset($_GET['qoob']) && $_GET['qoob'] == true) {
+                $this->loadAssetsScripts('backend');
                 wp_enqueue_style('wheelcolorpicker-minicolors', $this->getUrlQoob() . "css/wheelcolorpicker.css");
                 wp_enqueue_style('bootstrap', $this->getUrlQoob() . "css/bootstrap.min.css");
                 wp_enqueue_style('bootstrap-select', $this->getUrlQoob() . "css/bootstrap-select.min.css");
@@ -732,7 +733,10 @@ class Qoob {
      * 
      * @param Array $blocks blocks that contain wordpress theme
      */
-    private function loadAssetsScripts() {
+    private function loadAssetsScripts($destination = null) {
+        if (!isset($destination))
+            return;
+
         if ($qoobLibs = get_option('qoob_libs')) {
             
             for ($i = 0; $i < count($qoobLibs); $i++) {
@@ -742,10 +746,16 @@ class Qoob {
                 
                 if (!empty($cssArr))
                     for ($j = 0; $j < count($cssArr); $j++)
-                        wp_enqueue_style($cssArr[$j]['name'], $cssArr[$j]['url']);
+                        if ( (!isset($cssArr[$j]['use']) && $destination == 'frontend') || 
+                            (isset($cssArr[$j]['use']) && $cssArr[$j]['use'][$destination] === true) )
+                            wp_enqueue_style($cssArr[$j]['name'], $cssArr[$j]['url']);
+
                 if (!empty($jsArr))
                     for ($k = 0; $k < count($jsArr); $k++)
-                        wp_enqueue_script($cssArr[$k]['name'], $jsArr[$k]['url']);
+                        if ( (!isset($jsArr[$j]['use']) && $destination == 'frontend') || 
+                            (isset($jsArr[$j]['use']) && $jsArr[$j]['use'][$destination] === true) )
+                            wp_enqueue_script($jsArr[$k]['name'], $jsArr[$k]['url']);
+                    
             }
         }
     }
