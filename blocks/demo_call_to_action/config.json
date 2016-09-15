@@ -1,0 +1,30 @@
+{
+    "name": "",
+    "groups": "call_to_action",
+    "template": "template.hbs",
+    "settings": [{
+        "name": "header",
+        "label": "Header",
+        "type": "text"
+    }, {
+        "name": "action_text",
+        "label": "Action button text",
+        "type": "text"
+    }, {
+        "name": "action_url",
+        "label": "Url for action button",
+        "type": "text"
+    }],
+    "assets": [{
+        "type": "image",
+        "src": "%block_url%/assets/img/placeholder.png",
+        "tags": ["woman"]
+    }],
+    "defaults": {
+        "header": "Vestibulum ac diam amet quam sed sit dui",
+        "image": "%block_url%/assets/img/placeholder.png",
+        "action_text": "Try now",
+        "action_url": "http://qoob.it/",
+        "text": "<p>Cras ultricies ligula sed magna dictum porta. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Donec rutrum congue leo eget malesuada. Cras ultricies ligula sed magna dictum porta.</p><p>Quisque velit nisi, pretium ut lacinia in, elementum id enim. Donec rutrum congue leo eget malesuada.</p>"
+    }
+}

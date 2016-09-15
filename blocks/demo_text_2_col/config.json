@@ -1,0 +1,24 @@
+{
+    "name": "",
+    "groups": "text",
+    "template": "template.hbs",
+    "settings": [{
+        "name": "title",
+        "label": "Title",
+        "type": "text"
+    }, {
+        "name": "text_col_1",
+        "label": "Text column 1",
+        "type": "textarea"
+    },
+    {
+        "name": "text_col_2",
+        "label": "Text column 2",
+        "type": "textarea"
+    }],
+    "defaults": {
+        "title": "Quisque rutrum",
+        "text_col_1": "Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet.",
+        "text_col_2": "Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet."
+    }
+}

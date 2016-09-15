@@ -11,21 +11,7 @@ module.exports = function(grunt) {
         clean: {
             build: ['build/**'],
             tmp: ['tmp/**'],
-            docs: ['docs/dest/*', 'docs/dest/**'],
             phpunit: ["tests/phpunit/log/**"],
-        },
-        assemble: {
-            options: {
-                layout: "default.hbs",
-                layoutdir: 'docs/src/layouts',
-                data: 'docs/src/data/*.json',
-                flatten: true
-            },
-            pages: {
-                files: {
-                    'docs/dest/': ['docs/src/*.hbs']
-                }
-            }
         },
         compress: {
             stable: {
@@ -38,42 +24,43 @@ module.exports = function(grunt) {
                     '!tests/**',
                     '!**/tests/**',
                     '!node_modules/**',
+                    '!**/node_modules/**',
                     '!presentation/**',
                     '!.git/**',
+                    '!**/.git/**',
                     '!build/**',
                     '!docs/dest/**',
+                    '!**/docs/dest/**',
                     '!docs/**',
+                    '!**/docs/**',
                     '!Gruntfile.js',
+                    '!**/Gruntfile.js',
                     '!package.json',
-                    '!assets/screenshots/**',
                     '!**/package.json',
-                    '!jsdoc.json'
+                    '!assets/screenshots/**',
+                    '!jsdoc.json',
+                    '!**/jsdoc.json',
+                    '!test/**',
+                    '!**/test/**',
+                    '!.gitignore',
+                    '!**/.gitignore'
                 ],
                 dest: 'wp_qoob/'
             }
         },
         shell: {
             gitpull: {
-                command: 'git pull'
+                command: 'git pull origin block_sources'
             },
             phpunit: {
                 command: 'php tests/phpunit/phpunit.phar --configuration tests/phpunit/phpunit.xml'
             },
-            api: {
-                command: 'node node_modules/jsdoc/jsdoc.js -c jsdoc.json -d docs/dest/api -t docs/jsdoc/template/jaguar'
-            }
-        },
-        concat: {
-            options: {
-                separator: ';\n'
-            },
-            dist: {
-                src: ['assets/js/qoob-wordpress-driver.js', 'qoob/js/libs/bootstrap.min.js', 'qoob/js/libs/bootstrap-progressbar.js',
-                    'qoob/js/libs/bootstrap-select.min.js', 'qoob/js/libs/handlebars.js', 'qoob/js/libs/handlebars-helper.js',
-                    'qoob/js/libs/jquery-ui-droppable-iframe.js', 'qoob/js/libs/jquery.wheelcolorpicker.js', 'qoob/js/models/**.js', 'qoob/js/views/**.js',
-                    'qoob/js/views/fields/**.js', 'qoob/js/extensions/**.js', 'qoob/js/controllers/qoob-controller.js', 'qoob/js/**.js', 'assets/js/control-edit-page.js'
-                ],
-                dest: 'qoob/qoob.min.js'
+            qoob_build: {
+                command: [
+                    'cd qoob',
+                    'grunt build',
+                    'cd ..'
+                ].join('&&')
             }
         },
         mkdir: {
@@ -118,59 +105,23 @@ module.exports = function(grunt) {
                     '!assets/screenshots/**', // will be copied in copy:svn_assets below
                     '!node_modules/**',
                     '!.git/**',
+                    '!**/.git/**',
                     '!Gruntfile.js',
+                    '!**/Gruntfile.js',
                     '!package.json',
+                    '!**/package.json',
                     '!.gitignore',
+                    '!**/.gitignore',
                     '!.gitmodules',
+                    '!**/.gitmodules',
                     '!tests/**',
+                    '!**/tests/**',
+                    '!test/**',
+                    '!**/test/**',
                     '!build/**',
                     '!tmp/**'
                 ],
                 dest: 'tmp/<%= pkg.plugin_name %>/trunk/'
-            },
-			tags: {
-				expand: true,
-				cwd: 'tmp/<%= pkg.plugin_name %>/trunk/',
-                src: ['**'],
-                dest: 'tmp/<%= pkg.plugin_name %>/tags/<%= pkg.version %>/'
-			},
-            style: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'docs/src/css/',
-                        src: ['**'],
-                        dest: 'docs/dest/css/'
-                    }
-                ],
-            },
-            fonts: {
-                files: [{
-                        expand: true,
-                        cwd: 'docs/src/fonts/',
-                        src: ['**'],
-                        dest: 'docs/dest/fonts/'
-                    }]
-            },
-            js: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'docs/src/js/',
-                        src: ['**'],
-                        dest: 'docs/dest/js/'
-                    }
-                ]
-            },
-            img: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'docs/src/img/',
-                        src: ['**'],
-                        dest: 'docs/dest/img/'
-                    }
-                ],
             }
         },
         push_svn: {
@@ -184,32 +135,18 @@ module.exports = function(grunt) {
             }
         }
     });
-    // Load concating js plugin
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    //Load the shell plugin
+
     grunt.loadNpmTasks('grunt-shell');
-    //Clean plugin
     grunt.loadNpmTasks('grunt-contrib-clean');
-    // checkout svn
-    grunt.loadNpmTasks('grunt-svn-checkout');
-    // copy files
     grunt.loadNpmTasks('grunt-contrib-copy');
-    // push svn
+    grunt.loadNpmTasks('grunt-svn-checkout');
     grunt.loadNpmTasks('grunt-push-svn');
-    // load assemble
-    grunt.loadNpmTasks('grunt-assemble');
 
     //Build builder to theme tgm plugin
-    grunt.registerTask('build', ['clean:build', 'shell:gitpull', 'concat', 'compress:stable']);
+    grunt.registerTask('build', ['clean:build', 'shell:gitpull', 'shell:qoob_build', 'compress:stable']);
 
     // Deploy to trunk
     grunt.registerTask('deploy', ['shell:gitpull', 'concat', 'mkdir:build', 'svn_checkout', 'mkdir:tags', 'copy:svn_assets', 'copy:svn_trunk', 'copy:tags', 'push_svn', 'clean:tmp', 'clean:build']);
-
-    //Deploy docs
-    grunt.registerTask('docs', ['clean:docs', 'assemble', 'copy:style', 'copy:fonts', 'copy:js', 'copy:img', 'api']);
-
-    //Create only JS API docs
-    grunt.registerTask('api', ['shell:api']);
 
     //Run PHPUnit tests
     grunt.registerTask('phpunit', ['clean:phpunit','shell:phpunit']);
