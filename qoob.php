@@ -413,7 +413,7 @@ class Qoob {
      *
      * @global object $current_user
      */
-    public function renderPage($tested = false) {
+    public function renderPage() {
         global $current_user;
         global $post;
         wp_get_current_user();
@@ -444,8 +444,7 @@ class Qoob {
         add_filter('admin_title', array($this, 'setTitlePage'));
         is_array($this) && extract($this);
         
-        if (!$tested)
-        	require_once $this->getPathTemplates() . 'template.php';
+        require_once $this->getPathTemplates() . 'template.php';
         return;
     }
     /**

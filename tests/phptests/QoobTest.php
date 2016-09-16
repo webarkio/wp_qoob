@@ -319,6 +319,9 @@ class QoobTest extends WP_UnitTestCase {
     	$this->assertEquals($empty, false);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testRenderPage() {
     	global $post;
     	$qoob = new MockQoob();
@@ -327,7 +330,7 @@ class QoobTest extends WP_UnitTestCase {
     	$qoob->post = get_post($post_id);
     	$qoob->post->post_status = 'auto-draft';
     	$qoob->post_id = $post_id;
-    	$qoob->renderPage(true);
+    	$qoob->renderPage();
     	$this->assertEquals('page', $qoob->post_type->name);
     }
 
