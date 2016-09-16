@@ -82,6 +82,11 @@ You can edit information in each block of the page. For this purpose **click** t
 
 == Changelog ==
 
+= 1.2.0 =
+* New demo blocks added
+* New lib's system for storing blocks, using wp-options
+* groups.json became lib.json and contain addition info about blocks (name and url)
+
 = 1.1.8 =
 * Refactoring fields localization
 
