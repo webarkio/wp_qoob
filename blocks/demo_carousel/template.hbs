@@ -1,0 +1,34 @@
+<section class="demo-block demo-block-carousel">
+    <div id="slider-{{id}}" class="carousel slide" data-ride="carousel">
+        <!-- Wrapper for slides -->
+        {{#if slider.length}}
+            <div class="carousel-inner" role="listbox">
+                {{#each_with_sort slider "order"}}
+                    <div class="item{{#ifCond order "==" "0"}} active{{/ifCond}}">
+                    {{#if image}}
+                        <img src="{{image}}" alt="image-{{ order }}">
+                    {{/if}}
+                        <div class="carousel-content">
+                            <h1 class="carousel-title">{{ title }}</h1>
+                        </div>     
+                    </div>
+                {{/each_with_sort}}
+            </div>
+        {{/if}}
+        {{#ifCond slider.length ">" 1}}
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    {{#each_with_sort slider "order"}}
+                         <li data-target="#slider-{{../id}}" data-slide-to="{{ order }}" {{#ifCond order "==" "0"}}class="active"{{/ifCond}}></li>
+                    {{/each_with_sort}}
+                </ol>
+        {{/ifCond}}
+        <!-- Left and right controls -->
+        <a class="left carousel-control" href="#slider-{{id}}" role="button" data-slide="prev">
+            <span class="arrow"></span>
+        </a>
+        <a class="right carousel-control" href="#slider-{{id}}" role="button" data-slide="next">
+            <span class="arrow"></span>
+        </a>
+    </div>
+</section>

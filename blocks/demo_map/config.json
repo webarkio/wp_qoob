@@ -1,0 +1,43 @@
+{
+    "name": "",
+    "groups": "other",
+    "template": "template.hbs",
+    "settings": [{
+        "name": "header",
+        "label": "Header",
+        "type": "text"
+    },{
+        "name": "e-mail",
+        "label": "E-mail",
+        "type": "text"
+    },{
+        "name": "phone",
+        "label": "Phone",
+        "type": "text"
+    },{
+        "name": "address",
+        "label": "Address",
+        "type": "textarea"
+    },{
+        "name": "lat",
+        "label": "Latitude",
+        "type": "text"
+    },{
+        "name": "lng",
+        "label": "Longitude",
+        "type": "text"
+    },{
+        "name": "size",
+        "label": "Size",
+        "type": "slider"
+    }],
+    "defaults" : {
+        "header": "Where we are situated",
+        "e-mail": "qube@gmail.com",
+        "phone": "5988 849 6154",
+        "address": "101 Brodway #242<br>San Francisco, CA 98854",
+        "lat": "47.497912",
+        "lng": "19.04023499999994",
+        "size": "15"
+    }
+}
