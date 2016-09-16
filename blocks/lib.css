@@ -172,6 +172,10 @@
 	height: 17px;
 }
 
+.demo-slider .owl-dot span {
+	display: none !important;
+}
+
 .demo-gallery-zoom {
     padding: 8.2rem 0 12rem 0;
 }
