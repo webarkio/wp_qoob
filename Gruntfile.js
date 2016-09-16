@@ -50,7 +50,7 @@ module.exports = function(grunt) {
         },
         shell: {
             gitpull: {
-                command: 'git pull origin block_sources'
+                command: 'git pull origin master'
             },
             phpunit: {
                 command: 'php tests/phpunit/phpunit.phar --configuration tests/phpunit/phpunit.xml'
