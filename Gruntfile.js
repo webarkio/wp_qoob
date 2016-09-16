@@ -16,7 +16,7 @@ module.exports = function(grunt) {
         compress: {
             stable: {
                 options: {
-                    archive: 'build/wp_qoob_<%= pkg.version %>.zip'
+                    archive: 'build/qoob.<%= pkg.version %>.zip'
                 },
                 expand: true,
                 src: [
@@ -45,7 +45,7 @@ module.exports = function(grunt) {
                     '!.gitignore',
                     '!**/.gitignore'
                 ],
-                dest: 'wp_qoob/'
+                dest: 'qoob/'
             }
         },
         shell: {
