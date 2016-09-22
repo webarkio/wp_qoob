@@ -88,7 +88,7 @@ class Qoob {
         // Add metabox
         add_action('add_meta_boxes', array($this, 'infoMetabox'));
         add_action('plugins_loaded', array($this, 'pluginLoaded'), 10, 2);
-        add_action( 'plugins_loaded', array($this, 'pluginAddPaths'), 10, 2);
+        add_filter('qoob_libs', array($this, 'pluginAddlib'), 10, 2);
         // registration ajax actions
         $this->registrationAjax();
         // Creating blocks paths
@@ -110,14 +110,11 @@ class Qoob {
     /**
      * Add plugin paths to groups.json files to wp_options table
      */
-    public function pluginAddPaths() {
-       $masks = array(
-            'theme_url' => get_template_directory_uri(),
-            'lib_url' => plugin_dir_url( __FILE__ ) . 'blocks'
-       );
-       $pathToLib = plugin_dir_path(__FILE__) . 'blocks/lib.json';
-       Qoob::addLib($pathToLib, $masks);
+    public function pluginAddLib($qoobLibs) {
+        $qoobLibs[] = plugin_dir_path(__FILE__) . 'blocks/lib.json';
+        return $qoobLibs;
     }
+
     /**
      * Update plugin on migrating between versions
      */
@@ -537,7 +534,7 @@ class Qoob {
         wp_enqueue_script('qoob-wordpress-driver', $this->getUrlAssets() . 'js/qoob-wordpress-driver.js', array('jquery'), '', true);
         wp_enqueue_script('control_edit_page', $this->getUrlAssets() . 'js/control-edit-page.js', array('qoob'), '', true);
         if (!WP_DEBUG) {
-            wp_enqueue_script('qoob', $this->getUrlQoob() . '/qoob.concated.js', array('jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'backbone', 'underscore'));
+            wp_register_script('qoob', $this->getUrlQoob() . '/qoob.concated.js', array('jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'backbone', 'underscore'));
         } else {
             wp_enqueue_script('qoob-wordpress-driver', $this->getUrlAssets() . 'js/qoob-wordpress-driver.js', array('jquery'), '', true);
             wp_enqueue_script('handlebars', $this->getUrlQoob() . 'js/libs/handlebars.js', array('jquery'), '', true);
@@ -587,10 +584,6 @@ class Qoob {
             wp_enqueue_script('qoob-utils', $this->getUrlQoob() . 'js/qoob-utils.js', array('jquery'), '', true);
 
             wp_register_script('qoob', $this->getUrlQoob() . 'js/qoob.js', array('jquery'), '', true);
-            // Localize the script with new data
-            wp_localize_script('qoob', 'qoob_lng', $this->translationArray());
-            // Enqueued script with localized data.
-            wp_enqueue_script('qoob');
 
             wp_enqueue_script('handlebar-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-handlebars.js', array('handlebars'), '', true);
             wp_enqueue_script('underscore-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-underscore.js', array('underscore'), '', true);
@@ -771,12 +764,12 @@ class Qoob {
      * @return json
      */
     public function loadLibsInfo($return = null) {
-        $libs = get_site_option( 'qoob_libs' );
+        $libs = $this->getLibs();
         if (isset($libs)) {
             $response = array(
                 'success' => true,
                 'data' => array(
-                    'libs' => $libs
+                    'libs'=>$this->getLibs()
                 )
             );
         } else {
@@ -824,74 +817,32 @@ class Qoob {
         wp_send_json($response);
     }
 
-    /**
-     * Add source lib to wp_options table
-     * array(
-     *     'theme_url' => get_template_directory_uri(),
-     *     'lib_url' => plugin_dir_url( __FILE__ ) . 'blocks'
-     * )
-     */
-    /**
-     * [addLib description]
-     * @param [String] $pathToLib  Path to lib.json file of lib to be add.
-     * @param [Array] $masks  Array of masks, used in lib.json file to be replaced.
-     *                        Example: array(
-     *                             'theme_url' => get_template_directory_uri(),
-     *                             'lib_url' => plugin_dir_url( __FILE__ ) . 'blocks'
-     *                          )
-     */
-    public static function addLib($pathToLib = null, $masks = null) {
-        if (!$pathToLib || !$masks)
-            return;
-
-        $qoobLibs = get_site_option('qoob_libs');
-        $lib = file_get_contents($pathToLib);
-
-        if (!!$lib) {
-            foreach ($masks as $name => $value) { 
-                $lib = preg_replace('/%' . $name . '%/', $value, $lib);
+    public static function applyMasks($content, $masks){
+            if (!!$content) {
+                foreach ($masks as $name => $value) { 
+                    $content = preg_replace('/%' . $name . '%/', $value, $content);
+                }
+                
+                $content = array_merge(array('url' => $masks['lib_url']), json_decode($content, true));
             }
-            $qoobLib = array_merge(array('url' => $masks['lib_url']), json_decode($lib, true));
+            return $content;
+    }
 
-            if (!$qoobLibs) {
-                $result = array( $qoobLib );
-            } else {
-                for ($i = 0; $i < count($qoobLibs); $i++) { 
-                    if ($qoobLibs[$i]['name'] === $qoobLib['name']) {
-                        $defaultLibExists = true;
-                    }
-                }
-
-                if (!isset($defaultLibExists)) {
-                        $qoobLibs[] = $qoobLib;
-                        $result = $qoobLibs;
-                }
+    public function getLibs(){
+        $libs = apply_filters( 'qoob_libs', array());
+        $result = array();
+        foreach ($libs as $value) {
+            if(file_exists($value)){
+                $libContent = file_get_contents($value);
+                $masks = array(
+                   'theme_url' => get_template_directory_uri(),
+                   'lib_url' => plugin_dir_url( __FILE__ ) . 'blocks'
+                );
+                $libContent = Qoob::applyMasks($libContent, $masks);
+                $result[] = $libContent;
             }
         }
-
-        if (isset($result))
-            update_option('qoob_libs', $result);  
+        return $result;
     }
-
-    /**
-     * Remove source lib
-     */
-    public static function removeLib($name = null) {
-        if (!$name)
-            return;
-
-        $qoobLibs = get_site_option('qoob_libs');
-        if (is_array($qoobLibs)) {
-            for ($i = 0; $i < count($qoobLibs); $i++) { 
-                if ($qoobLibs[$i]['name'] === $name) {
-                    unset($qoobLibs[$i]);
-                    $qoobLibs = array_values($qoobLibs);
-                    update_option('qoob_libs', $qoobLibs);
-                    break;
-                }
-            }
-        } 
-    }
-
 }
 $qoob = new Qoob();

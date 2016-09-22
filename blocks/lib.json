@@ -1,107 +1,81 @@
 {
 	"name": "default",
-	"groups": [
-		{
-		    "id": "text",
-		    "label": "Text",
-		    "position": "0"
-		},
-		{
-		    "id": "gallery",
-		    "label": "Gallery",
-		    "position": "1"
-		},
-		{
-		    "id": "slider",
-		    "label": "Slider",
-		    "position": "2"
-		},
-		{
-		    "id": "video",
-		    "label": "Video",
-		    "position": "3"
-		},
-		{
-		    "id": "call_to_action",
-		    "label": "Call to action",
-		    "position": "4"
-		},
-		{
-		    "id": "other",
-		    "label": "Other",
-		    "position": "5"
-		}
-	],
-	"blocks": [
-		{
-		    "name": "demo_text",
-		    "url": "%lib_url%/demo_text/"
-		},
-		{
-		    "name": "demo_text_2_col",
-		    "url": "%lib_url%/demo_text_2_col/"
-		},
-		{
-		    "name": "demo_blockquote",
-		    "url": "%lib_url%/demo_blockquote/"
-		},
-		{
-		    "name": "demo_call_to_action",
-		    "url": "%lib_url%/demo_call_to_action/"
-		},
-		{
-		    "name": "demo_iconbox",
-		    "url": "%lib_url%/demo_iconbox/"
-		},
-		{
-		    "name": "glyphicons",
-		    "url": "%lib_url%/glyphicons/"
-		},
-		{
-		    "name": "demo_map",
-		    "url": "%lib_url%/demo_map/"
-		},
-		{
-		    "name": "demo_video",
-		    "url": "%lib_url%/demo_video/"
-		},
-		{
-		    "name": "demo_carousel",
-		    "url": "%lib_url%/demo_carousel/"
-		},
-		{
-		    "name": "demo_gallery",
-		    "url": "%lib_url%/demo_gallery/"
-		},
-		{
-			"name": "assets",
-			"url": "http://webark.com/qoob/blocks/default/media/"
-		},
-		{
-		    "name": "demo_slider",
-		    "url": "%lib_url%/demo_slider/"
-		}
-	],
+	"groups": [{
+		"id": "text",
+		"label": "Text",
+		"position": "0"
+	}, {
+		"id": "gallery",
+		"label": "Gallery",
+		"position": "1"
+	}, {
+		"id": "slider",
+		"label": "Slider",
+		"position": "2"
+	}, {
+		"id": "video",
+		"label": "Video",
+		"position": "3"
+	}, {
+		"id": "call_to_action",
+		"label": "Call to action",
+		"position": "4"
+	}, {
+		"id": "other",
+		"label": "Other",
+		"position": "5"
+	}],
+	"blocks": [{
+		"name": "demo_text",
+		"url": "%lib_url%/demo_text/"
+	}, {
+		"name": "demo_text_2_col",
+		"url": "%lib_url%/demo_text_2_col/"
+	}, {
+		"name": "demo_blockquote",
+		"url": "%lib_url%/demo_blockquote/"
+	}, {
+		"name": "demo_call_to_action",
+		"url": "%lib_url%/demo_call_to_action/"
+	}, {
+		"name": "demo_iconbox",
+		"url": "%lib_url%/demo_iconbox/"
+	}, {
+		"name": "glyphicons",
+		"url": "%lib_url%/glyphicons/"
+	}, {
+		"name": "demo_map",
+		"url": "%lib_url%/demo_map/"
+	}, {
+		"name": "demo_video",
+		"url": "%lib_url%/demo_video/"
+	}, {
+		"name": "demo_carousel",
+		"url": "%lib_url%/demo_carousel/"
+	}, {
+		"name": "demo_gallery",
+		"url": "%lib_url%/demo_gallery/"
+	}, {
+		"name": "assets",
+		"url": "http://webark.com/qoob/blocks/default/media/"
+	}, {
+		"name": "demo_slider",
+		"url": "%lib_url%/demo_slider/"
+	}],
 	"res": {
-		"css": [
-			{
-				"name": "qoob_default_css",
-				"url": "%lib_url%/lib.css"
-			},
-			{
-				"name": "owl-carousel",
-				"url": "%lib_url%/demo_slider/assets/css/owl.carousel.css"
-			},
-			{
-				"name": "owl-carousel-theme",
-				"url": "%lib_url%/demo_slider/assets/css/owl.theme.css"
-			}
-		],
-		"js": [
-			{
-				"name": "owl-carousel",
-				"url": "%lib_url%/demo_slider/assets/js/owl.carousel.min.js"
-			}
-		]
+		"css": [{
+			"name": "qoob_default_css",
+			"url": "%lib_url%/lib.css"
+		}, {
+			"name": "owl-carousel",
+			"url": "%lib_url%/demo_slider/assets/css/owl.carousel.css"
+		}, {
+			"name": "owl-carousel-theme",
+			"url": "%lib_url%/demo_slider/assets/css/owl.theme.css"
+		}],
+		"js": [{
+			"name": "owl-carousel",
+			"url": "%lib_url%/demo_slider/assets/js/owl.carousel.min.js"
+		}]
 	}
 }
