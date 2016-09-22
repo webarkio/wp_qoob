@@ -672,6 +672,7 @@ class Qoob {
         if ( isset($tested) )
         	return $data;
         wp_send_json($response);
+
     }
     /**
      * Save data page
