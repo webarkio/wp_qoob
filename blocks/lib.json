@@ -69,9 +69,6 @@
 		}, {
 			"name": "owl-carousel",
 			"url": "%lib_url%/demo_slider/assets/css/owl.carousel.css"
-		}, {
-			"name": "owl-carousel-theme",
-			"url": "%lib_url%/demo_slider/assets/css/owl.theme.css"
 		}],
 		"js": [{
 			"name": "owl-carousel",

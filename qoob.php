@@ -344,6 +344,8 @@ class Qoob {
     public function initEditPage() {
         $this->setPost();
         $this->renderPage();
+        // Since 4.6 WP version post.php redirects by default to edit.php if no action or custom action defined
+        die();
     }
     /**
      * Set post data for page
@@ -736,7 +738,7 @@ class Qoob {
         if (!isset($destination))
             return;
 
-        if ($qoobLibs = get_option('qoob_libs')) {
+        if ($qoobLibs = $this->getLibs()) {
             
             for ($i = 0; $i < count($qoobLibs); $i++) {
                 
