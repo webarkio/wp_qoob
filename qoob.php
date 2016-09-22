@@ -737,7 +737,7 @@ class Qoob {
         if (!isset($destination))
             return;
 
-        if ($qoobLibs = get_option('qoob_libs')) {
+        if ($qoobLibs = $this->getLibs()) {
             
             for ($i = 0; $i < count($qoobLibs); $i++) {
                 
