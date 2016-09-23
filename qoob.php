@@ -594,7 +594,7 @@ class Qoob {
      * Send array of translations data for Qoob
      * @param  boolean $return If need to return (not send) value. Using in tests
      */
-    public function loadQoobData($return = false) {
+    public function loadQoobData() {
         $libs = $this->getLibs();
         $translations = $this->getTranslationArray();
         
