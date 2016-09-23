@@ -156,3 +156,25 @@ QoobWordpressDriver.prototype.loadLibsInfo = function(cb) {
         }
     });
 };
+
+QoobWordpressDriver.prototype.loadTranslations = function(cb) {
+    jQuery(document).ready(function($) {
+        if (ajax.logged_in && ajax.qoob == true) {
+            $.ajax({
+                url: ajax.url,
+                type: 'POST',
+                data: {
+                    action: 'qoob_load_translations'
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (!!response.success) {
+                        cb(null, response.data);
+                    } else {
+                        cb(response.success);
+                    }
+                }
+            });
+        }
+    });
+};
