@@ -242,8 +242,7 @@ class Qoob {
      */
     public function registrationAjax() {
         add_action('wp_ajax_qoob_load_page_data', array($this, 'loadPageData'));
-        add_action('wp_ajax_qoob_load_libs_info', array($this, 'loadLibsInfo'));
-        add_action('wp_ajax_qoob_load_translations', array($this, 'loadTranslations'));
+        add_action('wp_ajax_qoob_load_qoob_data', array($this, 'loadQoobData'));
         add_action('wp_ajax_qoob_save_page_data', array($this, 'savePageData'));
         add_action('wp_ajax_qoob_load_tmpl', array($this, 'loadTmpl'));
     }
@@ -595,20 +594,21 @@ class Qoob {
      * Send array of translations data for Qoob
      * @param  boolean $return If need to return (not send) value. Using in tests
      */
-    public function loadTranslations($return = false) {
+    public function loadQoobData($return = false) {
+        $libs = $this->getLibs();
         $translations = $this->getTranslationArray();
         
-        if (isset($translations)) {
+        if (isset($translations) || isset($libs)) {
             $response = array(
                 'success' => true,
-                'data' => $translations
+                'data' => array(
+                    'libs' => (isset($libs) ? $libs : []),
+                    'translations' => (isset($translations) ? $translations : [])
+                )
             );
         } else {
             $response = array('success' => false);
         }
-
-        if (!!$return)
-            return $response;
 
         wp_send_json($response);
     }
@@ -766,25 +766,6 @@ class Qoob {
                     
             }
         }
-    }
-    
-    /**
-     * Load qoob data
-     * @return json
-     */
-    public function loadLibsInfo($return = null) {
-        $libs = $this->getLibs();
-        if (isset($libs)) {
-            $response = array(
-                'success' => true,
-                'data' => $this->getLibs()
-            );
-        } else {
-            $response = array('success' => false);
-        }
-        if (!!$return)
-        	return $response;
-        wp_send_json($response);
     }
     
     /**

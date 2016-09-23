@@ -132,14 +132,14 @@ QoobWordpressDriver.prototype.loadQoobTemplates = function(cb) {
  * 
  * @param {loadQoobDataCallback} cb - A callback to run.
  */
-QoobWordpressDriver.prototype.loadLibsInfo = function(cb) {
+QoobWordpressDriver.prototype.loadQoobData = function(cb) {
     jQuery(document).ready(function($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
                 url: ajax.url,
                 type: 'POST',
                 data: {
-                    action: 'qoob_load_libs_info'
+                    action: 'qoob_load_qoob_data'
                 },
                 dataType: 'json',
                 success: function(response) {
@@ -151,28 +151,6 @@ QoobWordpressDriver.prototype.loadLibsInfo = function(cb) {
                 },
                 error: function(xrh, error) {
                     //FIXME: 
-                }
-            });
-        }
-    });
-};
-
-QoobWordpressDriver.prototype.loadTranslations = function(cb) {
-    jQuery(document).ready(function($) {
-        if (ajax.logged_in && ajax.qoob == true) {
-            $.ajax({
-                url: ajax.url,
-                type: 'POST',
-                data: {
-                    action: 'qoob_load_translations'
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if (!!response.success) {
-                        cb(null, response.data);
-                    } else {
-                        cb(response.success);
-                    }
                 }
             });
         }
