@@ -18,28 +18,31 @@ It is the easiest and the fastest website builder for WordPress. No need for cod
 
 = Advantages of Qoob =
 
+
 = Blocks Builder =
-*	You add to your page ready-made blocks. You do not need to think about the size, font, indentation. Everything is ready and works fine. You can easily create your first page in 30 seconds.
+You add to your page ready-made blocks. You do not need to think about the size, font, indentation. Everything is ready and works fine. You can easily create your first page in 30 seconds.
 
 [youtube https://www.youtube.com/watch?v=nTvWrpHp80w]
 
 = Live Editing =
-*	You will be amazed to see how it is easy to change the contents of the blocks. We have tried to make this process as easy as possible. And the most amazing thing is that this happens in real time. You can see all changes without leaving the page.
+You will be amazed to see how it is easy to change the contents of the blocks. We have tried to make this process as easy as possible. And the most amazing thing is that this happens in real time. You can see all changes without leaving the page.
 
 [youtube https://www.youtube.com/watch?v=xkrxfAhzE9E]
 
 = Alaways Looking Good =
-*	QOOB automatically optimizes your website's pages for desktop, tablet and mobile. This ensures your visitors get the best viewing experience no matter what device they use.
+QOOB automatically optimizes your website's pages for desktop, tablet and mobile. This ensures your visitors get the best viewing experience no matter what device they use.
 
 [youtube https://www.youtube.com/watch?v=Bnzi-FQpLqk]
 
 = Clean and Intuitive UI =
-* All the visual editors that you met before almost always do not fit the overall design. They add their own frame, buttons and other elements that, almost always fit into the overall design of the site. Qoob is the only editor that does not do it! This editing site content is simple and straightforward.
+All the visual editors that you met before almost always do not fit the overall design. They add their own frame, buttons and other elements that, almost always fit into the overall design of the site. Qoob is the only editor that does not do it! This editing site content is simple and straightforward.
 
 [youtube https://www.youtube.com/watch?v=GgnTbYsqOZQ]
 
 = Realtime Editing Mobile Version =
 You have not seen it. You can add, delete and edit the unit is in tablet modeor even on a mobile device.
+
+[youtube https://www.youtube.com/watch?v=Mlimu8xuukc]
 
 If you have any questions that are beyond the scope of this help file, please feel free to post me to <https://github.com/webarkio/wp_qoob/issues>. Thanks so much!
 
