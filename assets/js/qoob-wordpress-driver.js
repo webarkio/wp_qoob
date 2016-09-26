@@ -132,14 +132,14 @@ QoobWordpressDriver.prototype.loadQoobTemplates = function(cb) {
  * 
  * @param {loadQoobDataCallback} cb - A callback to run.
  */
-QoobWordpressDriver.prototype.loadLibsInfo = function(cb) {
+QoobWordpressDriver.prototype.loadQoobData = function(cb) {
     jQuery(document).ready(function($) {
         if (ajax.logged_in && ajax.qoob == true) {
             $.ajax({
                 url: ajax.url,
                 type: 'POST',
                 data: {
-                    action: 'qoob_load_libs_info'
+                    action: 'qoob_load_qoob_data'
                 },
                 dataType: 'json',
                 success: function(response) {
