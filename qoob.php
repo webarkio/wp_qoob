@@ -656,11 +656,8 @@ class Qoob {
      * Load data page
      * @return json
      */
-    public function loadPageData($page_id=false) { 
-        if(!$page_id){
-            $page_id = $_POST['page_id'];
-        } else
-        	$tested = true;
+    public function loadPageData() { 
+        $page_id = $_POST['page_id'];
         $data = get_post_meta($page_id, 'qoob_data', true);
         // Send decoded page data to the Qoob editor page
         if ($data != '') {
@@ -672,25 +669,20 @@ class Qoob {
         } else {
             $response = array('success' => false);
         }
-        if ( isset($tested) )
-        	return $data;
+
         wp_send_json($response);
     }
     /**
      * Save data page
      * @return json
      */
-    public function savePageData($data = false) {
+    public function savePageData() {
         // Checking for administration rights
-        if (!current_user_can('manage_options')) {
+        if (!current_user_can('manage_options'))
             return;
-        }
-        if($data == ''){
-            $post_data = json_decode(file_get_contents('php://input'), true);
-        }else{
-        	$tested = true;
-            $post_data = json_decode($data, true);
-        }
+        
+        $post_data = json_decode(file_get_contents('php://input'), true);
+
         $blocks_html = trim($post_data['blocks']['html']);
         $post_id = $post_data['page_id'];
         $qoob_data = wp_slash( json_encode( isset($post_data['blocks']['data']) ? $post_data['blocks']['data'] : '' ) );
@@ -703,8 +695,6 @@ class Qoob {
         );
         $updated = wp_update_post( $update_args );
         $responce = array('success' => (boolean) $updated);
-        if ( isset($tested) )
-        	return;
         
         wp_send_json($responce);
     }
