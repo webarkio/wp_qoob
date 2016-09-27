@@ -189,7 +189,7 @@ class Qoob {
         }
     }
     /**
-     * [restoreRevision description]
+     * Updating post metadata during revision restoring
      * @param  int $post_id     Post id
      * @param  int $revision_id Current revision id
      */
@@ -331,8 +331,6 @@ class Qoob {
         $meta = get_post_meta($id, 'qoob_data', true);
         if ($meta != '{"blocks":[]}' && $meta != '') 
             $actions['edit_qoob'] = '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>';
-        return $actions;
-
         return $actions;
     }
     /**
@@ -681,13 +679,14 @@ class Qoob {
         if (!current_user_can('manage_options'))
             return;
         
-        $post_data = (isset($data) ? json_decode(file_get_contents('php://input'), true) : json_decode($data, true));
-
+        $post_data = (isset($data) ? json_decode($data, true) : json_decode(file_get_contents('php://input'), true));
         $blocks_html = trim($post_data['blocks']['html']);
         $post_id = $post_data['page_id'];
         $qoob_data = wp_slash( json_encode( isset($post_data['blocks']['data']) ? $post_data['blocks']['data'] : '' ) );
+        
         // Saving metafield
         $updated = update_post_meta( $post_id, 'qoob_data', $qoob_data );
+        
         // Updating post content and post content filtered
         $update_args = array(
           'ID'           => $post_id,
