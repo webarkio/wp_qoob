@@ -676,12 +676,12 @@ class Qoob {
      * Save data page
      * @return json
      */
-    public function savePageData() {
+    public function savePageData($data = null) {
         // Checking for administration rights
         if (!current_user_can('manage_options'))
             return;
         
-        $post_data = json_decode(file_get_contents('php://input'), true);
+        $post_data = (isset($data) ? json_decode(file_get_contents('php://input'), true) : json_decode($data, true));
 
         $blocks_html = trim($post_data['blocks']['html']);
         $post_id = $post_data['page_id'];
@@ -694,9 +694,13 @@ class Qoob {
           'post_content' => $blocks_html
         );
         $updated = wp_update_post( $update_args );
-        $responce = array('success' => (boolean) $updated);
-        
-        wp_send_json($responce);
+        $response = array('success' => (boolean) $updated);
+
+        if (isset($data)) {
+            return $response;
+        }
+
+        wp_send_json($response);
     }
     /**
      * Get url qoob templates

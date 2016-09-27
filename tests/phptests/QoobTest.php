@@ -23,35 +23,30 @@ class MockQoob extends Qoob {
     public function updateDefaultPost($post_id, $title) {
     	$post_data = array(
     		'ID'           => $post_id,
-             'post_title'    => $title
-//             'post_type' => 'page'
+            'post_title'    => $title
         );
         return wp_update_post( $post_data );
     }
 
 
+    // helper function for saving page data
     public function saveDefaultBlocksData($post_id = null) {
-    	if (!is_null($post_id)) {
-	    	$data = [
-	        'page_id' => $post_id,
-	        'blocks' => [
-	                        'html' => 'Some text',
-	                        'data' => file_get_contents('tests/phptests/demo_test.txt')
-	                    ]
-	        ];
-	        $data = json_encode($data);
-            fopen('php://input', 'r');
-            file_put_contents('php://input', $data);
-            var_dump(json_decode(file_get_contents('php://input'), true));
-            die();
-	        try {
-                $this->_handleAjax( 'qoob_save_page_data' );
-            } catch ( WPAjaxDieContinueException $e ) {}
-    	}
+        if (!is_null($post_id)) {
+            $data = [
+            'page_id' => $post_id,
+            'blocks' => [
+                            'html' => 'Some text',
+                            'data' => file_get_contents('tests/phptests/demo_test.txt')
+                        ]
+            ];
+            
+            return $this->savePageData(json_encode($data));
+        }
     }
 }
 
 class QoobTestAjax extends WP_Ajax_UnitTestCase {
+
     public function setUp() {
         parent::setUp();
         $this->qoob = new MockQoob();
@@ -73,41 +68,42 @@ class QoobTestAjax extends WP_Ajax_UnitTestCase {
     // loadSavePageData test
     public function testSavePageData() {
         $post_id = $this->qoob->createDefaultPost();
-        $this->qoob->saveDefaultBlocksData($post_id);
-        
-        $response = json_decode( $this->_last_response );
-        $this->assertInternalType( 'object', $response );
-        $this->assertObjectHasAttribute( 'success', $response );
-        $this->assertTrue( $response->success );        
+        $response = $this->qoob->saveDefaultBlocksData($post_id);
+
+        $this->assertInternalType( 'array', $response );
+        $this->assertArrayHasKey( 'success', $response );
+        $this->assertTrue( $response['success'] );        
     }
 
     // loadPageData test
-    // public function testLoadPageData() {
-    //     $_POST['page_id'] = $this->qoob->createDefaultPost();
-    //     $this->qoob->saveDefaultBlocksData($_POST['page_id']);
+    public function testLoadPageData() {
+        $_POST['page_id'] = $this->qoob->createDefaultPost();
+        $this->qoob->saveDefaultBlocksData($_POST['page_id']);
 
-    //     try {
-    //         $this->_handleAjax( 'qoob_load_page_data' );
-    //     } catch ( WPAjaxDieContinueException $e ) {}
+        try {
+            $this->_handleAjax( 'qoob_load_page_data' );
+        } catch ( WPAjaxDieContinueException $e ) {}
 
-    //     $response = json_decode( $this->_last_response );
-    //     $this->assertInternalType( 'object', $response );
-    //     $this->assertObjectHasAttribute( 'data', $response );
-    //     $this->assertEquals($response->data, file_get_contents('tests/phptests/demo_test.txt'));
-    // }
+        $response = json_decode( $this->_last_response );
+        $this->assertInternalType( 'object', $response );
+        $this->assertObjectHasAttribute( 'data', $response );
+        $this->assertEquals($response->data, file_get_contents('tests/phptests/demo_test.txt'));
+    }
+
+    // pluginUpdate
+    public function testPluginUpdate() {
+        $ver = '0.9.0';
+        $this->qoob->setVersion($ver);
+        delete_option('qoob_version');
+        $this->qoob->pluginUpdate();
+        $verUp = get_site_option('qoob_version');
+        $this->assertEquals($ver, $verUp);
+    }
 }
 
 // class QoobTest extends WP_UnitTestCase { 
 
-//     public function testPluginUpdate() {
-//         $qoob = new MockQoob();
-//         $ver = '0.9.0';
-//         $qoob->setVersion($ver);
-//         delete_option('qoob_version');
-//         $qoob->pluginUpdate();
-//         $verUp = get_site_option('qoob_version');
-//         $this->assertEquals($ver, $verUp);
-//     }
+
 
 //     // public function testPluginUpdateTo()
 
