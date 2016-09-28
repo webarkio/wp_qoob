@@ -243,7 +243,7 @@ class Qoob {
     public function registrationAjax() {
         add_action('wp_ajax_qoob_load_page_data', array($this, 'loadPageData'));
         add_action('wp_ajax_qoob_load_qoob_data', array($this, 'loadQoobData'));
-        add_action('wp_ajax_qoob_save_page_data', array($this, 'savePageData'));
+        add_action('wp_ajax_qoob_save_page_data', array($this, 'passDataOnSave'));
         add_action('wp_ajax_qoob_load_tmpl', array($this, 'loadTmpl'));
     }
     /**
@@ -340,7 +340,7 @@ class Qoob {
         $this->setPost();
         $this->renderPage();
         // Since 4.6 WP version post.php redirects by default to edit.php if no action or custom action defined
-        die();
+        die("page rendered");
     }
     /**
      * Set post data for page
@@ -439,7 +439,6 @@ class Qoob {
         is_array($this) && extract($this);
         
         require_once $this->getPathTemplates() . 'template.php';
-        return;
     }
     /**
      * Set title edit page
@@ -533,7 +532,6 @@ class Qoob {
         if (!WP_DEBUG) {
             wp_enqueue_script('qoob', $this->getUrlQoob() . '/qoob.concated.js', array('jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'backbone', 'underscore'));
         } else {
-            wp_enqueue_script('qoob-wordpress-driver', $this->getUrlAssets() . 'js/qoob-wordpress-driver.js', array('jquery'), '', true);
             wp_enqueue_script('handlebars', $this->getUrlQoob() . 'js/libs/handlebars.js', array('jquery'), '', true);
             wp_enqueue_script('handlebars-helper', $this->getUrlQoob() . 'js/libs/handlebars-helper.js', array('jquery'), '', true);
             wp_enqueue_script('jquery-ui-droppable-iframe', $this->getUrlQoob() . 'js/libs/jquery-ui-droppable-iframe.js', array('jquery'), '', true);
@@ -670,36 +668,49 @@ class Qoob {
 
         wp_send_json($response);
     }
+
+    /**
+    * Ajax hook for save data
+    */
+    public function passDataOnSave($testData = null) {
+        // Checking for administration rights
+        if (!current_user_can('manage_options'))
+            return;
+
+        $data = (isset($testData) ? $testData : file_get_contents('php://input'));
+        //$saved = $this->savePageData($data);
+        $response = array(
+            'success' => $this->savePageData($data)
+        );
+        if(testData){
+            return $response;
+        }
+        wp_send_json( $response );
+    }
+
     /**
      * Save data page
      * @return json
      */
     public function savePageData($data = null) {
-        // Checking for administration rights
-        if (!current_user_can('manage_options'))
+        if(!$data)
             return;
-        
-        $post_data = (isset($data) ? json_decode($data, true) : json_decode(file_get_contents('php://input'), true));
+
+        $post_data = json_decode($data, true);
         $blocks_html = trim($post_data['blocks']['html']);
         $post_id = $post_data['page_id'];
         $qoob_data = wp_slash( json_encode( isset($post_data['blocks']['data']) ? $post_data['blocks']['data'] : '' ) );
         
         // Saving metafield
-        $updated = update_post_meta( $post_id, 'qoob_data', $qoob_data );
-        
+        $updated_meta = update_post_meta( $post_id, 'qoob_data', $qoob_data );
         // Updating post content and post content filtered
         $update_args = array(
           'ID'           => $post_id,
           'post_content' => $blocks_html
         );
+
         $updated = wp_update_post( $update_args );
-        $response = array('success' => (boolean) $updated);
-
-        if (isset($data)) {
-            return $response;
-        }
-
-        wp_send_json($response);
+        return $updated && $updated_meta;
     }
     /**
      * Get url qoob templates
