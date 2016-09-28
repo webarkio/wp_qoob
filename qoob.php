@@ -677,14 +677,16 @@ class Qoob {
         if (!current_user_can('manage_options'))
             return;
 
-        $data = (isset($testData) ? $testData : file_get_contents('php://input'));
-        //$saved = $this->savePageData($data);
+        $data = (isset($testData) && $testData != '' ? $testData : file_get_contents('php://input'));
+
         $response = array(
             'success' => $this->savePageData($data)
         );
+
         if(testData){
             return $response;
         }
+
         wp_send_json( $response );
     }
 
