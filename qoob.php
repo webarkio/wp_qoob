@@ -768,7 +768,7 @@ class Qoob {
                     for ($k = 0; $k < count($jsArr); $k++)
                         if ( (!isset($jsArr[$j]['use']) && $destination == 'frontend') || 
                             (isset($jsArr[$j]['use']) && $jsArr[$j]['use'][$destination] === true) )
-                            wp_enqueue_script($jsArr[$k]['name'], $jsArr[$k]['url']);
+                            wp_enqueue_script($jsArr[$k]['name'], $jsArr[$k]['url'], array('jquery'));
                     
             }
         }
