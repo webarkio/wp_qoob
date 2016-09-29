@@ -104,6 +104,7 @@ module.exports = function(grunt) {
                     '**',
                     '!assets/screenshots/**', // will be copied in copy:svn_assets below
                     '!node_modules/**',
+					'!**/node_modules/**',
                     '!.git/**',
                     '!**/.git/**',
                     '!Gruntfile.js',
@@ -122,7 +123,13 @@ module.exports = function(grunt) {
                     '!tmp/**'
                 ],
                 dest: 'tmp/<%= pkg.plugin_name %>/trunk/'
-            }
+            },
+			tags: {
+				expand: true,
+				cwd: 'tmp/<%= pkg.plugin_name %>/trunk/',
+                src: ['**'],
+                dest: 'tmp/<%= pkg.plugin_name %>/tags/<%= pkg.version %>/'
+			}
         },
         push_svn: {
             options: {
@@ -146,7 +153,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build', ['clean:build', 'shell:gitpull', 'shell:qoob_build', 'compress:stable']);
 
     // Deploy to trunk
-    grunt.registerTask('deploy', ['shell:gitpull', 'concat', 'mkdir:build', 'svn_checkout', 'mkdir:tags', 'copy:svn_assets', 'copy:svn_trunk', 'copy:tags', 'push_svn', 'clean:tmp', 'clean:build']);
+    grunt.registerTask('deploy', ['shell:gitpull', 'shell:qoob_build', 'mkdir:build', 'svn_checkout', 'mkdir:tags', 'copy:svn_assets', 'copy:svn_trunk', 'copy:tags', 'push_svn', 'clean:tmp', 'clean:build']);
 
     //Run PHPUnit tests
     grunt.registerTask('phpunit', ['clean:phpunit','shell:phpunit']);

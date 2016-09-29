@@ -91,9 +91,6 @@ class Qoob {
         add_filter('qoob_libs', array($this, 'pluginAddlib'), 10, 2);
         // registration ajax actions
         $this->registrationAjax();
-        // Creating blocks paths
-        $this->blocks_path = is_dir(get_template_directory() . '/blocks') ? (get_template_directory() . '/blocks') : (plugin_dir_path(__FILE__) . 'blocks');
-        $this->blocks_url = is_dir(get_template_directory() . '/blocks') ? (get_template_directory_uri() . '/blocks') : (plugin_dir_url(__FILE__) . 'blocks');
     }
     /**
      * Add actions when class is loaded.
@@ -192,7 +189,7 @@ class Qoob {
         }
     }
     /**
-     * [restoreRevision description]
+     * Updating post metadata during revision restoring
      * @param  int $post_id     Post id
      * @param  int $revision_id Current revision id
      */
@@ -245,8 +242,8 @@ class Qoob {
      */
     public function registrationAjax() {
         add_action('wp_ajax_qoob_load_page_data', array($this, 'loadPageData'));
-        add_action('wp_ajax_qoob_load_libs_info', array($this, 'loadLibsInfo'));
-        add_action('wp_ajax_qoob_save_page_data', array($this, 'savePageData'));
+        add_action('wp_ajax_qoob_load_qoob_data', array($this, 'loadQoobData'));
+        add_action('wp_ajax_qoob_save_page_data', array($this, 'passDataOnSave'));
         add_action('wp_ajax_qoob_load_tmpl', array($this, 'loadTmpl'));
     }
     /**
@@ -335,8 +332,6 @@ class Qoob {
         if ($meta != '{"blocks":[]}' && $meta != '') 
             $actions['edit_qoob'] = '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>';
         return $actions;
-
-        return $actions;
     }
     /**
      * Initialize page qoob
@@ -345,7 +340,7 @@ class Qoob {
         $this->setPost();
         $this->renderPage();
         // Since 4.6 WP version post.php redirects by default to edit.php if no action or custom action defined
-        die();
+        die("page rendered");
     }
     /**
      * Set post data for page
@@ -444,7 +439,6 @@ class Qoob {
         is_array($this) && extract($this);
         
         require_once $this->getPathTemplates() . 'template.php';
-        return;
     }
     /**
      * Set title edit page
@@ -473,7 +467,7 @@ class Qoob {
         wp_enqueue_style('qoob.frontend.style', $this->getUrlAssets() . "css/qoob.css");
         // Bootstrap grid, carousel, glyphicons, etc. (Default styles and scripts for demo blocks)
         wp_enqueue_style('bootstrap', $this->getUrlAssets() . 'css/bootstrap.min.css');
-        wp_enqueue_script('bootstrap', $this->getUrlAssets(). 'js/bootstrap.min.js');
+        wp_enqueue_script('bootstrap', $this->getUrlAssets(). 'js/bootstrap.min.js', array('jquery'));
         wp_enqueue_style('glyphicons', $this->getUrlAssets() . '../blocks/glyphicons/assets/css/glyphicons.css');
     }
     /**
@@ -536,9 +530,8 @@ class Qoob {
         wp_enqueue_script('qoob-wordpress-driver', $this->getUrlAssets() . 'js/qoob-wordpress-driver.js', array('jquery'), '', true);
         wp_enqueue_script('control_edit_page', $this->getUrlAssets() . 'js/control-edit-page.js', array('qoob'), '', true);
         if (!WP_DEBUG) {
-            wp_register_script('qoob', $this->getUrlQoob() . '/qoob.concated.js', array('jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'backbone', 'underscore'));
+            wp_enqueue_script('qoob', $this->getUrlQoob() . '/qoob.concated.js', array('jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'backbone', 'underscore'));
         } else {
-            wp_enqueue_script('qoob-wordpress-driver', $this->getUrlAssets() . 'js/qoob-wordpress-driver.js', array('jquery'), '', true);
             wp_enqueue_script('handlebars', $this->getUrlQoob() . 'js/libs/handlebars.js', array('jquery'), '', true);
             wp_enqueue_script('handlebars-helper', $this->getUrlQoob() . 'js/libs/handlebars-helper.js', array('jquery'), '', true);
             wp_enqueue_script('jquery-ui-droppable-iframe', $this->getUrlQoob() . 'js/libs/jquery-ui-droppable-iframe.js', array('jquery'), '', true);
@@ -585,23 +578,42 @@ class Qoob {
             wp_enqueue_script('qoob-storage', $this->getUrlQoob() . 'js/qoob-storage.js', array('jquery'), '', true);
             wp_enqueue_script('qoob-utils', $this->getUrlQoob() . 'js/qoob-utils.js', array('jquery'), '', true);
 
-            wp_register_script('qoob', $this->getUrlQoob() . 'js/qoob.js', array('jquery'), '', true);
+            wp_enqueue_script('qoob', $this->getUrlQoob() . 'js/qoob.js', array('jquery'), '', true);
 
             wp_enqueue_script('handlebar-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-handlebars.js', array('handlebars'), '', true);
             wp_enqueue_script('underscore-extension', $this->getUrlQoob() . 'js/extensions/template-adapter-underscore.js', array('underscore'), '', true);
         }
+    }
 
-        // Localize the script with new data
-        wp_localize_script('qoob', 'qoob_lng', $this->translationArray());
-        // Enqueued script with localized data.
-        wp_enqueue_script('qoob');
+
+    /**
+     * Send array of translations data for Qoob
+     * @param  boolean $return If need to return (not send) value. Using in tests
+     */
+    public function loadQoobData() {
+        $libs = $this->getLibs();
+        $translations = $this->getTranslationArray();
+        
+        if (isset($translations) || isset($libs)) {
+            $response = array(
+                'success' => true,
+                'data' => array(
+                    'libs' => (isset($libs) ? $libs : []),
+                    'translations' => (isset($translations) ? $translations : [])
+                )
+            );
+        } else {
+            $response = array('success' => false);
+        }
+
+        wp_send_json($response);
     }
 
     /**
-     * Return localize array
+     * Return translations array
      * @return array
      */
-    public function translationArray() {
+    public function getTranslationArray() {
         $translation_array = array(
             // general localization
             'button_text' => __('qoob', 'qoob'),
@@ -610,36 +622,28 @@ class Qoob {
             'exit' => __('Exit', 'qoob'),
             'confirm_delete_block' => __('Are you sure you want to delete the block?', 'qoob'),
             // all fields view and tmpl
-            'fields' => array(
-                'media_title' => __('Select or Upload Media Of Your Chosen Persuasion', 'qoob'),
-                'media_text_button' => __('Use this media', 'qoob'),
-                'alert_error_format_file' => __('This file is not supposed to have correct format. Try another one.', 'qoob'),
-                'add_component' => __('Add component', 'qoob'),
-                'drag_to_delete' => __('Drag to delete', 'qoob'),
-                'all' => __('all', 'qoob'),
-                'tags' => __('Tags', 'qoob'),
-                'media_center' => __('Media Center', 'qoob'),
-                'image_url' => __('Image url', 'qoob'),
-                'video_url' => __('Video url', 'qoob'),
-                ),
+            'media_title' => __('Select or Upload Media Of Your Chosen Persuasion', 'qoob'),
+            'media_text_button' => __('Use this media', 'qoob'),
+            'alert_error_format_file' => __('This file is not supposed to have correct format. Try another one.', 'qoob'),
+            'add_component' => __('Add component', 'qoob'),
+            'drag_to_delete' => __('Drag to delete', 'qoob'),
+            'all' => __('all', 'qoob'),
+            'tags' => __('Tags', 'qoob'),
+            'media_center' => __('Media Center', 'qoob'),
+            'image_url' => __('Image url', 'qoob'),
+            'video_url' => __('Video url', 'qoob'),
             // folder block
-            'block' => array(
-                    'block_droppable_preview' => __('Drag here to creative new block', 'qoob'),
-                    'block_default_blank' => __('First of all you need add block', 'qoob'),
-                    'block_pleasewait_preview' => __('Please wait', 'qoob'),
-                ),
+            'block_droppable_preview' => __('Drag here to creative new block', 'qoob'),
+            'block_default_blank' => __('First of all you need add block', 'qoob'),
+            'block_pleasewait_preview' => __('Please wait', 'qoob'),
             // global menu
-            'menu' => array(
-                'back' => __('Back', 'qoob'),
-                'move' => __('Move', 'qoob'),
-                ),
+            'back' => __('Back', 'qoob'),
+            'move' => __('Move', 'qoob'),
             // loader
-            'tips' => array(
-                'add_block_both_by_dragging' => __('You can add block both by dragging preview picture or by clicking on it.', 'qoob'),
-                'view_page_in_the_preview_mode' => __('You can view page in the preview mode by clicking the up-arrow in the up right corner of the screen.', 'qoob'),
-                'preview_mode_cant_reach_block_editting' => __("While you are in preview mode - you can't reach block editting.", 'qoob'),
-                'activate_autosave' => __("You can activate autosave of edited page by clicking 'Autosave' button in the toolbar in the top of your screen.", 'qoob'),
-                ),
+            'add_block_both_by_dragging' => __('You can add block both by dragging preview picture or by clicking on it.', 'qoob'),
+            'view_page_in_the_preview_mode' => __('You can view page in the preview mode by clicking the up-arrow in the up right corner of the screen.', 'qoob'),
+            'preview_mode_cant_reach_block_editting' => __("While you are in preview mode - you can't reach block editting.", 'qoob'),
+            'activate_autosave' => __("You can activate autosave of edited page by clicking 'Autosave' button in the toolbar in the top of your screen.", 'qoob'),
         );
 
         return $translation_array;
@@ -648,11 +652,8 @@ class Qoob {
      * Load data page
      * @return json
      */
-    public function loadPageData($page_id=false) { 
-        if(!$page_id){
-            $page_id = $_POST['page_id'];
-        } else
-        	$tested = true;
+    public function loadPageData() { 
+        $page_id = $_POST['page_id'];
         $data = get_post_meta($page_id, 'qoob_data', true);
         // Send decoded page data to the Qoob editor page
         if ($data != '') {
@@ -664,42 +665,55 @@ class Qoob {
         } else {
             $response = array('success' => false);
         }
-        if ( isset($tested) )
-        	return $data;
+
         wp_send_json($response);
 
     }
+
+    /**
+    * Ajax hook for save data
+    */
+    public function passDataOnSave($testData = null) {
+        // Checking for administration rights
+        if (!current_user_can('manage_options'))
+            return;
+
+        $data = (isset($testData) && $testData != '' ? $testData : file_get_contents('php://input'));
+
+        $response = array(
+            'success' => $this->savePageData($data)
+        );
+
+        if(testData){
+            return $response;
+        }
+
+        wp_send_json( $response );
+    }
+
     /**
      * Save data page
      * @return json
      */
-    public function savePageData($data = false) {
-        // Checking for administration rights
-        if (!current_user_can('manage_options')) {
+    public function savePageData($data = null) {
+        if(!$data)
             return;
-        }
-        if($data == ''){
-            $post_data = json_decode(file_get_contents('php://input'), true);
-        }else{
-        	$tested = true;
-            $post_data = json_decode($data, true);
-        }
+
+        $post_data = json_decode($data, true);
         $blocks_html = trim($post_data['blocks']['html']);
         $post_id = $post_data['page_id'];
         $qoob_data = wp_slash( json_encode( isset($post_data['blocks']['data']) ? $post_data['blocks']['data'] : '' ) );
+        
         // Saving metafield
-        $updated = update_post_meta( $post_id, 'qoob_data', $qoob_data );
+        $updated_meta = update_post_meta( $post_id, 'qoob_data', $qoob_data );
         // Updating post content and post content filtered
         $update_args = array(
           'ID'           => $post_id,
           'post_content' => $blocks_html
         );
+
         $updated = wp_update_post( $update_args );
-        $responce = array('success' => (boolean) $updated);
-        if ( isset($tested) )
-        	return;
-        
-        wp_send_json($responce);
+        return $updated && $updated_meta;
     }
     /**
      * Get url qoob templates
@@ -755,31 +769,10 @@ class Qoob {
                     for ($k = 0; $k < count($jsArr); $k++)
                         if ( (!isset($jsArr[$j]['use']) && $destination == 'frontend') || 
                             (isset($jsArr[$j]['use']) && $jsArr[$j]['use'][$destination] === true) )
-                            wp_enqueue_script($jsArr[$k]['name'], $jsArr[$k]['url']);
+                            wp_enqueue_script($jsArr[$k]['name'], $jsArr[$k]['url'], array('jquery'));
                     
             }
         }
-    }
-    
-    /**
-     * Load qoob data
-     * @return json
-     */
-    public function loadLibsInfo($return = null) {
-        $libs = $this->getLibs();
-        if (isset($libs)) {
-            $response = array(
-                'success' => true,
-                'data' => array(
-                    'libs'=>$this->getLibs()
-                )
-            );
-        } else {
-            $response = array('success' => false);
-        }
-        if (!!$return)
-        	return $response;
-        wp_send_json($response);
     }
     
     /**
