@@ -312,7 +312,7 @@ class Qoob {
      * @return string|void
      */
     public function setDefaultTitle($title) {
-        return !is_string($title) || strlen($title) == 0 ? __('(no title)', 'qoob') : $title;
+        return !is_string($title) || strlen($title) == 0 ? esc_html__('(no title)', 'qoob') : $title;
     }
     /**
      * Get qoob url edit page 
@@ -337,7 +337,7 @@ class Qoob {
         //Check for qoob page
         $meta = get_post_meta($id, 'qoob_data', true);
         if ($meta != '{"blocks":[]}' && $meta != '') 
-            $actions['edit_qoob'] = '<a href="' . $url . '">' . __('Edit with qoob', 'qoob') . '</a>';
+            $actions['edit_qoob'] = '<a href="' . $url . '">' . esc_html__('Edit with qoob', 'qoob') . '</a>';
         return $actions;
     }
     /**
