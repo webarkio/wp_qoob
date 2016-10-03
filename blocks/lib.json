@@ -27,40 +27,52 @@
 	}],
 	"blocks": [{
 		"name": "demo_text",
-		"url": "%lib_url%/demo_text/"
+		"url": "%lib_url%/demo_text/",
+		"config_url": "%lib_url%/demo_text/config.json"
 	}, {
 		"name": "demo_text_2_col",
-		"url": "%lib_url%/demo_text_2_col/"
+		"url": "%lib_url%/demo_text_2_col/",
+		"config_url": "%lib_url%/demo_text_2_col/config.json"
 	}, {
 		"name": "demo_blockquote",
-		"url": "%lib_url%/demo_blockquote/"
+		"url": "%lib_url%/demo_blockquote/",
+		"config_url": "%lib_url%/demo_blockquote/config.json"
 	}, {
 		"name": "demo_call_to_action",
-		"url": "%lib_url%/demo_call_to_action/"
+		"url": "%lib_url%/demo_call_to_action/",
+		"config_url": "%lib_url%/demo_call_to_action/config.json"
 	}, {
 		"name": "demo_iconbox",
-		"url": "%lib_url%/demo_iconbox/"
+		"url": "%lib_url%/demo_iconbox/",
+		"config_url": "%lib_url%/demo_iconbox/config.json"
 	}, {
 		"name": "glyphicons",
-		"url": "%lib_url%/glyphicons/"
+		"url": "%lib_url%/glyphicons/",
+		"config_url": "%lib_url%/glyphicons/config.json"
 	}, {
 		"name": "demo_map",
-		"url": "%lib_url%/demo_map/"
+		"url": "%lib_url%/demo_map/",
+		"config_url": "%lib_url%/demo_map/config.json"
 	}, {
 		"name": "demo_video",
-		"url": "%lib_url%/demo_video/"
+		"url": "%lib_url%/demo_video/",
+		"config_url": "%lib_url%/demo_video/config.json"
 	}, {
 		"name": "demo_carousel",
-		"url": "%lib_url%/demo_carousel/"
+		"url": "%lib_url%/demo_carousel/",
+		"config_url": "%lib_url%/demo_carousel/config.json"
 	}, {
 		"name": "demo_gallery",
-		"url": "%lib_url%/demo_gallery/"
+		"url": "%lib_url%/demo_gallery/",
+		"config_url": "%lib_url%/demo_gallery/config.json"
 	}, {
 		"name": "assets",
-		"url": "http://webark.com/qoob/blocks/default/media/"
+		"url": "http://webark.com/qoob/blocks/default/media/",
+		"config_url": "http://webark.com/qoob/blocks/default/media/config.json"
 	}, {
 		"name": "demo_slider",
-		"url": "%lib_url%/demo_slider/"
+		"url": "%lib_url%/demo_slider/",
+		"config_url": "%lib_url%/demo_slider/config.json"
 	}],
 	"res": {
 		"css": [{

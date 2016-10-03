@@ -50,6 +50,10 @@ class Qoob {
      */
     private $qoob_version = '1.2.0';
     /**
+    * Lib's paths to blocks and gorups info
+    */
+    private $qoobLibs = array();
+    /**
      * Set current ersion of page
      */
     public function setVersion($version) {
@@ -167,13 +171,16 @@ class Qoob {
         $data = get_post_meta($post->ID, 'qoob_data', true);
         // If have blocks - remove tinymce editor
         if ( $data != '{"blocks":[]}' && $data != '')
-            add_meta_box('qoob-page-info', __('Attention!', 'qoob'), array($this, 'infoMetaboxDisplay'), 'page');
+            add_meta_box('qoob-page-info', esc_html__('Attention!', 'qoob'), array($this, 'infoMetaboxDisplay'), 'page');
     }
     /*
      * Display metabox
     */
     public function infoMetaboxDisplay() {
-        echo __('<p>Current page has been edited with Qoob Page Builder. To edit this page as regular one - go to Qoob editor by pressing "qoob" button and remove all blocks.</p>', 'qoob');
+        $allowed_html = array(
+            'p' => array()
+        ); 
+        echo wp_kses(__('<p>Current page has been edited with Qoob Page Builder. To edit this page as regular one - go to Qoob editor by pressing "qoob" button and remove all blocks.</p>', 'qoob'), $allowed_html);
     }
      /**
       * Saving post meta to revision
@@ -386,7 +393,7 @@ class Qoob {
             if ($this->showButton(get_the_ID())) {
                 $wp_admin_bar->add_menu(array(
                     'id' => 'qoob-admin-bar-link',
-                    'title' => __('qoob', "qoob"),
+                    'title' => esc_html__('qoob', "qoob"),
                     'href' => $this->getUrlPage(get_the_ID()),
                     'meta' => array('class' => 'qoob-inline-link')
                 ));
@@ -446,7 +453,7 @@ class Qoob {
      * @return string
      */
     public function setTitlePage() {
-        return __('Edit Page with qoob', 'qoob');
+        return esc_html__('Edit Page with qoob', 'qoob');
     }
     /**
      * Load javascript and css on iframe
@@ -480,7 +487,7 @@ class Qoob {
 
             // Localize the script with new data
             $translation_array = array(
-                'button_text' => __('qoob', 'qoob')
+                'button_text' => esc_html__('qoob', 'qoob')
             );
 
             wp_localize_script('qoob.admin', 'qoob_admin', $translation_array);
@@ -616,34 +623,34 @@ class Qoob {
     public function getTranslationArray() {
         $translation_array = array(
             // general localization
-            'button_text' => __('qoob', 'qoob'),
-            'autosave' => __('Autosave', 'qoob'),
-            'save' => __('Save', 'qoob'),
-            'exit' => __('Exit', 'qoob'),
-            'confirm_delete_block' => __('Are you sure you want to delete the block?', 'qoob'),
+            'button_text' => esc_html__('qoob', 'qoob'),
+            'autosave' => esc_html__('Autosave', 'qoob'),
+            'save' => esc_html__('Save', 'qoob'),
+            'exit' => esc_html__('Exit', 'qoob'),
+            'confirm_delete_block' => esc_html__('Are you sure you want to delete the block?', 'qoob'),
             // all fields view and tmpl
-            'media_title' => __('Select or Upload Media Of Your Chosen Persuasion', 'qoob'),
-            'media_text_button' => __('Use this media', 'qoob'),
-            'alert_error_format_file' => __('This file is not supposed to have correct format. Try another one.', 'qoob'),
-            'add_component' => __('Add component', 'qoob'),
-            'drag_to_delete' => __('Drag to delete', 'qoob'),
-            'all' => __('all', 'qoob'),
-            'tags' => __('Tags', 'qoob'),
-            'media_center' => __('Media Center', 'qoob'),
-            'image_url' => __('Image url', 'qoob'),
-            'video_url' => __('Video url', 'qoob'),
+            'media_title' => esc_html__('Select or Upload Media Of Your Chosen Persuasion', 'qoob'),
+            'media_text_button' => esc_html__('Use this media', 'qoob'),
+            'alert_error_format_file' => esc_html__('This file is not supposed to have correct format. Try another one.', 'qoob'),
+            'add_component' => esc_html__('Add component', 'qoob'),
+            'drag_to_delete' => esc_html__('Drag to delete', 'qoob'),
+            'all' => esc_html__('all', 'qoob'),
+            'tags' => esc_html__('Tags', 'qoob'),
+            'media_center' => esc_html__('Media Center', 'qoob'),
+            'image_url' => esc_html__('Image url', 'qoob'),
+            'video_url' => esc_html__('Video url', 'qoob'),
             // folder block
-            'block_droppable_preview' => __('Drag here to creative new block', 'qoob'),
-            'block_default_blank' => __('First of all you need add block', 'qoob'),
-            'block_pleasewait_preview' => __('Please wait', 'qoob'),
+            'block_droppable_preview' => esc_html__('Drag here to creative new block', 'qoob'),
+            'block_default_blank' => esc_html__('First of all you need add block', 'qoob'),
+            'block_pleasewait_preview' => esc_html__('Please wait', 'qoob'),
             // global menu
-            'back' => __('Back', 'qoob'),
-            'move' => __('Move', 'qoob'),
+            'back' => esc_html__('Back', 'qoob'),
+            'move' => esc_html__('Move', 'qoob'),
             // loader
-            'add_block_both_by_dragging' => __('You can add block both by dragging preview picture or by clicking on it.', 'qoob'),
-            'view_page_in_the_preview_mode' => __('You can view page in the preview mode by clicking the up-arrow in the up right corner of the screen.', 'qoob'),
-            'preview_mode_cant_reach_block_editting' => __("While you are in preview mode - you can't reach block editting.", 'qoob'),
-            'activate_autosave' => __("You can activate autosave of edited page by clicking 'Autosave' button in the toolbar in the top of your screen.", 'qoob'),
+            'add_block_both_by_dragging' => esc_html__('You can add block both by dragging preview picture or by clicking on it.', 'qoob'),
+            'view_page_in_the_preview_mode' => esc_html__('You can view page in the preview mode by clicking the up-arrow in the up right corner of the screen.', 'qoob'),
+            'preview_mode_cant_reach_block_editting' => esc_html__("While you are in preview mode - you can't reach block editting.", 'qoob'),
+            'activate_autosave' => esc_html__("You can activate autosave of edited page by clicking 'Autosave' button in the toolbar in the top of your screen.", 'qoob'),
         );
 
         return $translation_array;
@@ -817,13 +824,15 @@ class Qoob {
                 foreach ($masks as $name => $value) { 
                     $content = preg_replace('/%' . $name . '%/', $value, $content);
                 }
-                
                 $content = array_merge(array('url' => $masks['lib_url']), json_decode($content, true));
             }
             return $content;
     }
 
     public function getLibs(){
+        if(isset($this->qoobLibs) && !empty($this->qoobLibs))
+            return $this->qoobLibs;
+
         $libs = apply_filters( 'qoob_libs', array());
         $result = array();
         foreach ($libs as $value) {
@@ -837,6 +846,7 @@ class Qoob {
                 $result[] = $libContent;
             }
         }
+        $this->qoobLibs = $result;
         return $result;
     }
 }
