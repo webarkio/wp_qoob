@@ -93,6 +93,8 @@ class Qoob {
         add_action('add_meta_boxes', array($this, 'infoMetabox'));
         add_action('plugins_loaded', array($this, 'pluginLoaded'), 10, 2);
         add_filter('qoob_libs', array($this, 'pluginAddlib'), 10, 2);
+        //Filter qoob meta data
+        add_filter( 'wxr_export_skip_postmeta', array($this, 'filter_change_export_qoobmeta'), 10, 3 );
         // registration ajax actions
         $this->registrationAjax();
     }
@@ -649,8 +651,8 @@ class Qoob {
             // loader
             'add_block_both_by_dragging' => esc_html__('You can add block both by dragging preview picture or by clicking on it.', 'qoob'),
             'view_page_in_the_preview_mode' => esc_html__('You can view page in the preview mode by clicking the up-arrow in the up right corner of the screen.', 'qoob'),
-            'preview_mode_cant_reach_block_editting' => esc_html__("While you are in preview mode - you can't reach block editting.", 'qoob'),
-            'activate_autosave' => esc_html__("You can activate autosave of edited page by clicking 'Autosave' button in the toolbar in the top of your screen.", 'qoob'),
+            'preview_mode_cant_reach_block_editting' => wp_kses_post(__("While you are in preview mode - you can't reach block editting.", 'qoob')),
+            'activate_autosave' => wp_kses_post(__("You can activate autosave of edited page by clicking 'Autosave' button in the toolbar in the top of your screen.", 'qoob')),
         );
 
         return $translation_array;
@@ -848,6 +850,22 @@ class Qoob {
         }
         $this->qoobLibs = $result;
         return $result;
+    }
+
+    /**
+    * Quote qoob_data with slashes
+    * 
+    * @param (bool) $skip Whether to skip the current post meta. Default false.     
+    * @param  (string) $meta_key  Current meta key.
+    * @param  (object) $meta Current meta object.
+    * @return Returns the escaped meta object.
+    */
+
+    public function filter_change_export_qoobmeta( $false, $meta_meta_key, $meta ) {
+        if ($meta_meta_key === 'qoob_data') {
+            $meta->meta_value = addslashes($meta->meta_value);
+        }
+        return $false; 
     }
 }
 $qoob = new Qoob();
