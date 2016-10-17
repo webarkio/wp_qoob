@@ -3,8 +3,8 @@ Contributors: webarkio
 Donate link: http://webark.com/qoob/#donate
 Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder
 Requires at least: 4.1
-Tested up to: 4.6
-Stable tag: 1.2.0
+Tested up to: 4.6.1
+Stable tag: 1.2.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -100,6 +100,11 @@ You can edit information in each block of the page. For this purpose **click** t
 2. Sides of the qoob
 
 == Changelog ==
+
+= 1.2.1 =
+* Change priority JS files for lib's
+* Fix sortable fields
+* When changing size viewport scrolling to edit block
 
 = 1.2.0 =
 * New demo blocks added
