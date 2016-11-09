@@ -1,3 +1,4 @@
 [submodule "qoob"]
 	path = qoob
 	url = https://github.com/webarkio/qoob.git
+	branch = 2.0
