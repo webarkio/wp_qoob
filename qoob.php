@@ -38,23 +38,60 @@ class Qoob {
      * Register actions for plugin
      */
     public function __construct($mode="prod") {
+//        global $post;
+        // print_r($post);
+        // die();
         $this->mode = $mode;
 
         //Load libraries data action. Needs for front and backend.
         add_action('wp_ajax_qoob_load_libraries_data', array($this, 'loadQoobLibrariesData'));
 
-        //==================ONLY FRONTEND======================
-        // Adding filter to check content
-        add_filter('the_content', array($this, 'modifyContent'));
+        if (is_admin()) {
+            //=================ONLY ADMIN ZONE=====================
 
 
-        //=================ONLY ADMIN ZONE=====================
-        //Register action for qoob builder page
-        add_action('post_action_qoob', array($this ,'starterPage'));
+            //Register action for qoob builder page
+            add_action('post_action_qoob', array($this ,'starterPage'));
 
-        add_action('wp_ajax_qoob_load_page_data', array($this, 'loadQoobPageData'));
-        // add_action('wp_ajax_qoob_save_page_data', array($this, 'passDataOnSave'));
+            //Add scripts for media library dialog
+            add_action('admin_enqueue_scripts', array($this, 'enqueueBackendScripts'));
 
+            //Ajax load page data
+            add_action('wp_ajax_qoob_load_page_data', array($this, 'loadQoobPageData'));
+
+            // Controlling revisions
+            add_action('save_post', array($this, 'savePostMeta'));
+            add_action( 'wp_restore_post_revision', array($this, 'restoreRevision'), 10, 2 );
+
+
+            // //Load JS and CSS
+            // if (isset($_GET['qoob']) && $_GET['qoob'] == true) {
+            //     add_action('current_screen', array($this, 'initEditPage'));
+            // }
+        } else {
+            //==================ONLY FRONTEND======================
+            // add edit link to admin bar
+            add_action('admin_bar_menu', array(&$this, "addAdminBarLink"), 999);
+            // Adding filter to check content
+            add_filter('the_content', array($this, 'modifyContent'));
+
+            add_action('wp_enqueue_scripts', array($this, 'enqueueFrontendScripts'));
+
+        }
+
+        
+        //add_action('wp_ajax_qoob_save_page_data', array($this, 'passDataOnSave'));
+
+    }
+
+    public function enqueueFrontendScripts(){
+        wp_enqueue_style('qoob-frontend-style', plugins_url( 'assets/css/qoob-frontend.css', __FILE__ ) );
+    }
+
+
+    public function enqueueBackendScripts(){
+        wp_enqueue_media();
+        wp_enqueue_script('qoob-backend-starter', plugins_url( 'qoob/qoob-backend-starter.js', __FILE__ ), array('jquery'));
     }
 
     public function checkAccess(){
@@ -65,8 +102,8 @@ class Qoob {
         global $post;
         if(empty($post)){
             die("Post not found");
-        }        
-        return '<script type="text/javascript" src="'. plugins_url( 'qoob-wordpress-driver.js', __FILE__ ).'"></script><script type="text/javascript"> var starter = new QoobStarter({"mode": "'.$this->mode.'", "qoobUrl": "'. plugins_url( 'qoob/', __FILE__ ).'", "driver": new QoobWordpressDriver({"ajaxUrl": "'.admin_url( 'admin-ajax.php' ).'", "iframeUrl": "'.add_query_arg( 'qoob', 'true', get_permalink( $post->ID )).'", "pageId": '.$post->ID.' }) });</script>';
+        }
+        return '<script type="text/javascript" src="'. plugins_url( 'qoob-wordpress-driver.js', __FILE__ ).'"></script><script type="text/javascript"> var starter = new QoobStarter({"mode": "'.$this->mode.'", "skip":["jquery","underscore","backbone"],"qoobUrl": "'. plugins_url( 'qoob/', __FILE__ ).'", "driver": new QoobWordpressDriver({"ajaxUrl": "'.admin_url( 'admin-ajax.php' ).'", "iframeUrl": "'.add_query_arg( 'qoob', 'true', get_permalink( $post->ID )).'", "pageId": '.$post->ID.' }) });</script>';
     }
 
     /**
@@ -78,7 +115,14 @@ class Qoob {
         if(!$this->checkAccess()){
             die("Access is denied");
         }
-        echo '<!DOCTYPE html><html><head><script type="text/javascript" src="'. plugins_url( 'qoob/qoob-backend-starter.js', __FILE__ ).'"></script>'. $this->getDriverHtml().'</head><body></body></html>';
+        global $hook_suffix;
+        echo '<!DOCTYPE html><html><head>';
+        do_action( 'admin_enqueue_scripts', $hook_suffix );
+        do_action( 'admin_print_styles' );
+        do_action( 'admin_print_scripts' );
+        echo $this->getDriverHtml();
+        echo '</head><body>';
+        include( ABSPATH . 'wp-admin/admin-footer.php' );
         die();
     }
 
@@ -188,6 +232,64 @@ class Qoob {
         .$this->getDriverHtml().'<!-- end qoob starter -->';
         return $result;
     }
+
+    /**
+     * Add link to admin bar
+     * @param WP_Admin_Bar $wp_admin_bar
+     */
+    public function addAdminBarLink($wp_admin_bar) {
+        if (!is_object($wp_admin_bar)) {
+            global $wp_admin_bar;
+        }
+        if (is_singular()) {
+                //FIX: check page use qoob or empty
+                $wp_admin_bar->add_menu(array(
+                    'id' => 'qoob-admin-bar-link',
+                    'title' => esc_html__("Edit with qoob", 'qoob'),
+                    'href' => $this->getEditWithQoobUrl(get_the_ID()),
+                    'meta' => array('class' => 'qoob-inline-link')
+                ));
+        }
+    }
+ 
+    /**
+     * Get qoob url edit page 
+     *
+     * @param string $id Post id
+     * @return string
+     */
+    public function getEditWithQoobUrl($pageId) {
+        return admin_url() . 'post.php?post=' . $pageId . '&action=qoob';
+    }
+
+
+     /**
+      * Saving post meta to revision
+      * @param  int $post_id ID of the current post
+      */
+    public function savePostMeta($post_id) {
+        $parent_id = wp_is_post_revision( $post_id );
+        if ( $parent_id ) {
+            $parent  = get_post( $parent_id );
+            $qoob_data = get_post_meta( $parent->ID, 'qoob_data', true );
+            if ( $qoob_data !== false )
+                add_metadata( 'post', $post_id, 'qoob_data', $qoob_data );
+        }
+    }
+    /**
+     * Updating post metadata during revision restoring
+     * @param  int $post_id     Post id
+     * @param  int $revision_id Current revision id
+     */
+    public function restoreRevision( $post_id, $revision_id ) {
+        $post     = get_post( $post_id );
+        $revision = get_post( $revision_id );
+        $data  = get_metadata( 'post', $revision->ID, 'qoob_data', true );
+        if ( $data !== false )
+            update_post_meta( $post_id, 'qoob_data', $data );
+        else
+            delete_post_meta( $post_id, 'qoob_data' );
+    }    
     //===================================================DEL
 
 

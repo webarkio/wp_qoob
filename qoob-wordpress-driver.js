@@ -7,6 +7,7 @@
 //module.exports.QoobWordpressDriver = QoobWordpressDriver;
 function QoobWordpressDriver(options) {
     this.options = options;
+//    this.assets = [{"type":"js","name":"media-models", "src":"/wp-includes/js/media-models.js"}];
 }
 
 /**
@@ -24,7 +25,7 @@ QoobWordpressDriver.prototype.getIframePageUrl = function() {
  * @returns {String}
  */
 QoobWordpressDriver.prototype.exit = function() {
-    window.location.href = 'post.php?post=' + pageId + '&action=edit';
+    window.location.href = 'post.php?post=' + this.options.pageId + '&action=edit';
 };
 
 /** 
@@ -39,24 +40,19 @@ QoobWordpressDriver.prototype.exit = function() {
  * @param {savePageDataCallback} cb - A callback to run.
  */
 QoobWordpressDriver.prototype.savePageData = function(data, cb) {
-    console.log('Page saved');
-    jQuery(document).ready(function($) {
-        if (ajax.logged_in && ajax.qoob == true) {
-            var dataToSend = JSON.stringify({
-                page_id: pageId,
-                blocks: data
-            });
-            $.ajax({
-                url: ajax.url + '?action=qoob_save_page_data',
-                type: 'POST',
-                data: dataToSend,
-                processData: false,
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
-                success: function(response) {
-                    cb(null, response.success);
-                }
-            });
+    var dataToSend = JSON.stringify({
+        page_id: this.options.pageId,
+        data: data
+    });
+    $.ajax({
+        url: ajax.url + '?action=qoob_save_page_data',
+        type: 'POST',
+        data: dataToSend,
+        processData: false,
+        contentType: "application/json; charset=utf-8",
+        dataType: 'json',
+        success: function(response) {
+            cb(null, response.success);
         }
     });
 };
@@ -74,7 +70,7 @@ QoobWordpressDriver.prototype.savePageData = function(data, cb) {
  * @param {loadPageDataCallback} cb - A callback to run.
  */
 QoobWordpressDriver.prototype.loadPageData = function(cb) {
-        jQuery.ajax({
+    jQuery.ajax({
         url: this.options.ajaxUrl,
         type: 'POST',
         data: {
@@ -88,10 +84,10 @@ QoobWordpressDriver.prototype.loadPageData = function(cb) {
                 cb(null, response.data);
             } else {
                 console.error("Error in 'QoobWordpressDriver.loadPageData'. Returned data from server is fail.");
-                if(response.error){
+                if (response.error) {
                     console.error(response.error);
                 }
-                
+
             }
         },
         error: function(xrh, error) {
@@ -118,14 +114,38 @@ QoobWordpressDriver.prototype.loadLibrariesData = function(cb) {
                 cb(null, response.libs);
             } else {
                 console.error("Error in 'QoobWordpressDriver.loadLibrariesData'. Returned data from server is fail.");
-                if(response.error){
+                if (response.error) {
                     console.error(response.error);
                 }
-                
+
             }
         },
         error: function(xrh, error) {
             console.error(error);
         }
     });
+};
+
+QoobWordpressDriver.prototype.openUploadDialog = function(cb) {
+
+}
+
+QoobWordpressDriver.prototype.upload = function(cb) {
+    //Create media upload frame
+    var mcFrame = wp.media({
+        // title: "title",// this.storage.__('media_title', 'Select or Upload Media Of Your Chosen Persuasion'),
+        // button: {
+        //     text: "text" //this.storage.__('media_text_button', 'Use this media')
+        // },
+        multiple: false // Set to true to allow multiple files to be selected  
+    });
+    //On submit - save submitted url
+    mcFrame.on('select', function() {
+        // Get media attachment details from the frame state
+        var attachment = mcFrame.state().get('selection').first().toJSON();
+        cb(null, attachment.url);
+    }.bind(this));
+    //Open media frame
+    mcFrame.open();
+
 };
