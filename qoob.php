@@ -607,8 +607,8 @@ class Qoob {
             $response = array(
                 'success' => true,
                 'data' => array(
-                    'libs' => (isset($libs) ? $libs : []),
-                    'translations' => (isset($translations) ? $translations : [])
+                    'libs' => (isset($libs) ? $libs : array()),
+                    'translations' => (isset($translations) ? $translations : array())
                 )
             );
         } else {
