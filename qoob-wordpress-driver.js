@@ -44,15 +44,25 @@ QoobWordpressDriver.prototype.savePageData = function(data, cb) {
         page_id: this.options.pageId,
         data: data
     });
-    $.ajax({
-        url: ajax.url + '?action=qoob_save_page_data',
+    jQuery.ajax({
+        url: this.options.ajaxUrl + '?action=qoob_save_page_data',
         type: 'POST',
         data: dataToSend,
         processData: false,
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
         success: function(response) {
-            cb(null, response.success);
+            if (response.success) {
+                cb(null, response.success);
+            } else {
+                console.error("Error in 'QoobWordpressDriver.savePageData'. Sent data from server is fail.");
+                if (response.error) {
+                    console.error(response.error);
+                }
+            }
+        },
+        error: function(xrh, error) {
+            console.error(error);
         }
     });
 };
@@ -87,7 +97,6 @@ QoobWordpressDriver.prototype.loadPageData = function(cb) {
                 if (response.error) {
                     console.error(response.error);
                 }
-
             }
         },
         error: function(xrh, error) {
@@ -125,6 +134,43 @@ QoobWordpressDriver.prototype.loadLibrariesData = function(cb) {
         }
     });
 };
+
+/**
+ * Load template
+ * 
+ * @param {loadPageTemplatesCallback} cb - A callback to run.
+ */
+QoobWordpressDriver.prototype.loadPageTemplates = function(cb) {
+    cb(null);
+    // jQuery.ajax({
+    //     dataType: "json",
+    //     url: this.templatesDataUrl,
+    //     error: function(jqXHR, textStatus) {
+    //         cb(textStatus);
+    //     },
+    //     success: function(data) {
+    //         cb(null, data);
+    //     }
+    // });
+};
+
+
+/**
+ * Load main menu
+ * @param {Array} staticMenu
+ * @returns {Array}
+ */
+QoobWordpressDriver.prototype.mainMenu = function(staticMenu) {
+    var customData = [{
+        "id": "save-template",
+        "label": "Save as template",
+        "action": "",
+        "icon": ""
+    }];
+
+    return jQuery.extend(staticMenu, customData);
+};
+
 
 QoobWordpressDriver.prototype.openUploadDialog = function(cb) {
 

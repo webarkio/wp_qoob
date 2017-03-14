@@ -1,4 +1,4 @@
- <?php
+<?php
 /*
 Plugin Name: qoob
 Plugin URI: http://webark.com/qoob/
@@ -18,7 +18,7 @@ Author URI: http://webark.com/
  *
  * @author     webark.com <qoob@webark.com>
  * @link       http://webark.com/qoob/
- * @copyright  2015-2016 WebArk.com
+ * @copyright  2015-2017 WebArk.com
  * @license    http://webark.com/qoob/LISENCE
  */
 
@@ -59,9 +59,15 @@ class Qoob {
             //Ajax load page data
             add_action('wp_ajax_qoob_load_page_data', array($this, 'loadQoobPageData'));
 
+            //Ajax load page data
+            add_action('wp_ajax_qoob_save_page_data', array($this, 'saveQoobPageData'));
+
             // Controlling revisions
             add_action('save_post', array($this, 'savePostMeta'));
             add_action( 'wp_restore_post_revision', array($this, 'restoreRevision'), 10, 2 );
+
+            // Add demo blocks lib
+            add_filter('qoob_libs', array($this, 'addDemoLib'), 10, 2);
 
 
             // //Load JS and CSS
@@ -94,8 +100,12 @@ class Qoob {
         wp_enqueue_script('qoob-backend-starter', plugins_url( 'qoob/qoob-backend-starter.js', __FILE__ ), array('jquery'));
     }
 
+    /**
+     * Checking for administration rights
+     *
+     */
     public function checkAccess(){
-        return true;
+        return (current_user_can('edit_posts') ? true : false);
     }
 
     private function getDriverHtml(){
@@ -120,6 +130,8 @@ class Qoob {
         do_action( 'admin_enqueue_scripts', $hook_suffix );
         do_action( 'admin_print_styles' );
         do_action( 'admin_print_scripts' );
+        add_filter( 'admin_footer_text', '__return_empty_string', 11 ); 
+        add_filter( 'update_footer', '__return_empty_string', 11 );
         echo $this->getDriverHtml();
         echo '</head><body>';
         include( ABSPATH . 'wp-admin/admin-footer.php' );
@@ -161,6 +173,7 @@ class Qoob {
                 $result[] = $lib;
             }
         }
+
         return $result;
     }
 
@@ -207,6 +220,40 @@ class Qoob {
         }
         wp_send_json($response);
 
+    }
+
+    /**
+     * Save data page
+     * @return json
+     */
+    public function saveQoobPageData() {
+        $incoming = file_get_contents('php://input');
+
+        $decoded = json_decode($incoming, true);
+        $data = $decoded['data'];
+
+        $blocks_html = trim($data['html']);
+        $post_id = $decoded['page_id'];
+        $qoob_data = wp_slash( json_encode( isset($data['data']['blocks']) ? $data['data']['blocks'] : '' ) );
+
+        // Saving metafield
+        $updated_meta = update_post_meta( $post_id, 'qoob_data', $qoob_data );
+
+        // Updating post content and post content filtered
+        $update_args = array(
+          'ID'           => $post_id,
+          'post_content' => $blocks_html
+        );
+
+        $updated = wp_update_post( $update_args );
+
+        if ($updated && $updated_meta) {
+            $response = array('success' => true);
+        } else {
+            $response = array('success' => false, 'error' => "Couldn't save data");
+        }
+
+        wp_send_json( $response );
     }
 
     /**
@@ -289,7 +336,18 @@ class Qoob {
             update_post_meta( $post_id, 'qoob_data', $data );
         else
             delete_post_meta( $post_id, 'qoob_data' );
-    }    
+    }
+
+    /**
+     * Create array libs from json file
+     *
+     * @param array $qoobLibs Array libs from json file.
+     */
+    public function addDemoLib($qoobLibs) {
+        $qoobLibs[] = plugin_dir_path(__FILE__) . 'qoob/blocks/lib.json';
+        return $qoobLibs;
+    }
+
     //===================================================DEL
 
 
