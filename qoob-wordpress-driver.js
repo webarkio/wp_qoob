@@ -7,7 +7,7 @@
 //module.exports.QoobWordpressDriver = QoobWordpressDriver;
 function QoobWordpressDriver(options) {
     this.options = options;
-//    this.assets = [{"type":"js","name":"media-models", "src":"/wp-includes/js/media-models.js"}];
+    //    this.assets = [{"type":"js","name":"media-models", "src":"/wp-includes/js/media-models.js"}];
 }
 
 /**
@@ -41,7 +41,7 @@ QoobWordpressDriver.prototype.exit = function() {
  */
 QoobWordpressDriver.prototype.savePageData = function(data, cb) {
     var dataToSend = JSON.stringify({
-        page_id: this.options.pageId,
+        pageId: this.options.pageId,
         data: data
     });
     jQuery.ajax({
@@ -126,7 +126,6 @@ QoobWordpressDriver.prototype.loadLibrariesData = function(cb) {
                 if (response.error) {
                     console.error(response.error);
                 }
-
             }
         },
         error: function(xrh, error) {
@@ -136,24 +135,81 @@ QoobWordpressDriver.prototype.loadLibrariesData = function(cb) {
 };
 
 /**
- * Load template
+ * Add new library
+ * @param {Array} new lib
+ * @param {loadQoobDataCallback} cb - A callback to run.
+ */
+QoobWordpressDriver.prototype.saveLibrariesData = function(libraries, cb) {
+    jQuery.ajax({
+        url: this.options.ajaxUrl + '?action=qoob_save_libraries_data',
+        type: 'POST',
+        data: JSON.stringify(libraries),
+        processData: false,
+        contentType: "application/json; charset=utf-8",
+        dataType: 'json',
+        error: function(jqXHR, textStatus) {
+            cb(textStatus);
+        },
+        success: function(response) {
+            if (response.success) {
+                cb(null, response.success);
+            } else {
+                if (response.error) {
+                    console.error(response.error);
+                }
+            }
+        }
+    });
+
+};
+
+/**
+ * Save page template
+ * 
+ * @param {savePageTemplateCallback} cb - A callback to run.
+ */
+QoobWordpressDriver.prototype.savePageTemplate = function(data, cb) {
+    jQuery.ajax({
+        url: this.options.ajaxUrl + '?action=qoob_save_page_template',
+        type: 'POST',
+        data: JSON.stringify(data),
+        processData: false,
+        contentType: "application/json; charset=utf-8",
+        dataType: 'json',
+        success: function(response) {
+            cb(null, response.success);
+        }
+    });
+};
+
+/**
+ * Load page templates
  * 
  * @param {loadPageTemplatesCallback} cb - A callback to run.
  */
 QoobWordpressDriver.prototype.loadPageTemplates = function(cb) {
-    cb(null);
-    // jQuery.ajax({
-    //     dataType: "json",
-    //     url: this.templatesDataUrl,
-    //     error: function(jqXHR, textStatus) {
-    //         cb(textStatus);
-    //     },
-    //     success: function(data) {
-    //         cb(null, data);
-    //     }
-    // });
+    jQuery.ajax({
+        dataType: "json",
+        url: this.options.ajaxUrl,
+        type: 'POST',
+        data: {
+            action: 'qoob_load_page_templates'
+        },
+        error: function(jqXHR, textStatus) {
+            console.error("Error in 'QoobWordpressDriver.loadPageTemplates'. Returned data from server is fail.");
+            cb(textStatus);
+        },
+        success: function(response) {
+            if (response.success && response.templates) {
+                cb(null, JSON.parse(response.templates));
+            } else {
+                if (response.error) {
+                    console.error(response.error);
+                }
+            }
+        }
+    });
 };
-
 
 /**
  * Load main menu

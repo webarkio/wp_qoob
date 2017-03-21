@@ -27,6 +27,7 @@
     border-radius: 3px;
     border-width: 1px;
     border-style: solid;
+
 }
 .cube-button i.cube {
     display: inline-block;
@@ -41,6 +42,7 @@
     display: block;
     font-family: 'OpenSans-Regular';
     font-size: 16px;
+    line-height: 18px;
     color: #fff;
     padding: 10px 15px 4px 8px;
     text-decoration: none;    
