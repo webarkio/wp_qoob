@@ -92,6 +92,9 @@ class Qoob {
 
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueueFrontendScripts' ) );
 		}
+
+		// Add new image to media
+		add_action( 'wp_ajax_qoob_add_new_image', array( $this, 'addNewImage' ) );
 	}
 
 	/**
@@ -113,11 +116,15 @@ class Qoob {
 		}
 	}
 
-
 	public function enqueueBackendScripts() {
 		wp_enqueue_media();
 		wp_enqueue_script( 'qoob-backend-starter', plugins_url( 'qoob/qoob-backend-starter.js', __FILE__ ), array( 'jquery' ) );
 		wp_register_script( 'qoob-backend-custom', plugins_url( 'assets/js/qoob-backend-custom.js', __FILE__ ),  array( 'jquery' ), true );
+
+		// Media WP style
+		wp_enqueue_style('common');
+		wp_enqueue_style('forms');
+
 		// Localize the script with new data
 		$translation_array = array(
 			'button_text' => esc_html__( 'qoob', 'qoob' ),
@@ -170,6 +177,7 @@ class Qoob {
 
 		global $hook_suffix;
 		echo '<!DOCTYPE html><html><head>';
+		echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
 		echo '<title>' . esc_html__( 'Edit Page with qoob', 'qoob' ) . '</title>';
 		do_action( 'admin_enqueue_scripts', $hook_suffix );
 		do_action( 'admin_print_styles' );
@@ -386,11 +394,10 @@ class Qoob {
 	 */
 	public function loadQoobPageTemplates() {
 		$page_templates = get_site_option( 'qoob_page_templates' );
-
 		if ( $page_templates ) {
 			$response = array( 'success' => true, 'templates' => wp_unslash( $page_templates ) );
 		} else {
-			$response = array( 'success' => false, 'error' => 'Page templates not found' );
+			$response = array( 'success' => false );
 		}
 
 		wp_send_json( $response );
@@ -580,6 +587,77 @@ class Qoob {
 			$meta->meta_value = addslashes( $meta->meta_value );
 		}
 		return $skip;
+	}
+
+	/**
+	 * Upload image
+	 * @param (array) file data array
+	 */
+	public function uploadImage( $file = array() ) {
+		require_once ABSPATH . 'wp-admin/includes/admin.php';
+		$file_return = wp_handle_upload( $file, array( 'test_form' => false ) );
+
+		if ( isset( $file_return['error'] ) || isset( $file_return['upload_error_handler'] ) ) {
+			return false;
+		} else {
+			$filename = $file_return['file'];
+			$attachment = array(
+				'post_mime_type' => $file_return['type'],
+				'post_content' => '',
+				'post_type' => 'attachment',
+				'post_status' => 'inherit',
+				'guid' => $file_return['url'],
+			);
+			if ( $title ) {
+				$attachment['post_title'] = $title;
+			}
+			$attachment_id = wp_insert_attachment( $attachment, $filename );
+			require_once( ABSPATH . 'wp-admin/includes/image.php' );
+
+			$attachment_data = wp_generate_attachment_metadata( $attachment_id, $filename );
+			wp_update_attachment_metadata( $attachment_id, $attachment_data );
+			if ( 0 < intval( $attachment_id ) ) {
+				return $attachment_id;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Send json data from image
+	 */
+	public function addNewImage() {
+		$data = array();
+
+		if ( empty( $_FILES ) ) {
+			$data['error'] = false;
+			$data['message'] = __( 'Please select an image to upload!','qoob' );
+		} elseif ( $file['size'] > 5242880 ) { // Maximum image size is 5M
+			$data['size'] = $files[0]['size'];
+			$data['error'] = false;
+			$data['message'] = __( 'Image is too large. It must be less than 2M!','qoob' );
+		} else {
+			$data['message'] = '';
+
+			if ( isset( $_FILES['image'] ) ) {
+				$file = $_FILES['image'];
+				$attachment_id = $this->uploadImage( $file, false );
+
+				if ( is_numeric( $attachment_id ) ) {
+					$img_thumb = wp_get_attachment_image_src( $attachment_id, 'full' );
+					$data['success'] = true;
+					$data['url'] = $img_thumb[0];
+				}
+			}
+
+			if ( ! $attachment_id ) {
+				$data['error'] = false;
+				$data['message'] = __( 'An error has occured. Your image was not added.','qoob' );
+			}
+		}
+
+		echo json_encode( $data );
+		die();
 	}
 }
 $qoob = new Qoob( 'dev' );

@@ -202,10 +202,6 @@ QoobWordpressDriver.prototype.loadPageTemplates = function(cb) {
         success: function(response) {
             if (response.success && response.templates) {
                 cb(null, JSON.parse(response.templates));
-            } else {
-                if (response.error) {
-                    console.error(response.error);
-                }
             }
         }
     });
@@ -227,27 +223,125 @@ QoobWordpressDriver.prototype.mainMenu = function(staticMenu) {
     return jQuery.extend(staticMenu, customData);
 };
 
+/**
+ * Upload image
+ * @param {Array} data
+ * @param {uploadCallback} cb - A callback to run.
+ */
+QoobWordpressDriver.prototype.upload = function(data, cb) {
+    jQuery.ajax({
+        url: this.options.ajaxUrl,
+        type: 'POST',
+        data: data,
+        processData: false,
+        contentType: false,
+        error: function(jqXHR, textStatus) {
+            cb(textStatus)
+            console.error(textStatus);
+        },
+        success: function(response) {
+            var data = JSON.parse(response);
+            if (data.success) {
+                cb(null, data.url);
+            } else {
+                if (data.error) {
+                    console.error(data.message);
+                    cb(true);
+                }
+            }
+        }
+    });
+};
 
+/**
+ * Show dialog media WP
+ * @param {openUploadDialogCallback} cb - A callback to run.
+ */
 QoobWordpressDriver.prototype.openUploadDialog = function(cb) {
-
-}
-
-QoobWordpressDriver.prototype.upload = function(cb) {
-    //Create media upload frame
+        //Create media upload frame
     var mcFrame = wp.media({
-        // title: "title",// this.storage.__('media_title', 'Select or Upload Media Of Your Chosen Persuasion'),
-        // button: {
-        //     text: "text" //this.storage.__('media_text_button', 'Use this media')
-        // },
         multiple: false // Set to true to allow multiple files to be selected  
     });
     //On submit - save submitted url
     mcFrame.on('select', function() {
         // Get media attachment details from the frame state
         var attachment = mcFrame.state().get('selection').first().toJSON();
-        cb(null, attachment.url);
+        if (attachment) {
+            cb(null, attachment.url);
+        } else {
+            cb(true);
+            console.error('Please select an image to upload!');
+        }
+        
     }.bind(this));
     //Open media frame
     mcFrame.open();
+};
 
+/**
+ * Custom field image action
+ * @param {Array} actions
+ * @returns {Array}
+ */
+QoobWordpressDriver.prototype.fieldImageActions = function(actions) {
+    var self = this;
+    var customActions = [{
+        "id": "upload",
+        "label": "Upload",
+        "action": function(imageField) {
+            if (!imageField.$el.find('.input-file').length) {
+                imageField.$el.find('.image-control').append('<input type="file" class="input-file" name="image">');
+            }
+
+            imageField.$el.find('input[type=file]').click();
+
+            imageField.$el.find('input[type=file]').change(function() {
+                var file = imageField.$el.find('input[type=file]').val();
+                if (file.match(/.(jpg|jpeg|png|gif)$/i)) {
+                    var formData = new FormData();
+                    formData.append( "image", imageField.$el.find('input[type=file]')[0].files[0]);
+                    formData.append("action", "qoob_add_new_image");
+                    self.upload(formData, function(error, url) {
+                        if ('' !== url) {
+                            imageField.changeImage(url);
+                            if (imageField.$el.find('.edit-image').hasClass('empty')) {
+                                imageField.$el.find('.edit-image').removeClass('empty');
+                            }
+                        }
+                    });
+                } else {
+                    console.error('file format is not appropriate');
+                }
+            });
+        },
+        "icon": ""
+    }, {
+        "id": "reset",
+        "label": "Reset to default",
+        "action": function(imageField){
+            imageField.changeImage(imageField.options.defaults);
+            if (imageField.$el.find('.edit-image').hasClass('empty')) {
+                imageField.$el.find('.edit-image').removeClass('empty');
+            }
+        },
+        "icon": ""
+    }, {
+        "id": "wml",
+        "label": "WordPress Media library",
+        "action": function(imageField){
+            self.openUploadDialog(function(error, url){
+                if ('' !== url) {
+                    imageField.changeImage(url);
+                    if (imageField.$el.find('.edit-image').hasClass('empty')) {
+                        imageField.$el.find('.edit-image').removeClass('empty');
+                    }
+                }
+            });
+        },
+        "icon": ""
+    }];
+
+    var glueActions = actions.concat(customActions);
+
+    return glueActions;
 };

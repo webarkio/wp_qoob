@@ -13,9 +13,3 @@
 if (!defined('ABSPATH') || !defined('WP_UNINSTALL_PLUGIN')) {
     exit();  // silence is golden
 }
-
-global $wpdb;
-
-/* Drop Table */
-$table_name = $wpdb->prefix . "pages";
-$wpdb->query('DROP TABLE `' . $table_name . '`');
