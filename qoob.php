@@ -95,6 +95,17 @@ class Qoob {
 
 		// Add new image to media
 		add_action( 'wp_ajax_qoob_add_new_image', array( $this, 'addNewImage' ) );
+
+		// register deactivation
+		register_deactivation_hook( __FILE__, array( $this, 'pluginDeactivate' ) );
+	}
+
+	/**
+	 * Add action when plugin diactivate
+	 */
+	public function pluginDeactivate() {
+		// Remove option "qoob_libs"
+		delete_option( 'qoob_libs' );
 	}
 
 	/**
