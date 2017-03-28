@@ -55,9 +55,11 @@ QoobWordpressDriver.prototype.savePageData = function(data, cb) {
             if (response.success) {
                 cb(null, response.success);
             } else {
-                console.error("Error in 'QoobWordpressDriver.savePageData'. Sent data from server is fail.");
+                cb(response.error, response.success);
                 if (response.error) {
                     console.error(response.error);
+                } else {
+                    console.error("Error in 'QoobWordpressDriver.savePageData'. Sent data from server is fail.");
                 }
             }
         },
