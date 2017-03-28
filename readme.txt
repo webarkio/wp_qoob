@@ -15,6 +15,8 @@ Try Qoob, a powerful page builder and editor, right now. Use a wide range of Qoo
 
 Qoob is much easier and extremely fast to use than any other website builders for WordPress. Absolutely no coding or design skills are required. This powerful website creator enables you to start your ideal website from a scratch with minimum technical knowledge. Just upload your content and get a working cross-platform website that is adapted to any device.
 
+**[Try Demo](http://webark.com/qoob/demo/)**
+
 = Distinct features of Qoob =
 
 

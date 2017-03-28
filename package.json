@@ -1,6 +1,6 @@
 {
   "name": "qoob.wordpress",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "description": "qoob for WordPress",
   "main": "index.js",
   "plugin_name": "qoob",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/maxazan/qoob.wordpress.git"
+    "url": "https://github.com/webarkio/wp_qoob.git"
   },
   "author": "Webark Systems",
   "license": "MIT",
