@@ -3,48 +3,65 @@ Contributors: webarkio
 Donate link: http://webark.com/qoob/#donate
 Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder
 Requires at least: 4.1
-Tested up to: 4.6.1
-Stable tag: 1.2.1
+Tested up to: 4.7.3
+Stable tag: 2.0.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
-Thank you for choosing Qoob - a high-performance page builder.
-It offers a huge amount of tools and features absolutely FREE.
+Try Qoob, a powerful page builder and editor, right now. Use a wide range of Qoob's tools and features absolutely for FREE.
 
 
 == Description ==
 
-It is the easiest and the fastest website builder for WordPress. No need for coding skills. It is a perfect solution, that save you from any prior design and let you handle it without hiring a professional. Just upload your content and get a working cross-platform website, fully adjusted to all devices available on the market. Our [qoob](http://webark.com/qoob/) website was built with the help of "qoob" plugin.
+Qoob is much easier and extremely fast to use than any other website builders for WordPress. Absolutely no coding or design skills are required. This powerful website creator enables you to start your ideal website from a scratch with minimum technical knowledge. Just upload your content and get a working cross-platform website that is adapted to any device.
 
-= Advantages of Qoob =
+= Distinct features of Qoob =
 
 
-= Blocks Builder =
-You add to your page ready-made blocks. You do not need to think about the size, font, indentation. Everything is ready and works fine. You can easily create your first page in 30 seconds.
+= Building blocks =
+Create your website using Qoob’s drag’n’drop functionality. Don't worry about your website’s parameters: size, font, indentation. The first page of your great website is just a few clicks away.
 
 [youtube https://www.youtube.com/watch?v=nTvWrpHp80w]
 
-= Live Editing =
-You will be amazed to see how it is easy to change the contents of the blocks. We have tried to make this process as easy as possible. And the most amazing thing is that this happens in real time. You can see all changes without leaving the page.
+= Live editing =
+We provide you with easy-to-use tools to edit and publish the content of the blocks instantly. And what is more amazing - you get a live preview of your page, that is being edited in real time.
 
 [youtube https://www.youtube.com/watch?v=xkrxfAhzE9E]
 
-= Alaways Looking Good =
-QOOB automatically optimizes your website's pages for desktop, tablet and mobile. This ensures your visitors get the best viewing experience no matter what device they use.
+= Always looking good =
+Your website's pages built by Qoob display suitably on desktop, tablet and mobile screen sizes. Thank to a flexible and fluid design your visitors can get the best viewing experience regardless of what device they use.
 
 [youtube https://www.youtube.com/watch?v=Bnzi-FQpLqk]
 
 = Clean and Intuitive UI =
-All the visual editors that you met before almost always do not fit the overall design. They add their own frame, buttons and other elements that, almost always fit into the overall design of the site. Qoob is the only editor that does not do it! This editing site content is simple and straightforward.
+Unlike other visual editors, Qoob focuses on the overall design of the website without adding its own elements (frame, buttons and other components). Clean and intuitive interface makes editing website's content simple and straightforward.
 
 [youtube https://www.youtube.com/watch?v=GgnTbYsqOZQ]
 
-= Realtime Editing Mobile Version =
-You have not seen it. You can add, delete and edit the unit is in tablet modeor even on a mobile device.
+= Realtime editing mobile version =
+It may undoubtedly turn out a wonder for you. With Qoob you can really get your website arranged faster in a tablet mode or even on a mobile device!
 
 [youtube https://www.youtube.com/watch?v=Mlimu8xuukc]
 
-If you have any questions that are beyond the scope of this help file, please feel free to post me to <https://github.com/webarkio/wp_qoob/issues>. Thanks so much!
+= Creating and saving templates =
+Customize your website by Qoob’s new feature. Now you can build your ideal website using a unique combination of blocks and saving your ready-made templates for the future purposes.
+
+= Managing libraries =
+Now you are able to control and manage your pages templates within a single library that works as a store for the blocks’ components: pictures, texts etc. Create and change your list of libraries easily by adding, updating or deleting them.
+
+Still have some more issues to clarify? We're [Documentation](https://github.com/webarkio/wp_qoob/issues) to clear them up.
+
+
+
+We have created a number of professionally designed and fully customizable themes for your unique website:
+
+* [eCom](https://themeforest.net/item/ecom-material-design-ecommerce-html-template/19245920?s_rank=1) - the right choice for your professional online shop
+* [Flareup](https://themeforest.net/item/flareup-responsive-flat-wordpress-theme/18914750?s_rank=2) - flexible and fluid theme that provides the best looking of your website in any environment
+* [Pizza](https://themeforest.net/item/pizza-restaurant-pizzeria-wordpress-theme/18316258?s_rank=3) - the best option for your food related website with appetizing design
+* [Happy Seniors](https://themeforest.net/item/happy-seniors-senior-care-html-template/15536790?s_rank=4) - HTML template for Senior Care with modern and functional design
+* [Reflect](https://themeforest.net/item/reflect-responsive-one-page-wordpress-theme/10121192?s_rank=5) - multi-purpose solution for your stunning professional website with Retina Ready effect
+* [Spring](https://themeforest.net/item/spring-creative-one-page-wordpress-theme/8751334?s_rank=6) - fully customizable and reflective Wordpress theme with clean and slick design
+* [Birva](https://themeforest.net/item/birva-creative-one-page-wordpress-theme/8433790?s_rank=7) - a perfect option for your business needs with parallax effect
 
 == Installation ==
 
@@ -69,29 +86,33 @@ If you have any questions that are beyond the scope of this help file, please fe
 
 == Frequently Asked Questions ==
 
-= How to create a page with qoob =
-Qoob is the editor consisting of blocks. Work in Qoob simplifies the task of page creation.
+= How to create a page with Qoob =
+Qoob is the editor consisting from blocks. Creating pages is simplified by Qoob.
 
-1. Go to Page -> Add New
-2. Click on button "qoob"
+`Go to Page -> Add New`
+
+`Click on the button "qoob"`
 
 = How to add the blocks =
 
-There are several ways for adding the block in qoob.
+There are several ways of adding a block on Qoob.
 
-1. To add a block in the page, please, **click** on the block. Each new block is added to the end of the page, under the blocks that were added earlier. After that you can add blocks by **dragging**.
-2. You find a block in the group and **move** it to the necessary place. This place will be highlighted.
+* To add a block in the page, please, click on it. Every new block is added to the bottom of the page, under the blocks that were added earlier. After that you can add blocks by dragging them.
+* To add a block in the page find it in the group and move it to the necessary place. This place will be highlighted.
 
 = How to edit the blocks =
-You can edit information in each block of the page. For this purpose **click** the necessary block on the right of the page. In the left you can see settings of this block.
+You can edit information in each of the page blocks. For this purpose click on the necessary block on the right side of the page. On the left side of the page you can find block settings.
 
 = How to delete / move blocks =
-1. Click the necessary block.
-2. By pressing the **Delete / Move** button in the left bottom corner of settings you can change postion of the block or delete it from the page.
+1. Click on the necessary block.
+2. By pressing the Delete / Move button in the left bottom corner of the settings you can change the position of the block or delete it from the page.
 
 = How to change the media center =
-1. **Click** the necessary block.
-2. In the settings **click** the image, video or icon to choose it. To return to the previous media, click on it again.
+1. Click on the necessary block.
+2. Click on the image, video or icon to choose a necessary one in the settings. To return to the previous media, click on it again.
+
+= Contributors & Developers =
+This is an open source software. The following foundations have contributed to this plugin.
 
 == Screenshots ==
 
@@ -100,6 +121,9 @@ You can edit information in each block of the page. For this purpose **click** t
 2. Sides of the qoob
 
 == Changelog ==
+
+= 2.0.0 =
+* Full rebuild
 
 = 1.2.1 =
 * Change priority JS files for lib's
