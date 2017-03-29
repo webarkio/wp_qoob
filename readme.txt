@@ -4,7 +4,7 @@ Donate link: http://webark.com/qoob/#donate
 Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder
 Requires at least: 4.1
 Tested up to: 4.7.3
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -124,6 +124,10 @@ This is an open source software. The following foundations have contributed to t
 2. Sides of the qoob
 
 == Changelog ==
+
+= 2.0.1 =
+* Fixed images and videos search
+* Fixed remove options from base when uninstall
 
 = 2.0.0 =
 * Full rebuild
