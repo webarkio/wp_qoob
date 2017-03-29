@@ -41,6 +41,7 @@ class Qoob {
 
 		// Load libraries data action. Needs for front and backend.
 		add_action( 'wp_ajax_qoob_load_libraries_data', array( $this, 'loadQoobLibrariesData' ) );
+		add_action( 'wp_ajax_nopriv_qoob_load_libraries_data', array( $this, 'loadQoobLibrariesData' ) );
 
 		if ( is_admin() ) {
 			// =================ONLY ADMIN ZONE=====================
@@ -98,14 +99,34 @@ class Qoob {
 
 		// register deactivation
 		register_deactivation_hook( __FILE__, array( $this, 'pluginDeactivate' ) );
+
+		register_uninstall_hook( __FILE__, array( $this, 'pluginUninstall' ) );
 	}
 
 	/**
 	 * Add action when plugin diactivate
 	 */
 	public function pluginDeactivate() {
-		// Remove option "qoob_libs"
+		if ( ! current_user_can( 'activate_plugins' ) )
+			return;
+
+		// Remove option "qoob"
 		delete_option( 'qoob_libs' );
+	}
+
+	/**
+	 * Add action when plugin uninstall
+	 */
+	public function pluginUninstall() {
+		if ( ! current_user_can( 'activate_plugins' ) )
+			return;
+
+		if ( __FILE__ != WP_UNINSTALL_PLUGIN )
+			return;
+
+		// Remove option "qoob"
+		delete_option( 'qoob_libs' );
+		delete_option( 'qoob_version' );
 	}
 
 	/**
@@ -116,6 +137,23 @@ class Qoob {
 	public function pluginLoaded() {
 		// load localize
 		load_plugin_textdomain( 'qoob', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+
+		// start update when loaded
+		$this->pluginUpdate();
+	}
+
+	/**
+	 * Update plugin on migrating between versions
+	 */
+	public function pluginUpdate() {
+		// Update qoob version
+		if ( get_site_option( 'qoob_version' ) !== $this->version ) {
+	        $cur_version = get_site_option( 'qoob_version' ) ? get_site_option( 'qoob_version' ) : '0.0.0';
+
+	        if ( version_compare( $this->version, $cur_version ) > 0 ) {
+	        	update_option( 'qoob_version', $this->version );
+	        }
+		}
 	}
 
 	public function enqueueFrontendScripts() {
@@ -133,8 +171,8 @@ class Qoob {
 		wp_register_script( 'qoob-backend-custom', plugins_url( 'assets/js/qoob-backend-custom.js', __FILE__ ),  array( 'jquery' ), true );
 
 		// Media WP style
-		wp_enqueue_style('common');
-		wp_enqueue_style('forms');
+		wp_enqueue_style( 'common' );
+		wp_enqueue_style( 'forms' );
 
 		// Localize the script with new data
 		$translation_array = array(
@@ -151,6 +189,7 @@ class Qoob {
 	 * Checking for administration rights
 	 */
 	public function checkAccess() {
+
 		return (current_user_can( 'edit_posts' ) ? true : false);
 	}
 
@@ -205,19 +244,13 @@ class Qoob {
 	 * Send array of libraries data for Qoob
 	 */
 	public function loadQoobLibrariesData() {
-		if ( ! $this->checkAccess() ) {
-			$response = array(
-				'success' => false,
-				'error' => 'Access is denied',
-			);
-		} else {
-			$libs = $this->getLibs();
+		$libs = $this->getLibs();
 
-			$response = array(
-				'success' => true,
-				'libs' => (isset( $libs ) ? $libs : []),
-			);
-		}
+		$response = array(
+			'success' => true,
+			'libs' => (isset( $libs ) ? $libs : []),
+		);
+
 		wp_send_json( $response );
 	}
 
@@ -602,6 +635,7 @@ class Qoob {
 
 	/**
 	 * Upload image
+	 *
 	 * @param (array) file data array
 	 */
 	public function uploadImage( $file = array() ) {
