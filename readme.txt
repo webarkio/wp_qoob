@@ -48,12 +48,14 @@ It may undoubtedly turn out a wonder for you. With Qoob you can really get your 
 = Creating and saving templates =
 Customize your website by Qoob’s new feature. Now you can build your ideal website using a unique combination of blocks and saving your ready-made templates for the future purposes.
 
+[youtube https://www.youtube.com/watch?v=27ToVbn9sLc]
+
 = Managing libraries =
 Now you are able to control and manage your pages templates within a single library that works as a store for the blocks’ components: pictures, texts etc. Create and change your list of libraries easily by adding, updating or deleting them.
 
-Still have some more issues to clarify? We're [Documentation](https://github.com/webarkio/wp_qoob/issues) to clear them up.
+[youtube https://www.youtube.com/watch?v=C8ui2TvBsKA]
 
-
+Still have some more issues to clarify? We're [here](https://github.com/webarkio/wp_qoob/issues) to clear them up.
 
 We have created a number of professionally designed and fully customizable themes for your unique website:
 
@@ -92,7 +94,6 @@ We have created a number of professionally designed and fully customizable theme
 Qoob is the editor consisting from blocks. Creating pages is simplified by Qoob.
 
 `Go to Page -> Add New`
-
 `Click on the button "qoob"`
 
 = How to add the blocks =
