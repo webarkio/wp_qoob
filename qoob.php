@@ -96,23 +96,6 @@ class Qoob {
 
 		// Add new image to media
 		add_action( 'wp_ajax_qoob_add_new_image', array( $this, 'addNewImage' ) );
-
-		// register uninstall
-		register_uninstall_hook( __FILE__, array( $this, 'pluginUninstall' ) );
-	}
-	/**
-	 * Add action when plugin uninstall
-	 */
-	public function pluginUninstall() {
-		if ( ! current_user_can( 'activate_plugins' ) )
-			return;
-
-		if ( __FILE__ != WP_UNINSTALL_PLUGIN )
-			return;
-
-		// Remove option "qoob"
-		delete_option( 'qoob_libs' );
-		delete_option( 'qoob_version' );
 	}
 
 	/**

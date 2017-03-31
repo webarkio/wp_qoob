@@ -13,3 +13,7 @@
 if (!defined('ABSPATH') || !defined('WP_UNINSTALL_PLUGIN')) {
     exit();  // silence is golden
 }
+
+// Remove options "qoob"
+delete_option( 'qoob_libs' );
+delete_option( 'qoob_version' );

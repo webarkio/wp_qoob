@@ -59,10 +59,8 @@ Still have some more issues to clarify? We're [here](https://github.com/webarkio
 
 We have created a number of professionally designed and fully customizable themes for your unique website:
 
-* [eCom](https://themeforest.net/item/ecom-material-design-ecommerce-html-template/19245920?s_rank=1) - the right choice for your professional online shop
 * [Flareup](https://themeforest.net/item/flareup-responsive-flat-wordpress-theme/18914750?s_rank=2) - flexible and fluid theme that provides the best looking of your website in any environment
 * [Pizza](https://themeforest.net/item/pizza-restaurant-pizzeria-wordpress-theme/18316258?s_rank=3) - the best option for your food related website with appetizing design
-* [Happy Seniors](https://themeforest.net/item/happy-seniors-senior-care-html-template/15536790?s_rank=4) - HTML template for Senior Care with modern and functional design
 * [Reflect](https://themeforest.net/item/reflect-responsive-one-page-wordpress-theme/10121192?s_rank=5) - multi-purpose solution for your stunning professional website with Retina Ready effect
 * [Spring](https://themeforest.net/item/spring-creative-one-page-wordpress-theme/8751334?s_rank=6) - fully customizable and reflective Wordpress theme with clean and slick design
 * [Birva](https://themeforest.net/item/birva-creative-one-page-wordpress-theme/8433790?s_rank=7) - a perfect option for your business needs with parallax effect
