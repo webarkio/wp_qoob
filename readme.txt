@@ -124,8 +124,10 @@ This is an open source software. The following foundations have contributed to t
 == Changelog ==
 
 = 2.0.1 =
+* Add new menu link "Show on frontend"
 * Fixed images and videos search
 * Fixed remove options from base when uninstall
+* Fixed styles
 
 = 2.0.0 =
 * Full rebuild
