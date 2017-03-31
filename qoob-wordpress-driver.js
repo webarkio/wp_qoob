@@ -215,10 +215,18 @@ QoobWordpressDriver.prototype.loadPageTemplates = function(cb) {
  * @returns {Array}
  */
 QoobWordpressDriver.prototype.mainMenu = function(staticMenu) {
+    var self = this;
     var customData = [{
         "id": "save-template",
         "label": "Save as template",
         "action": "",
+        "icon": ""
+    }, {
+        "id": "show-frontend",
+        "label": "Show on frontend",
+        "action": function() {
+            window.open(self.getIframePageUrl().replace('&qoob=true', ''), '_blank');
+        },
         "icon": ""
     }];
 
