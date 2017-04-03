@@ -225,7 +225,7 @@ QoobWordpressDriver.prototype.mainMenu = function(staticMenu) {
         "id": "show-frontend",
         "label": "Show on frontend",
         "action": function() {
-            window.open(self.getIframePageUrl().replace('&qoob=true', ''), '_blank');
+            window.open(self.getIframePageUrl().replace('&qoob=true', '').replace('?qoob=true', ''), '_blank');
         },
         "icon": ""
     }];
