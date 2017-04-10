@@ -230,7 +230,7 @@ QoobWordpressDriver.prototype.mainMenu = function(staticMenu) {
         "icon": ""
     }];
 
-    return jQuery.extend(staticMenu, customData);
+    return staticMenu.concat(customData);
 };
 
 /**
