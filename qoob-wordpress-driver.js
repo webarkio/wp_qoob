@@ -137,35 +137,6 @@ QoobWordpressDriver.prototype.loadLibrariesData = function(cb) {
 };
 
 /**
- * Add new library
- * @param {Array} new lib
- * @param {loadQoobDataCallback} cb - A callback to run.
- */
-QoobWordpressDriver.prototype.saveLibrariesData = function(libraries, cb) {
-    jQuery.ajax({
-        url: this.options.ajaxUrl + '?action=qoob_save_libraries_data',
-        type: 'POST',
-        data: JSON.stringify(libraries),
-        processData: false,
-        contentType: "application/json; charset=utf-8",
-        dataType: 'json',
-        error: function(jqXHR, textStatus) {
-            cb(textStatus);
-        },
-        success: function(response) {
-            if (response.success) {
-                cb(null, response.success);
-            } else {
-                if (response.error) {
-                    console.error(response.error);
-                }
-            }
-        }
-    });
-
-};
-
-/**
  * Save page template
  * 
  * @param {savePageTemplateCallback} cb - A callback to run.

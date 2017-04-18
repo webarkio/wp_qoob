@@ -70,9 +70,6 @@ class Qoob {
 			// Add demo blocks lib
 			add_filter( 'qoob_libs', array( $this, 'addDemoLib' ), 10, 2 );
 
-			// Save libraries data action
-			add_action( 'wp_ajax_qoob_save_libraries_data', array( $this, 'saveQoobLibrariesData' ) );
-
 			// Add metabox
 			add_action( 'add_meta_boxes', array( $this, 'infoMetabox' ) );
 
@@ -219,28 +216,6 @@ class Qoob {
 			'success' => true,
 			'libs' => (isset( $libs ) ? $libs : []),
 		);
-
-		wp_send_json( $response );
-	}
-
-	/**
-	 * Add new library to array libs
-	 */
-	public function saveQoobLibrariesData() {
-		$incoming = file_get_contents( 'php://input' );
-
-		$updated = update_option( 'qoob_libs', wp_slash( json_decode( $incoming, true ) ) );
-
-		if ( $updated ) {
-			$response = array(
-				'success' => true,
-			);
-		} else {
-			$response = array(
-				'success' => false,
-				'error' => "Couldn't save libs",
-			);
-		}
 
 		wp_send_json( $response );
 	}
