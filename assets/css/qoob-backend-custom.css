@@ -1,9 +1,7 @@
 @font-face {
     font-family: 'OpenSans-Regular';
     src: url("../fonts/opensans/OpenSans-Regular.eot");
-    src: url("../fonts/opensans/OpenSans-Regular.eot?#iefix")format("embedded-opentype"),
-        url("../fonts/opensans/OpenSans-Regular.woff") format("woff"),
-        url("../fonts/opensans/OpenSans-Regular.ttf") format("truetype");
+    src: url("../fonts/opensans/OpenSans-Regular.eot?#iefix")format("embedded-opentype"), url("../fonts/opensans/OpenSans-Regular.woff") format("woff"), url("../fonts/opensans/OpenSans-Regular.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
@@ -27,8 +25,8 @@
     border-radius: 3px;
     border-width: 1px;
     border-style: solid;
-
 }
+
 .cube-button i.cube {
     display: inline-block;
     width: 24px;
@@ -37,6 +35,7 @@
     margin: 0 7px 0 0;
     background: transparent url('../img/qoob_button.png') no-repeat;
 }
+
 .cube-button a,
 .cube-button a:hover {
     display: block;
@@ -45,26 +44,29 @@
     line-height: 18px;
     color: #fff;
     padding: 10px 15px 4px 8px;
-    text-decoration: none;    
-    text-shadow: 0 -1px 1px #006799,1px 0 1px #006799,0 1px 1px #006799,-1px 0 1px #006799;
+    text-decoration: none;
+    text-shadow: 0 -1px 1px #006799, 1px 0 1px #006799, 0 1px 1px #006799, -1px 0 1px #006799;
 }
+
 .cube-button a,
 .cube-button a:hover,
 .cube-button a:focus {
-  outline: none;
+    outline: none;
     border: 0;
 }
+
 .cube-button span {
     display: inline-block;
     vertical-align: middle;
     height: 26px;
 }
+
 .cube-button:hover {
     background: #008ec2;
     border-color: #006799;
 }
 
-.cube-button:active {    
+.cube-button:active {
     background: #0073aa;
     border-color: #006799;
     -webkit-box-shadow: inset 0 2px 0 #006799;
@@ -74,6 +76,11 @@
     transform: translateY(1px);
 }
 
-.cube-button:active, .cube-button:focus {
+.cube-button:active,
+.cube-button:focus {
     outline: 0;
+}
+
+.qoob-filters {
+    margin-left: 18px;
 }

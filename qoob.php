@@ -5,7 +5,7 @@ Plugin URI: http://webark.com/qoob/
 Text Domain: qoob
 Domain Path: /languages
 Description: Qoob - by far the easiest free page builder plugin for WP
-Version: 2.0.1
+Version: 2.0.2
 Author: webark.com
 Author URI: http://webark.com/
 */
@@ -29,7 +29,7 @@ class Qoob {
 	 *
 	 * @var string
 	 */
-	private $version = '2.0.1';
+	private $version = '2.0.2';
 	/**
 	 * Register actions for plugin
 	 */
@@ -81,6 +81,12 @@ class Qoob {
 
 			// Filter qoob meta data
 			add_filter( 'wxr_export_skip_postmeta', array( $this, 'filterChangeExportQoobmeta' ), 10, 3 );
+
+			// Add new lib by url
+			add_action( 'admin_post_qoob_add_library', array( $this, 'addNewLib' ) );
+
+			// Register a custom menu page.
+			add_action( 'admin_menu', array($this, 'registerQoobAdminMenu') );
 		} else {
 			// ==================ONLY FRONTEND======================
 			// add edit link to admin bar
@@ -226,59 +232,71 @@ class Qoob {
 	 * @return json
 	 */
 	public function getLibs() {
-		$qoob_libs = get_site_option( 'qoob_libs' );
+		$libs = apply_filters( 'qoob_libs', array() );
 
-		if ( $qoob_libs ) {
-			$result = wp_unslash( $qoob_libs );
-		} else {
-			$libs = apply_filters( 'qoob_libs', array() );
+		$result = array();
+		foreach ( $libs as $value ) {
+			if ( file_exists( $value ) ) {
+				$lib = json_decode( file_get_contents( $value ), true );
+				if ( ! array_key_exists( 'url', $lib ) ) {
+					$lib['url'] = $this->getUrlFromPath( str_replace( '/lib.json', '', $value ) );
+				}
 
-			$result = array();
-			foreach ( $libs as $value ) {
-				if ( file_exists( $value ) ) {
-					$lib = json_decode( file_get_contents( $value ), true );
-					if ( ! array_key_exists( 'url', $lib ) ) {
-						$lib['url'] = $this->getUrlFromPath( str_replace( '/lib.json', '', $value ) );
+				// if old version lib
+				if ( ! array_key_exists( 'version', $lib ) ) {
+					// Set current version
+					$lib['version'] = $this->version;
+
+					foreach ( $lib['blocks'] as $index => $block ) {
+						$lib['blocks'][ $index ]['url'] = str_replace( '%theme_url%/blocks/', '', $block['url'] );
 					}
 
-					// if old version lib
-					if ( ! array_key_exists( 'version', $lib ) ) {
-						// Set current version
-						$lib['version'] = $this->version;
+					foreach ( $lib['res'] as $key => $val ) {
+						if ( 'js' === $key || 'css' === $key ) {
+							foreach ( $val as $v ) {
+								$temp = array(
+										'type' => $key,
+										'name' => $v['name'],
+										'src' => str_replace( '%theme_url%/blocks/', '', $v['url'] ),
+										);
 
-						foreach ( $lib['blocks'] as $index => $block ) {
-							$lib['blocks'][ $index ]['url'] = str_replace( '%theme_url%/blocks/', '', $block['url'] );
-						}
-
-						foreach ( $lib['res'] as $key => $val ) {
-							if ( 'js' === $key || 'css' === $key ) {
-								foreach ( $val as $v ) {
-									$temp = array(
-											'type' => $key,
-											'name' => $v['name'],
-											'src' => str_replace( '%theme_url%/blocks/', '', $v['url'] ),
-											);
-
-									if ( $v['use'] ) {
-										$lib['res'][] = array_merge_recursive( $temp, $v['use'] );
-									} else {
-										$lib['res'][] = $temp;
-									}
-
-									unset( $temp );
+								if ( $v['use'] ) {
+									$lib['res'][] = array_merge_recursive( $temp, $v['use'] );
+								} else {
+									$lib['res'][] = $temp;
 								}
+
+								unset( $temp );
 							}
 						}
-
-						unset( $lib['res']['css'] );
-						unset( $lib['res']['js'] );
 					}
 
-					$result[] = $lib;
+					unset( $lib['res']['css'] );
+					unset( $lib['res']['js'] );
+				}
+
+				$result[] = $lib;
+			}
+		}
+
+		// Get libs from base
+		$list_libs = get_option( 'qoob_libs' );
+
+		if ( $list_libs ) {
+			foreach ($list_libs as $lib_url) {
+				if ( $data = @file_get_contents( $lib_url ) ) {
+					// decode the JSON data
+					$lib = json_decode( $data, true );
+
+					$lib[0]['external'] = true;
+					$lib[0]['url'] = $lib_url;
+
+					if ( json_last_error() === 0 ) {
+						// JSON is valid
+						array_push( $result, $lib[0] );
+					}
 				}
 			}
-
-			update_option( 'qoob_libs', wp_slash( $result ) );
 		}
 
 		return $result;
@@ -647,6 +665,244 @@ class Qoob {
 
 		echo json_encode( $data );
 		die();
+	}
+
+	/**
+ 	 * Register a custom menu page.
+ 	 */
+	public function registerQoobAdminMenu() {
+		add_menu_page(
+			__('Qoob title page', 'qoob'),
+			__( 'Qoob', 'qoob' ),
+			'manage_options',
+			'qoob',
+			array( $this, 'adminPage' ),
+			plugins_url( 'assets/img/qoob_logo_admin_bar.png', __FILE__ ),
+			21
+		);
+
+		add_submenu_page(
+			'qoob',
+			__('Manage libs title page','menu-test'),
+			__('Manage libs','menu-test'),
+			'manage_options',
+			'qoob-manage-libs',
+			array( $this, 'manageLibs' )
+		);
+
+		$this->actionsNoticeLibs();
+	}
+
+	/**
+	 * Display a custom qoob page
+	 */
+	public function adminPage() {
+		include_once( 'views/page-qoob.php' );
+	}
+
+	/**
+	 * Display a qoob manage library page
+	 */
+	public function manageLibs() {
+		include_once( 'views/page-manage-libs.php' );
+	}
+
+	public function actionsNoticeLibs() {
+		if ( false !== ( $action_notice = get_transient( "qoob_action" ) ) ) {
+			add_settings_error($action_notice[0]['setting'], $action_notice[0]['code'], $action_notice[0]['message'], $action_notice[0]['type']);
+			delete_transient( "qoob_action" );
+		}
+
+		// remove action
+		if ( (isset($_GET['action']) && 'remove' === $_GET['action']) ) {
+
+			$list_libs = get_option( 'qoob_libs' );
+			unset( $list_libs[array_search( urldecode_deep( $_GET['lib_url'] ), $list_libs )] );
+
+			if ( update_option( 'qoob_libs', $list_libs ) ) {
+				add_settings_error('qoob_action', esc_attr( 'updated' ), __( 'Library deleted', 'qoob' ), 'updated' );
+				set_transient('qoob_action', get_settings_errors(), 30);
+				wp_safe_redirect('admin.php?page=qoob-manage-libs');
+			} else {
+				add_settings_error('qoob_action', esc_attr( 'error' ), __( 'Could not delete library', 'qoob' ), 'error');
+				set_transient('qoob_action', get_settings_errors(), 30);
+			}
+		}
+	}
+
+
+	/**
+	 * Determines if the nonce variable associated with the options page is set
+	 * and is valid.
+	 *
+	 * @access private
+	 * 
+	 * @return boolean False if the field isn't set or the nonce value is invalid;
+	 * otherwise, true.
+	 */
+	private function hasValidNonce() {
+	    // If the field isn't even in the $_POST, then it's invalid.
+	    if ( ! isset( $_POST['_wpnonce'] ) ) { // Input var okay.
+	        return false;
+	    }
+	 
+	    $field  = wp_unslash( $_POST['_wpnonce'] );
+	    $action = 'qoob_add_lib';
+	 
+	    return wp_verify_nonce( $field, $action );
+	}
+
+	/**
+	 * Redirect to the page from which we came (which should always be the
+	 * admin page. If the referred isn't set, then we redirect the user to
+	 * the login page.
+	 *
+	 * @access private
+	 */
+	private function redirect() {
+		// To make the Coding Standards happy, we have to initialize this.
+		if ( ! isset( $_POST['_wp_http_referer'] ) ) { // Input var okay.
+			$_POST['_wp_http_referer'] = wp_login_url();
+		}
+
+		// Sanitize the value of the $_POST collection for the Coding Standards.
+		$url = sanitize_text_field(
+			wp_unslash( $_POST['_wp_http_referer'] ) // Input var okay.
+		);
+
+		// Finally, redirect back to the admin page.
+		wp_safe_redirect( urldecode( $url ) );
+		exit;
+	}
+
+	/**
+	 * Post action hook
+	 */
+	public function addNewLib() {
+		if ( isset( $_POST['lib_url'] ) && '' !== $_POST['lib_url'] ) {
+			$this->addLibraryByUrl($_POST['lib_url']);
+		} else if ( isset( $_FILES['lib_file'] ) && '' !== $_FILES['lib_file']['name'] ) {
+			$this->addLibraryByArchive( $_FILES['lib_file'] );
+		} else {
+			add_settings_error('qoob_action', esc_attr( 'error' ), __( "You need to fill one of the fields", 'qoob' ), 'error');
+			set_transient( 'qoob_action', get_settings_errors(), 30 );
+			$this->redirect();
+		}
+	}
+
+
+	/**
+	 * Addd library by url
+	 * @param (String) $lib_url
+	 */
+	public function addLibraryByUrl( $lib_url = '' ) {
+		if ( ! ( $this->hasValidNonce() && current_user_can( 'manage_options' ) ) ) {
+			wp_redirect( $redirect );
+			exit;
+		}
+
+		if ( ! $data = @file_get_contents( $lib_url ) ) {
+			add_settings_error('qoob_action', esc_attr( 'error' ), __( "The field isn't set or the nonce value is invalid", 'qoob' ), 'error');
+			set_transient( 'qoob_action', get_settings_errors(), 30 );
+			$this->redirect();
+		}
+
+		// decode the JSON data
+		$lib = json_decode($data, true);
+
+		if ( json_last_error() === 0 ) {
+			// JSON is valid
+			$list_libs = get_option( 'qoob_libs' );
+
+			if ( $list_libs === '' )
+				$list_libs = array();
+
+			array_push( $list_libs, $lib[0]['url'] );
+		    update_option( 'qoob_libs', $list_libs );
+			add_settings_error('qoob_action', esc_attr( 'updated' ), __( 'Library was successfully added', 'qoob' ), 'updated');
+			set_transient( 'qoob_action', get_settings_errors(), 30 );
+		}
+
+		$this->redirect();
+	}
+
+	/**
+	 * Addd library by url
+	 * @param (Array) $file
+	 */
+	public function addLibraryByArchive( $file = array() ) {
+		WP_Filesystem();
+
+		$upload = wp_upload_dir();
+		$upload_dir = $upload['basedir'];
+		$upload_dir = $upload_dir . '/qoob';
+
+		if ( wp_mkdir_p( $upload_dir ) ) {
+			// Set default folder "qoob"
+			add_filter( 'upload_dir', array($this, 'UploadDir') );
+
+			$uploadedfile = $_FILES['lib_file'];
+
+			$allowed_file_types = array( 'zip' =>'application/zip' );
+	    	$overrides = array('test_form' => false, 'mimes' => $allowed_file_types);
+			$movefile = wp_handle_upload( $uploadedfile, $overrides );
+
+			if ( $movefile && ! isset( $movefile['error'] ) ) {
+				$unzipfile = unzip_file( $movefile['file'], $upload_dir );
+
+				if ( $unzipfile ) {
+					$json_url = str_replace( ".zip", "/lib.json", $movefile['url'] );
+
+					if ( @file_get_contents( $json_url ) ) {
+						$list_libs = get_option( 'qoob_libs' );
+
+						if ( $list_libs === '' )
+							$list_libs = array();
+
+						array_push( $list_libs, $json_url );
+		    			update_option( 'qoob_libs', $list_libs );
+					} else {
+						add_settings_error('qoob_action', esc_attr( 'error' ), __( 'File "lib.json" not found', 'qoob' ), 'error');
+						set_transient( 'qoob_action', get_settings_errors(), 30 );
+					}
+					add_settings_error('qoob_action', esc_attr( 'notice' ), __( "Successfully unzipped the file", 'qoob' ), 'notice');
+					set_transient( 'qoob_action', get_settings_errors(), 30 );
+				} else {
+					add_settings_error('qoob_action', esc_attr( 'error' ), __( "There was an error unzipping the file", 'qoob' ), 'error');
+					set_transient( 'qoob_action', get_settings_errors(), 30 );
+				}
+
+				add_settings_error('qoob_action', esc_attr( 'updated' ), __( "There was an error unzipping the file", 'qoob' ), 'updated');
+				set_transient( 'qoob_action', get_settings_errors(), 30 );
+			} else {
+			    /**
+			     * Error generated by _wp_handle_upload()
+			     * @see _wp_handle_upload() in wp-admin/includes/file.php
+			     */
+				add_settings_error('qoob_action', esc_attr( 'error' ), $movefile['error'], 'error');
+				set_transient( 'qoob_action', get_settings_errors(), 30 );
+			}
+
+			// Remove default folder "qoob"
+			remove_filter( 'upload_dir', array( $this, 'UploadDir') );
+
+			$this->redirect();
+
+		} else {
+			add_settings_error('qoob_action', esc_attr( 'error' ), __( "You don’t have permission to upload or create files", 'qoob' ), 'error');
+			set_transient( 'qoob_action', get_settings_errors(), 30 );
+		}
+	}
+
+	/**
+	 * Change default upload folder
+	 * @param (array) $dirs
+	 */
+	public function UploadDir( $dirs ) {
+	    $dirs['subdir'] = '/qoob';
+	    $dirs['path'] = $dirs['basedir'] . '/qoob';
+	    $dirs['url'] = $dirs['baseurl'] . '/qoob';
+	    return $dirs;
 	}
 }
 $qoob = new Qoob( 'dev' );
