@@ -280,7 +280,7 @@ class Qoob {
 		}
 
 		// Get libs from base
-		$list_libs = get_option( 'qoob_libs' );
+		$list_libs = get_option( 'qoob_libraries' );
 
 		if ( $list_libs ) {
 			foreach ($list_libs as $lib_url) {
@@ -399,8 +399,14 @@ class Qoob {
 	 * @return json
 	 */
 	public function loadQoobPageTemplates() {
+		$id = 0;
+
 		if ( $page_templates = get_site_option( 'qoob_page_templates' ) ) {
 			$page_templates = json_decode( wp_unslash( $page_templates ), true );
+			foreach ($page_templates as $template) {
+				if ( $template['id'] > $id )
+					$id = $template['id'];
+			}
 		} else {
 			$page_templates = array();
 		}
@@ -410,7 +416,9 @@ class Qoob {
 		if ( $default_page_templates ) {
 			$default_page_templates = json_decode( $default_page_templates, true );
 			foreach ( $default_page_templates as $key => $template ) {
+				$id++;
 				$default_page_templates[$key]['external'] = true;
+				$default_page_templates[$key]['id'] = $id;
 			}
 		} else {
 			$default_page_templates = array();
@@ -734,10 +742,10 @@ class Qoob {
 		// remove action
 		if ( (isset($_GET['action']) && 'remove' === $_GET['action']) ) {
 
-			$list_libs = get_option( 'qoob_libs' );
+			$list_libs = get_option( 'qoob_libraries' );
 			unset( $list_libs[array_search( urldecode_deep( $_GET['lib_url'] ), $list_libs )] );
 
-			if ( update_option( 'qoob_libs', $list_libs ) ) {
+			if ( update_option( 'qoob_libraries', $list_libs ) ) {
 				add_settings_error('qoob_action', esc_attr( 'updated' ), __( 'Library deleted', 'qoob' ), 'updated' );
 				set_transient('qoob_action', get_settings_errors(), 30);
 				wp_safe_redirect('admin.php?page=qoob-manage-libs');
@@ -830,15 +838,20 @@ class Qoob {
 
 		if ( json_last_error() === 0 ) {
 			// JSON is valid
-			$list_libs = get_option( 'qoob_libs' );
+			$list_libs = get_option( 'qoob_libraries' );
 
-			if ( $list_libs === '' )
+			if ( ! $list_libs )
 				$list_libs = array();
 
 			array_push( $list_libs, $lib[0]['url'] );
-		    update_option( 'qoob_libs', $list_libs );
-			add_settings_error('qoob_action', esc_attr( 'updated' ), __( 'Library was successfully added', 'qoob' ), 'updated');
-			set_transient( 'qoob_action', get_settings_errors(), 30 );
+
+			if ( update_option( 'qoob_libraries', $list_libs ) ) {
+				add_settings_error('qoob_action', esc_attr( 'updated' ), __( 'Library was successfully added', 'qoob' ), 'updated');
+				set_transient( 'qoob_action', get_settings_errors(), 30 );
+			} else {
+				add_settings_error('qoob_action', esc_attr( 'error' ), __( 'The library is not added', 'qoob' ), 'error');
+				set_transient( 'qoob_action', get_settings_errors(), 30 );
+			}
 		}
 
 		$this->redirect();
@@ -872,13 +885,13 @@ class Qoob {
 					$json_url = str_replace( ".zip", "/lib.json", $movefile['url'] );
 
 					if ( @file_get_contents( $json_url ) ) {
-						$list_libs = get_option( 'qoob_libs' );
+						$list_libs = get_option( 'qoob_libraries' );
 
 						if ( $list_libs === '' )
 							$list_libs = array();
 
 						array_push( $list_libs, $json_url );
-		    			update_option( 'qoob_libs', $list_libs );
+		    			update_option( 'qoob_libraries', $list_libs );
 					} else {
 						add_settings_error('qoob_action', esc_attr( 'error' ), __( 'File "lib.json" not found', 'qoob' ), 'error');
 						set_transient( 'qoob_action', get_settings_errors(), 30 );

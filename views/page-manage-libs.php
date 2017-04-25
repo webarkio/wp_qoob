@@ -10,7 +10,7 @@
 			<table class="wp-list-table widefat striped fix">
 				<thead>
 					<tr>
-						<th><?php _e( 'Url', 'qoob' ); ?></th>
+						<th><?php _e( 'URL', 'qoob' ); ?></th>
 						<th><?php _e( 'Name', 'qoob' ); ?></th>
 						<th><?php _e( 'Action', 'qoob' ); ?></th>
 					</tr>
