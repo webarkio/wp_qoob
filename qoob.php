@@ -399,9 +399,27 @@ class Qoob {
 	 * @return json
 	 */
 	public function loadQoobPageTemplates() {
-		$page_templates = get_site_option( 'qoob_page_templates' );
-		if ( $page_templates ) {
-			$response = array( 'success' => true, 'templates' => wp_unslash( $page_templates ) );
+		if ( $page_templates = get_site_option( 'qoob_page_templates' ) ) {
+			$page_templates = json_decode( wp_unslash( $page_templates ), true );
+		} else {
+			$page_templates = array();
+		}
+
+		$default_page_templates = apply_filters( 'qoob_page_templates', array() );
+
+		if ( $default_page_templates ) {
+			$default_page_templates = json_decode( $default_page_templates, true );
+			foreach ( $default_page_templates as $key => $template ) {
+				$default_page_templates[$key]['external'] = true;
+			}
+		} else {
+			$default_page_templates = array();
+		}
+
+		$result = array_merge( $page_templates, $default_page_templates );
+
+		if ( count($result) > 0 ) {
+			$response = array( 'success' => true, 'templates' => json_encode( $result ) );
 		} else {
 			$response = array( 'success' => false );
 		}
