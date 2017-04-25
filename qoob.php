@@ -149,6 +149,7 @@ class Qoob {
 		// Localize the script with new data
 		$translation_array = array(
 			'button_text' => esc_html__( 'qoob', 'qoob' ),
+			'theme_url' => get_template_directory_uri(),
 		);
 		wp_localize_script( 'qoob-backend-custom', 'qoob_backend_custom', $translation_array );
 		// Enqueued script with localized data.
