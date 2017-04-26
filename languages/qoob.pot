@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Qoob - Page Builder\n"
-"POT-Creation-Date: 2016-09-13 16:56+0300\n"
+"POT-Creation-Date: 2017-04-26 11:51+0300\n"
 "PO-Revision-Date: 2016-09-08 12:33+0300\n"
 "Last-Translator: webark.com <qoob@webark.com>\n"
 "Language-Team: \n"
@@ -18,124 +18,117 @@ msgstr ""
 "_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: tests\n"
+"X-Poedit-SearchPathExcluded-1: assets\n"
+"X-Poedit-SearchPathExcluded-2: qoob\n"
 
-#: qoob.php:174
-msgid "Attention!"
-msgstr ""
-
-#: qoob.php:397
-msgid "(no title)"
-msgstr ""
-
-#: qoob.php:422
-msgid "Edit with qoob"
-msgstr ""
-
-#: qoob.php:478 qoob.php:569 qoob.php:684
+#: qoob.php:151
 msgid "qoob"
 msgstr ""
 
-#: qoob.php:538
+#: qoob.php:204
 msgid "Edit Page with qoob"
 msgstr ""
 
-#: qoob.php:685
-msgid "Autosave"
+#: qoob.php:494 qoob.php:605
+msgid "Edit with qoob"
 msgstr ""
 
-#: qoob.php:686
-msgid "Save"
+#: qoob.php:561
+msgid "Attention!"
 msgstr ""
 
-#: qoob.php:687
-msgid "Exit"
-msgstr ""
-
-#: qoob.php:688
-msgid "Are you sure you want to delete the block?"
-msgstr ""
-
-#: qoob.php:691
-msgid "Select or Upload Media Of Your Chosen Persuasion"
-msgstr ""
-
-#: qoob.php:692
-msgid "Use this media"
-msgstr ""
-
-#: qoob.php:693
-msgid "This file is not supposed to have correct format. Try another one."
-msgstr ""
-
-#: qoob.php:694
-msgid "Add component"
-msgstr ""
-
-#: qoob.php:695
-msgid "Drag to delete"
-msgstr ""
-
-#: qoob.php:696
-msgid "all"
-msgstr ""
-
-#: qoob.php:697
-msgid "Tags"
-msgstr ""
-
-#: qoob.php:698
-msgid "Media Center"
-msgstr ""
-
-#: qoob.php:699
-msgid "Image url"
-msgstr ""
-
-#: qoob.php:700
-msgid "Video url"
-msgstr ""
-
-#: qoob.php:704
-msgid "Drag here to creative new block"
-msgstr ""
-
-#: qoob.php:705
-msgid "First of all you need add block"
-msgstr ""
-
-#: qoob.php:706
-msgid "Please wait"
-msgstr ""
-
-#: qoob.php:710
-msgid "Back"
-msgstr ""
-
-#: qoob.php:711
-msgid "Move"
-msgstr ""
-
-#: qoob.php:715
+#: qoob.php:572
 msgid ""
-"You can add block both by dragging preview picture or by clicking on it."
+"<p>Current page has been edited with Qoob Page Builder. To edit this page "
+"as regular one - go to Qoob editor by pressing \"qoob\" button and remove "
+"all blocks.</p>"
 msgstr ""
 
-#: qoob.php:716
-msgid ""
-"You can view page in the preview mode by clicking the up-arrow in the up "
-"right corner of the screen."
+#: qoob.php:668
+msgid "Please select an image to upload!"
 msgstr ""
 
-#: qoob.php:717
-msgid "While you are in preview mode - you can't reach block editting."
+#: qoob.php:672
+msgid "Image is too large. It must be less than 2M!"
 msgstr ""
 
-#: qoob.php:718
-msgid ""
-"You can activate autosave of edited page by clicking 'Autosave' button in "
-"the toolbar in the top of your screen."
+#: qoob.php:689
+msgid "An error has occured. Your image was not added."
 msgstr ""
 
-#: templates/template.php:30
-msgid "Did you know"
+#: qoob.php:702
+msgid "Qoob manager"
+msgstr ""
+
+#: qoob.php:703
+msgid "Qoob"
+msgstr ""
+
+#: qoob.php:713 qoob.php:714
+msgid "Manage libraries"
+msgstr ""
+
+#: qoob.php:750
+msgid "Library has been deleted"
+msgstr ""
+
+#: qoob.php:754
+msgid "Library can't been deleted"
+msgstr ""
+
+#: qoob.php:814
+msgid "You need to fill in one of the fields"
+msgstr ""
+
+#: qoob.php:832
+msgid "The field isn't set or the value is invalid"
+msgstr ""
+
+#: qoob.php:850
+msgid "The library has been successfully added"
+msgstr ""
+
+#: qoob.php:853
+msgid "The library has not been added"
+msgstr ""
+
+#: qoob.php:897
+msgid "File \"lib.json\" was not found"
+msgstr ""
+
+#: qoob.php:900
+msgid "The library's URL has been added"
+msgstr ""
+
+#: qoob.php:903
+msgid "There was an error unzipping the file"
+msgstr ""
+
+#: qoob.php:920
+msgid "You don’t have a permission to upload or create files"
+msgstr ""
+
+#: views/page-manage-libs.php:13
+msgid "URL"
+msgstr ""
+
+#: views/page-manage-libs.php:14
+msgid "Name"
+msgstr ""
+
+#: views/page-manage-libs.php:15
+msgid "Action"
+msgstr ""
+
+#: views/page-manage-libs.php:25
+msgid "Delete"
+msgstr ""
+
+#: views/page-manage-libs.php:38
+msgid "Add a Qoob library"
+msgstr ""
+
+#: views/page-manage-libs.php:45
+msgid "Upload a Qoob library"
 msgstr ""
