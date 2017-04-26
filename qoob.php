@@ -415,7 +415,7 @@ class Qoob {
 		$default_page_templates = apply_filters( 'qoob_page_templates', array() );
 
 		if ( $default_page_templates ) {
-			$default_page_templates = json_decode( $default_page_templates, true );
+			$default_page_templates = json_decode( wp_unslash( $default_page_templates ), true );
 			foreach ( $default_page_templates as $key => $template ) {
 				$id++;
 				$default_page_templates[$key]['external'] = true;
