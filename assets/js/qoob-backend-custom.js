@@ -4,7 +4,7 @@
  */
 (function($) {
     $(document).ready(function() {
-        if (typenow === 'page') {
+        if (typeof(typenow) !== 'undefined' && typenow === 'page') {
             // Add button editor in WP admin
             var postId = jQuery('#post_ID').val();
             var url = 'post.php?post=' + postId + '&action=qoob';
