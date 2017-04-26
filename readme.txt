@@ -1,10 +1,10 @@
 ﻿=== Qoob - Realtime Frontend Page Builder ===
 Contributors: webarkio
 Donate link: http://webark.com/qoob/#donate
-Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder
+Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder, drag-and-drop, editor, landing page
 Requires at least: 4.1
-Tested up to: 4.7.3
-Stable tag: 2.0.1
+Tested up to: 4.7.4
+Stable tag: 2.0.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -49,11 +49,6 @@ It may undoubtedly turn out a wonder for you. With Qoob you can really get your 
 Customize your website by Qoob’s new feature. Now you can build your ideal website using a unique combination of blocks and saving your ready-made templates for the future purposes.
 
 [youtube https://www.youtube.com/watch?v=27ToVbn9sLc]
-
-= Managing libraries =
-Now you are able to control and manage your pages templates within a single library that works as a store for the blocks’ components: pictures, texts etc. Create and change your list of libraries easily by adding, updating or deleting them.
-
-[youtube https://www.youtube.com/watch?v=C8ui2TvBsKA]
 
 Still have some more issues to clarify? We're [here](https://github.com/webarkio/wp_qoob/issues) to clear them up.
 
@@ -122,6 +117,12 @@ This is an open source software. The following foundations have contributed to t
 2. Sides of the qoob
 
 == Changelog ==
+
+= 2.0.2 =
+* Libraries' manager in "wp-admin" created
+* Layout import/export created
+* Fixed bugs issues
+* Fixed styles
 
 = 2.0.1 =
 * Add new menu link "Show on frontend"
