@@ -32,17 +32,17 @@
 		</div>
 	</form>
 
-	<h2><?php echo esc_html( 'Choose how to add qoob library', 'qoob' ); ?></h2>
+	<h2><?php echo esc_html( 'Choose how to add a Qoob library', 'qoob' ); ?></h2>
 
 	<form enctype="multipart/form-data" id="qoob-filters" method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
-		<p><label><input type="radio" name="radio" checked="checked" value="url" /> <?php _e( 'Add qoob library', 'qoob' ); ?></label></p>
+		<p><label><input type="radio" name="radio" checked="checked" value="url" /> <?php _e( 'Add a Qoob library', 'qoob' ); ?></label></p>
 		<ul id="qoob-url" class="qoob-filters">
 			<li>
 				<input type="url" class="regular-text" name="lib_url" placeholder="<?php echo esc_html( 'Json url', 'qoob' ); ?>" value="" />
 			</li>
 		</ul>
 
-		<p><label><input type="radio" name="radio" value="file" /> <?php _e( 'Upload qoob library', 'qoob' ); ?></label></p>
+		<p><label><input type="radio" name="radio" value="file" /> <?php _e( 'Upload a Qoob library', 'qoob' ); ?></label></p>
 		<ul id="qoob-file" class="qoob-filters">
 			<li>
 				<input name="lib_file" type="file" />
