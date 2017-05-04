@@ -63,6 +63,12 @@ class Qoob {
 			// Ajax save page template
 			add_action( 'wp_ajax_qoob_save_page_template', array( $this, 'SaveQoobPageTemplate' ) );
 
+			// Add new image to media
+			add_action( 'wp_ajax_qoob_add_new_image', array( $this, 'addNewImage' ) );
+
+			// Add new video to media
+			add_action( 'wp_ajax_qoob_add_new_video', array( $this, 'addNewVideo' ) );
+
 			// Controlling revisions
 			add_action( 'save_post', array( $this, 'savePostMeta' ) );
 			add_action( 'wp_restore_post_revision', array( $this, 'restoreRevision' ), 10, 2 );
@@ -96,9 +102,6 @@ class Qoob {
 
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueueFrontendScripts' ) );
 		}
-
-		// Add new image to media
-		add_action( 'wp_ajax_qoob_add_new_image', array( $this, 'addNewImage' ) );
 	}
 
 	/**
@@ -623,11 +626,11 @@ class Qoob {
 	}
 
 	/**
-	 * Upload image
+	 * Upload file
 	 *
 	 * @param (array) file data array
 	 */
-	public function uploadImage( $file = array() ) {
+	public function uploadFile( $file = array() ) {
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
 		$file_return = wp_handle_upload( $file, array( 'test_form' => false ) );
 
@@ -669,18 +672,54 @@ class Qoob {
 		} elseif ( $file['size'] > 5242880 ) { // Maximum image size is 5M
 			$data['size'] = $files[0]['size'];
 			$data['error'] = false;
-			$data['message'] = __( 'Image is too large. It must be less than 2M!','qoob' );
+			$data['message'] = __( 'Image is too large. It must be less than 5M!','qoob' );
 		} else {
 			$data['message'] = '';
 
 			if ( isset( $_FILES['image'] ) ) {
 				$file = $_FILES['image'];
-				$attachment_id = $this->uploadImage( $file, false );
+				$attachment_id = $this->uploadFile( $file, false );
 
 				if ( is_numeric( $attachment_id ) ) {
 					$img_thumb = wp_get_attachment_image_src( $attachment_id, 'full' );
 					$data['success'] = true;
 					$data['url'] = $img_thumb[0];
+				}
+			}
+
+			if ( ! $attachment_id ) {
+				$data['error'] = false;
+				$data['message'] = __( 'An error has occured. Your image was not added.','qoob' );
+			}
+		}
+
+		echo json_encode( $data );
+		die();
+	}
+
+	/**
+	 * Send json data from video
+	 */
+	public function addNewVideo() {
+		$data = array();
+
+		if ( empty( $_FILES ) ) {
+			$data['error'] = false;
+			$data['message'] = __( 'Please select an image to upload!','qoob' );
+		} elseif ( $file['size'] > 8388608 ) { // Maximum image size is 8M
+			$data['size'] = $files[0]['size'];
+			$data['error'] = false;
+			$data['message'] = __( 'Video is too large. It must be less than 8M!','qoob' );
+		} else {
+			$data['message'] = '';
+			if ( isset( $_FILES['video'] ) ) {
+				$file = $_FILES['video'];
+				$attachment_id = $this->uploadFile( $file, false );
+
+				if ( is_numeric( $attachment_id ) ) {
+					$url = wp_get_attachment_url( $attachment_id );
+					$data['success'] = true;
+					$data['url'] = $url;
 				}
 			}
 
