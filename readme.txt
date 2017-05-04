@@ -118,6 +118,9 @@ This is an open source software. The following foundations have contributed to t
 
 == Changelog ==
 
+= 2.0.3 =
+* Fix iframe cross-domain erorr
+
 = 2.0.2 =
 * Libraries' manager in "wp-admin" created
 * Layout import/export created
