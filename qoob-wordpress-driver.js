@@ -270,13 +270,12 @@ QoobWordpressDriver.prototype.fieldImageActions = function(actions) {
         "id": "upload",
         "label": "Upload",
         "action": function(imageField) {
-            if (!imageField.$el.find('.input-file').length) {
-                imageField.$el.find('.image-control').append('<input type="file" class="input-file" name="image">');
-            }
+            imageField.$el.find('.image-control').find('.input-file').remove();
+            imageField.$el.find('.image-control').append('<input type="file" class="input-file" name="image">');
 
-            imageField.$el.find('input[type=file]').click();
+            imageField.$el.find('.input-file').trigger('click');
 
-            imageField.$el.find('input[type=file]').change(function() {
+            imageField.$el.find('.input-file').change(function() {
                 var file = imageField.$el.find('input[type=file]').val();
                 if (file.match(/.(jpg|jpeg|png|gif)$/i)) {
                     var formData = new FormData();
@@ -301,7 +300,12 @@ QoobWordpressDriver.prototype.fieldImageActions = function(actions) {
         "label": "Reset to default",
         "action": function(imageField) {
             imageField.changeImage(imageField.options.defaults);
-            if (imageField.$el.find('.edit-image').hasClass('empty')) {
+
+            if ('' === imageField.options.defaults) {
+                if (!imageField.$el.find('.edit-image').hasClass('empty')) {
+                    imageField.$el.find('.edit-image').addClass('empty');
+                }
+            } else {
                 imageField.$el.find('.edit-image').removeClass('empty');
             }
         },
@@ -399,4 +403,19 @@ QoobWordpressDriver.prototype.fieldVideoActions = function(actions) {
     var glueActions = actions.concat(customActions);
 
     return glueActions;
+};
+
+/**
+ * Upload image
+ * @param {Array} dataFile
+ * @param {uploadCallback} cb - A callback to run.
+ */
+QoobWordpressDriver.prototype.uploadImage = function(dataFile, cb) {
+    var formData = new FormData();
+    formData.append('image', dataFile[0]);
+    formData.append("action", "qoob_add_new_image");
+
+    this.upload(formData, function(error, url) {
+        cb(error, url);
+    });
 };
