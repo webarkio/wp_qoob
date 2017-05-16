@@ -264,7 +264,7 @@ class Qoob {
 										'src' => str_replace( '%theme_url%/blocks/', '', $v['url'] ),
 										);
 
-								if ( $v['use'] ) {
+								if ( isset( $v['use'] ) && $v['use'] ) {
 									$lib['res'][] = array_merge_recursive( $temp, $v['use'] );
 								} else {
 									$lib['res'][] = $temp;
@@ -291,13 +291,13 @@ class Qoob {
 				if ( $data = @file_get_contents( $lib_url ) ) {
 					// decode the JSON data
 					$lib = json_decode( $data, true );
-
-					$lib[0]['external'] = true;
-					$lib[0]['url'] = $lib_url;
+					
+					$lib['external'] = true;
+					$lib['url'] = $lib_url;
 
 					if ( json_last_error() === 0 ) {
 						// JSON is valid
-						array_push( $result, $lib[0] );
+						array_push( $result, $lib );
 					}
 				}
 			}
@@ -863,8 +863,7 @@ class Qoob {
 	 */
 	public function addLibraryByUrl( $lib_url = '' ) {
 		if ( ! ( $this->hasValidNonce() && current_user_can( 'manage_options' ) ) ) {
-			wp_redirect( $redirect );
-			exit;
+			$this->redirect();
 		}
 
 		if ( ! $data = @file_get_contents( $lib_url ) ) {
@@ -883,7 +882,7 @@ class Qoob {
 			if ( ! $list_libs )
 				$list_libs = array();
 
-			array_push( $list_libs, $lib[0]['url'] );
+			array_push( $list_libs, $lib_url );
 
 			if ( update_option( 'qoob_libraries', $list_libs ) ) {
 				add_settings_error('qoob_action', esc_attr( 'updated' ), __( 'The library has been successfully added', 'qoob' ), 'updated');
