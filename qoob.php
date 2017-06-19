@@ -490,12 +490,16 @@ class Qoob {
 		if ( ! is_object( $wp_admin_bar ) ) {
 			global $wp_admin_bar;
 		}
-		if ( is_singular() ) {
-				// FIX: check page use qoob or empty
+
+		global $wp_query;
+		$id = $wp_query->post->ID;
+		$post_meta = json_decode( get_post_meta( $id, 'qoob_data', true ), true );
+
+		if ( is_singular() && count( $post_meta ) > 0 ) {
 				$wp_admin_bar->add_menu(array(
 					'id' => 'qoob-admin-bar-link',
 					'title' => esc_html__( 'Edit with qoob', 'qoob' ),
-					'href' => $this->getEditWithQoobUrl( get_the_ID() ),
+					'href' => $this->getEditWithQoobUrl( $id ),
 					'meta' => array( 'class' => 'qoob-inline-link' ),
 				));
 		}
