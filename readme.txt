@@ -4,7 +4,7 @@ Donate link: http://webark.com/qoob/#donate
 Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder, drag-and-drop, editor, landing page
 Requires at least: 4.1
 Tested up to: 4.7.4
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -117,6 +117,11 @@ This is an open source software. The following foundations have contributed to t
 2. Sides of the qoob
 
 == Changelog ==
+
+= 2.0.4 =
+* Media search was fixed
+* The library absence bug was fixed
+* ID identification for formatting was fixed
 
 = 2.0.3 =
 * Fix iframe cross-domain erorr

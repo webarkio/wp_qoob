@@ -102,6 +102,7 @@ module.exports = function(grunt) {
                 //setup file list for copying/ not copying for SVN
                 src: [
                     '**',
+                    '!qoob/skins/simple/**',
                     '!assets/screenshots/**', // will be copied in copy:svn_assets below
                     '!node_modules/**',
 					'!**/node_modules/**',
