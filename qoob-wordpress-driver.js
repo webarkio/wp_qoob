@@ -1,7 +1,7 @@
 /**
  * Class for work with ajax methods
  *  
- * @version 0.0.1
+ * @version 0.0.2
  * @class  QoobWordpressDriver
  */
 //module.exports.QoobWordpressDriver = QoobWordpressDriver;
@@ -130,8 +130,13 @@ QoobWordpressDriver.prototype.loadLibrariesData = function(cb) {
                 }
             }
         },
-        error: function(xrh, error) {
-            console.error(error);
+        error: function(xmlHttpRequest, textStatus) {
+            if (xmlHttpRequest.readyState == 0 || xmlHttpRequest.status == 0) {
+                return; // it's not really an error
+            } else {
+                // Do normal error handling
+                console.error(textStatus);
+            }
         }
     });
 };
@@ -386,12 +391,10 @@ QoobWordpressDriver.prototype.fieldVideoActions = function(actions) {
         "label": "WordPress Media library",
         "action": function(videoField) {
             self.openUploadDialog(function(error, url) {
-                console.log(url);
                 if ('' !== url) {
                     var src = { 'url': url, preview: '' };
                     videoField.changeVideo(src);
                     if (!videoField.$el.find('.edit-video').hasClass('empty')) {
-                        console.log('tut');
                         videoField.$el.find('.edit-video').addClass('empty');
                     }
                 }
