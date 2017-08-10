@@ -5,7 +5,7 @@ Plugin URI: http://webark.com/qoob/
 Text Domain: qoob
 Domain Path: /languages
 Description: Qoob - by far the easiest free page builder plugin for WP
-Version: 2.0.5
+Version: 2.0.6
 Author: webark.com
 Author URI: http://webark.com/
 */
@@ -29,7 +29,7 @@ class Qoob {
 	 *
 	 * @var string
 	 */
-	private $version = '2.0.5';
+	private $version = '2.0.6';
 	/**
 	 * Register actions for plugin
 	 */
@@ -255,28 +255,30 @@ class Qoob {
 						$lib['blocks'][ $index ]['url'] = str_replace( '%theme_url%/blocks/', '', $block['url'] );
 					}
 
-					foreach ( $lib['res'] as $key => $val ) {
-						if ( 'js' === $key || 'css' === $key ) {
-							foreach ( $val as $v ) {
-								$temp = array(
-										'type' => $key,
-										'name' => $v['name'],
-										'src' => str_replace( '%theme_url%/blocks/', '', $v['url'] ),
-										);
+					if ( isset($lib['res']) ) {
+						foreach ( $lib['res'] as $key => $val ) {
+							if ( 'js' === $key || 'css' === $key ) {
+								foreach ( $val as $v ) {
+									$temp = array(
+											'type' => $key,
+											'name' => $v['name'],
+											'src' => str_replace( '%theme_url%/blocks/', '', $v['url'] ),
+											);
 
-								if ( isset( $v['use'] ) && $v['use'] ) {
-									$lib['res'][] = array_merge_recursive( $temp, $v['use'] );
-								} else {
-									$lib['res'][] = $temp;
+									if ( isset( $v['use'] ) && $v['use'] ) {
+										$lib['res'][] = array_merge_recursive( $temp, $v['use'] );
+									} else {
+										$lib['res'][] = $temp;
+									}
+
+									unset( $temp );
 								}
-
-								unset( $temp );
 							}
 						}
-					}
 
-					unset( $lib['res']['css'] );
-					unset( $lib['res']['js'] );
+						unset( $lib['res']['css'] );
+						unset( $lib['res']['js'] );
+					}
 				}
 
 				$result[] = $lib;

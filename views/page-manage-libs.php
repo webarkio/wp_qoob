@@ -19,7 +19,7 @@
 					<?php foreach ($libs as $lib) { ?>
 						<tr>
 							<td><?php echo $lib['url']; ?></td>
-							<td><?php echo $lib['name']; ?></td>
+							<td><?php echo (isset($lib['name']) ? $lib['name'] : ''); ?></td>
 							<td>
 								<?php if (isset($lib['external'])) : ?>
 									<a href="<?php menu_page_url( 'qoob-manage-libs' ); ?>&action=remove&lib_url=<?php echo urlencode_deep( $lib['url'] ); ?>" title="<?php __( 'Delete', 'qoob' ) ?>"><span class="dashicons dashicons-trash"></span></a>
