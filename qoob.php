@@ -5,7 +5,7 @@ Plugin URI: http://webark.com/qoob/
 Text Domain: qoob
 Domain Path: /languages
 Description: Qoob - by far the easiest free page builder plugin for WP
-Version: 2.0.7
+Version: 2.0.8
 Author: webark.com
 Author URI: http://webark.com/
 */
@@ -29,7 +29,7 @@ class Qoob {
 	 *
 	 * @var string
 	 */
-	private $version = '2.0.7';
+	private $version = '2.0.8';
 	/**
 	 * Register actions for plugin
 	 */
@@ -304,6 +304,10 @@ class Qoob {
 				}
 			}
 		}
+		echo "<pre>";
+		var_dump($result);
+		echo "</pre>";
+		exit();
 
 		return $result;
 	}
