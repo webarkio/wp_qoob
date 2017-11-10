@@ -3,111 +3,115 @@ Contributors: webarkio
 Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder, drag-and-drop, editor, landing page
 Requires at least: 4.1
 Tested up to: 4.8.2
-Stable tag: 2.0.8
+Stable tag: 3.0.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
 Try Qoob, a powerful page builder and editor, right now. Use a wide range of Qoob's tools and features absolutely for FREE.
 
 
-== Description ==
+== Introductory description ==
 
-Qoob is much easier and extremely fast to use than any other website builders for WordPress. Absolutely no coding or design skills are required. This powerful website creator enables you to start your ideal website from a scratch with minimum technical knowledge. Just upload your content and get a working cross-platform website that is adapted to any device.
+Qoob is a truly DIY website builder!
+Creating, running and updating websites shouldn’t be expensive, difficult or time-consuming. Bearing this in mind, we’ve created a simple, powerful and absolutely free Qoob site builder that will become a great helper and time-saver for you! Qoob is so intuitive and easy-to-use that you can proceed with building your website even without going through the documentation. The first page of your brand-new site is about to appear. To get it done make some baby steps: add ready-made blocks, arrange them, configure settings, insert media elements and add your content. What is more - you can start, run and update your website right from your smartphone!
 
 **[Try Demo](http://webark.com/qoob/demo/)**
 
-= Distinct features of Qoob =
+= Why use Qoob? =
 
 
-= Building blocks =
-Create your website using Qoob’s drag’n’drop functionality. Don't worry about your website’s parameters: size, font, indentation. The first page of your great website is just a few clicks away.
+= Drag-and-drop builder =
+Qoob includes a set of predefined blocks that have everything ready for the work of your website. You just need to add blocks to your blank page and arrange them according to your needs. All the blocks are grouped into categories and it considerably simplifies your searches. Within a block you can add your content, media and customize effects. 
 
 [youtube https://www.youtube.com/watch?v=nTvWrpHp80w]
 
-= Live editing =
-We provide you with easy-to-use tools to edit and publish the content of the blocks instantly. And what is more amazing - you get a live preview of your page, that is being edited in real time.
+= Live editor =
+Qoob is the most convenient site builder ever, it allows you to change your content fast and easy and do it in real time. Since now you will never ever work with backend and guess what your page look like in frontend. With Qoob live editor you can edit your content and at the same time view the changes.
 
 [youtube https://www.youtube.com/watch?v=xkrxfAhzE9E]
 
-= Always looking good =
-Your website's pages built by Qoob display suitably on desktop, tablet and mobile screen sizes. Thank to a flexible and fluid design your visitors can get the best viewing experience regardless of what device they use.
+= Responsive design =
+Websites created on Qoob look attractive on any device be it a desktop, laptop or even a smartphone. Pages automatically adjust to different screen sizes and look natural. With Qoob you can be always confident that your visitors are pleased with your website and are likely to come back again.
 
 [youtube https://www.youtube.com/watch?v=Bnzi-FQpLqk]
 
-= Clean and Intuitive UI =
-Unlike other visual editors, Qoob focuses on the overall design of the website without adding its own elements (frame, buttons and other components). Clean and intuitive interface makes editing website's content simple and straightforward.
+= User-friendly interface =
+Clean and uncluttered interface is so easy to deal with, that even a child can make a simple website. All the interface elements (frames, buttons, lists and fields) are intuitive and unobtrusive, so you need a little time to get to know how to deal with them. Creating a website with Qoob is really enjoyable and pleasant.
 
 [youtube https://www.youtube.com/watch?v=GgnTbYsqOZQ]
 
-= Realtime editing mobile version =
-It may undoubtedly turn out a wonder for you. With Qoob you can really get your website arranged faster in a tablet mode or even on a mobile device!
+= Mobile editing =
+Imagine that all of a sudden you’re struck with inspiration and you want to share a new post or, for instance, you need a very quick price update but you’re away from the computer. Qoob is your go-to in case of a need for instant updating, formatting or even making a website. It’s unprecedentedly easy and fast to create pages, insert images and videos, change the layout and edit texts right from your mobile device. No matter where you’re you can always keep your website up-to-date!
 
 [youtube https://www.youtube.com/watch?v=Mlimu8xuukc]
 
-= Creating and saving templates =
-Customize your website by Qoob’s new feature. Now you can build your ideal website using a unique combination of blocks and saving your ready-made templates for the future purposes.
+= Template creator and saver =
+The developers of Qoob do their best to make it as feature-rich and convenient as possible. That’s why they constantly work on new updates. Recently they have added a new enhanced feature that allows users to create templates with a number of blocks, save them and use them later on for new websites.
 
 [youtube https://www.youtube.com/watch?v=27ToVbn9sLc]
 
-Still have some more issues to clarify? We're [here](https://github.com/webarkio/wp_qoob/issues) to clear them up.
+Need more help? That’s what we are [here](https://github.com/webarkio/wp_qoob/issues) for.
 
-We have created a number of professionally designed and fully customizable themes for your unique website:
+With Qoob it’s possible to create not only bespoke and feature-rich websites but also beautiful themes.
 
-* [Flareup](https://themeforest.net/item/flareup-responsive-flat-wordpress-theme/18914750?s_rank=2) - flexible and fluid theme that provides the best looking of your website in any environment
-* [Pizza](https://themeforest.net/item/pizza-restaurant-pizzeria-wordpress-theme/18316258?s_rank=3) - the best option for your food related website with appetizing design
-* [Reflect](https://themeforest.net/item/reflect-responsive-one-page-wordpress-theme/10121192?s_rank=5) - multi-purpose solution for your stunning professional website with Retina Ready effect
-* [Spring](https://themeforest.net/item/spring-creative-one-page-wordpress-theme/8751334?s_rank=6) - fully customizable and reflective Wordpress theme with clean and slick design
-* [Birva](https://themeforest.net/item/birva-creative-one-page-wordpress-theme/8433790?s_rank=7) - a perfect option for your business needs with parallax effect
+
+* [Qoob](https://wordpress.org/themes/qoob/) - free WP theme - clean and minimal theme for corporate and business websites
+* [Flareup](https://themeforest.net/item/flareup-responsive-flat-wordpress-theme/18914750) - flat and harmonic theme with a creative design specially made for professional websites
+* [Pizza](https://themeforest.net/item/pizza-restaurant-pizzeria-wordpress-theme/18316258) - appetizing template with attractive pictures suitable for any kind of cafe, restaurant, bar or canteen
+* [Reflect](https://themeforest.net/item/reflect-responsive-one-page-wordpress-theme/10121192) - bright and eye-catching WP theme made in a creative way, it will help your website stand out of the crowd
+* [Spring](https://themeforest.net/item/spring-creative-one-page-wordpress-theme/8751334) - its name speaks for itself, fresh and brisk design, cute animation makes it a good option for any project or business
+* [Birva](https://themeforest.net/item/birva-creative-one-page-wordpress-theme/8433790) - fast, laconic and original template that can serve for different kinds of online businesses
+* [KEO](https://themeforest.net/item/keo-complex-multipurpose-wordpress-theme/19706582) - truly multipurpose template with several demos inside, can be the right choice for photographers, web studios, design agencies, personal blogs etc.
 
 == Installation ==
 
-= Installing Through The WordPress Admin =
+= INSTALLING THROUGH THE WORDPRESS ADMIN PANEL =
 
-1. Head over to Plugins > Add New in the admin
-2. Search for "qoob"
+1. Head over to Plugins >> Add New in WP admin panel
+2. Search for Qoob
 3. Install & activate the plugin
 4. Visit any page in your frontend
-5. Click the "Edit with qoob" button on the top of the page and start building your page!
+5. Click Edit with qoob at the top of the page and start building your page!
 
-= Installing Through FTP =
+= INSTALLING THROUGH FTP =
 
-1. Download the ZIP file and unpack it
-2. Upload the qoob to the `/wp-content/plugins/` directory
-3. Activate the plugin through the 'Plugins' menu in WordPress
-4. You are now ready to use the qoob builder by going to any page and clicking on qoob
+1. Download a ZIP plugin file and unpack it
+2. Upload qoob plugin to the /wp-content/plugins/ directory
+3. Activate the plugin on the Plugins menu in WordPress
+4. Now you are ready to use qoob builder by going to any page and clicking on Qoob
 
 == Documentation ==
 
-[Documentation](http://webark.com/qoob/docs) is available on qoob.
+Documentation on Qoob can be found [here](http://webark.com/qoob/docs)
 
 == Frequently Asked Questions ==
 
 = How to create a page with Qoob =
-Qoob is the editor consisting from blocks. Creating pages is simplified by Qoob.
+Qoob is an editor that consists of blocks. It’s easy to create pages by Qoob.
 
 `Go to Page -> Add New`
-`Click on the button "qoob"`
+`Click on Qoob`
 
-= How to add the blocks =
+= How to add blocks =
 
 There are several ways of adding a block on Qoob.
 
-* To add a block in the page, please, click on it. Every new block is added to the bottom of the page, under the blocks that were added earlier. After that you can add blocks by dragging them.
-* To add a block in the page find it in the group and move it to the necessary place. This place will be highlighted.
+* To add a block to a page, please, click on it. After that you can add other blocks by dragging them. Every new block appears at the bottom of the page, under the blocks that were added earlier on.
+* To add a block to a page find it in the group and move it to the necessary place. This place will be highlighted.
 
-= How to edit the blocks =
-You can edit information in each of the page blocks. For this purpose click on the necessary block on the right side of the page. On the left side of the page you can find block settings.
+= How to edit blocks =
+You can edit the content of each block. To do it click on the necessary block on the right side of the page. Block settings can be found on the left side of the page.
 
 = How to delete / move blocks =
 1. Click on the necessary block.
-2. By pressing the Delete / Move button in the left bottom corner of the settings you can change the position of the block or delete it from the page.
+2. By pressing Delete / Move button in the bottom left corner of a block’s settings you can change the position of a block or delete it from the page.
 
 = How to change the media center =
-1. Click on the necessary block.
-2. Click on the image, video or icon to choose a necessary one in the settings. To return to the previous media, click on it again.
+1. Click on a necessary block.
+2. Click on a image, video or icon to choose a necessary one from the list in a block’s settings. To return to a previous media element, click on it again.
 
 = Contributors & Developers =
-This is an open source software. The following foundations have contributed to this plugin.
+Qoob is truly an open source and it was created by a team of professional and experienced developers who are always ready to assist you in solving any issues. We provide around-the-clock support and we do it absolutely for free.  
 
 == Screenshots ==
 
@@ -116,6 +120,8 @@ This is an open source software. The following foundations have contributed to t
 2. Sides of the qoob
 
 == Changelog ==
+
+= 3.0.0 =
 
 = 2.0.8 =
 * We've added an opportunity to use https protocol
