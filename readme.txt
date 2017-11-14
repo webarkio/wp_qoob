@@ -2,7 +2,7 @@
 Contributors: webarkio
 Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder, drag-and-drop, editor, landing page
 Requires at least: 4.1
-Tested up to: 4.8.2
+Tested up to: 4.8.3
 Stable tag: 3.0.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -23,32 +23,32 @@ Creating, running and updating websites shouldn’t be expensive, difficult or t
 = Drag-and-drop builder =
 Qoob includes a set of predefined blocks that have everything ready for the work of your website. You just need to add blocks to your blank page and arrange them according to your needs. All the blocks are grouped into categories and it considerably simplifies your searches. Within a block you can add your content, media and customize effects. 
 
-[youtube https://www.youtube.com/watch?v=nTvWrpHp80w]
+[youtube https://www.youtube.com/watch?v=x-nLVKjrcK4]
 
 = Live editor =
 Qoob is the most convenient site builder ever, it allows you to change your content fast and easy and do it in real time. Since now you will never ever work with backend and guess what your page look like in frontend. With Qoob live editor you can edit your content and at the same time view the changes.
 
-[youtube https://www.youtube.com/watch?v=xkrxfAhzE9E]
+[youtube https://www.youtube.com/watch?v=TBD_kxiQICY]
 
 = Responsive design =
 Websites created on Qoob look attractive on any device be it a desktop, laptop or even a smartphone. Pages automatically adjust to different screen sizes and look natural. With Qoob you can be always confident that your visitors are pleased with your website and are likely to come back again.
 
-[youtube https://www.youtube.com/watch?v=Bnzi-FQpLqk]
+[youtube https://www.youtube.com/watch?v=F6Ggwj2AZAE]
 
 = User-friendly interface =
 Clean and uncluttered interface is so easy to deal with, that even a child can make a simple website. All the interface elements (frames, buttons, lists and fields) are intuitive and unobtrusive, so you need a little time to get to know how to deal with them. Creating a website with Qoob is really enjoyable and pleasant.
 
-[youtube https://www.youtube.com/watch?v=GgnTbYsqOZQ]
+[youtube https://www.youtube.com/watch?v=7vOVJEZQnO8]
 
 = Mobile editing =
 Imagine that all of a sudden you’re struck with inspiration and you want to share a new post or, for instance, you need a very quick price update but you’re away from the computer. Qoob is your go-to in case of a need for instant updating, formatting or even making a website. It’s unprecedentedly easy and fast to create pages, insert images and videos, change the layout and edit texts right from your mobile device. No matter where you’re you can always keep your website up-to-date!
 
-[youtube https://www.youtube.com/watch?v=Mlimu8xuukc]
+[youtube https://www.youtube.com/watch?v=w9HFX-cVO1U]
 
 = Template creator and saver =
 The developers of Qoob do their best to make it as feature-rich and convenient as possible. That’s why they constantly work on new updates. Recently they have added a new enhanced feature that allows users to create templates with a number of blocks, save them and use them later on for new websites.
 
-[youtube https://www.youtube.com/watch?v=27ToVbn9sLc]
+[youtube https://www.youtube.com/watch?v=t7O74OVR2I0]
 
 Need more help? That’s what we are [here](https://github.com/webarkio/wp_qoob/issues) for.
 
@@ -115,13 +115,39 @@ Qoob is truly an open source and it was created by a team of professional and ex
 
 == Screenshots ==
 
-1. The qoob builder interface.
+1. Live editor
 
-2. Sides of the qoob
+2. Add block
+
+3. Move blocks
+
+4. Responsive
+
+5. Interface view on desktop
+
+6. Blocks preview on desktop
+
+7. Editor on desktop
+
+8. Interface view on tablet
+
+9. Blocks preview on tablet
+
+10. Editor on tablet
+
+11. UI on mobile device
+
+12. Blocks preview on mobile device
+
+13. Editor on mobile device
 
 == Changelog ==
 
 = 3.0.0 =
+* New user interface created
+* Compatibility with mobile devices (ability to create and edit pages)
+* New field datepicker added
+* Bugs fixed
 
 = 2.0.8 =
 * We've added an opportunity to use https protocol
