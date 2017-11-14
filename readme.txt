@@ -7,7 +7,7 @@ Stable tag: 3.0.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
-Try Qoob, a powerful page builder and editor, right now. Use a wide range of Qoob's tools and features absolutely for FREE.
+Qoob is a super powerful and simple-to-use page builder. Create your website fast, easy and absolutely for FREE!
 
 
 == Introductory description ==
