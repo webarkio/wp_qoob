@@ -275,8 +275,8 @@ QoobWordpressDriver.prototype.fieldImageActions = function(actions) {
         "id": "upload",
         "label": "Upload",
         "action": function(imageField) {
-            imageField.$el.find('.image-control').find('.input-file').remove();
-            imageField.$el.find('.image-control').append('<input type="file" class="input-file" name="image">');
+            imageField.$el.find('.input-file').remove();
+            imageField.$el.append('<input type="file" class="input-file" name="image">');
 
             imageField.$el.find('.input-file').trigger('click');
 
@@ -284,18 +284,33 @@ QoobWordpressDriver.prototype.fieldImageActions = function(actions) {
                 var file = imageField.$el.find('input[type=file]').val();
                 if (file.match(/.(jpg|jpeg|png|gif)$/i)) {
                     var formData = new FormData();
-                    formData.append("image", imageField.$el.find('input[type=file]')[0].files[0]);
+                    formData.append('image', jQuery(this)[0].files[0], jQuery(this)[0].files[0].name);
                     formData.append("action", "qoob_add_new_image");
                     self.upload(formData, function(error, url) {
                         if ('' !== url) {
                             imageField.changeImage(url);
-                            if (imageField.$el.find('.edit-image').hasClass('empty')) {
-                                imageField.$el.find('.edit-image').removeClass('empty');
+                            imageField.$el.find('input[type=file]').val('');
+                            if (imageField.$el.find('.empty').length > 0) {
+                                imageField.$el.find('.empty').removeClass('empty');
                             }
                         }
                     });
                 } else {
                     console.error('file format is not appropriate');
+                }
+            });
+        },
+        "icon": ""
+    }, {
+        "id": "wml",
+        "label": "WordPress Media library",
+        "action": function(imageField) {
+            self.openUploadDialog(function(error, url) {
+                if ('' !== url) {
+                    imageField.changeImage(url);
+                    if (imageField.$el.find('.edit-image').hasClass('empty')) {
+                        imageField.$el.find('.edit-image').removeClass('empty');
+                    }
                 }
             });
         },
@@ -313,20 +328,6 @@ QoobWordpressDriver.prototype.fieldImageActions = function(actions) {
             } else {
                 imageField.$el.find('.edit-image').removeClass('empty');
             }
-        },
-        "icon": ""
-    }, {
-        "id": "wml",
-        "label": "WordPress Media library",
-        "action": function(imageField) {
-            self.openUploadDialog(function(error, url) {
-                if ('' !== url) {
-                    imageField.changeImage(url);
-                    if (imageField.$el.find('.edit-image').hasClass('empty')) {
-                        imageField.$el.find('.edit-image').removeClass('empty');
-                    }
-                }
-            });
         },
         "icon": ""
     }];
@@ -347,26 +348,26 @@ QoobWordpressDriver.prototype.fieldVideoActions = function(actions) {
         "id": "upload",
         "label": "Upload",
         "action": function(videoField) {
-            videoField.$el.find('.video-control').find('.input-file').remove();
-            videoField.$el.find('.video-control').append('<input type="file" class="input-file" name="video">');
+            videoField.$el.find('.input-file').remove();
+            videoField.$el.append('<input type="file" class="input-file" name="video">');
 
-            videoField.$el.find('input.input-file').trigger('click');
+            videoField.$el.find('.input-file').trigger('click');
 
-            videoField.$el.find('input.input-file').change(function() {
+            videoField.$el.find('.input-file').change(function() {
                 var s = this;
                 var file = jQuery(this).val();
 
-                if (file.match(/.(mp4)$/i)) {
+                if (file.match(/.(mp4|ogv|webm)$/i)) {
                     var formData = new FormData();
-                    formData.append('video', jQuery(this)[0].files[0]);
+                    formData.append('video', jQuery(this)[0].files[0], jQuery(this)[0].files[0].name);
                     formData.append("action", "qoob_add_new_video");
                     self.upload(formData, function(error, url) {
                         if ('' !== url) {
                             var src = { 'url': url, preview: '' };
                             videoField.changeVideo(src);
                             jQuery(s).val('');
-                            if (!videoField.$el.find('.edit-video').hasClass('empty')) {
-                                videoField.$el.find('.edit-video').addClass('empty');
+                            if (!videoField.$el.find('.empty-preview').length > 0) {
+                                videoField.$el.find('.field-video-container').addClass('empty-preview');
                             }
                         }
                     });
@@ -374,16 +375,6 @@ QoobWordpressDriver.prototype.fieldVideoActions = function(actions) {
                     console.error('file format is not appropriate');
                 }
             });
-        },
-        "icon": ""
-    }, {
-        "id": "reset",
-        "label": "Reset to default",
-        "action": function(videoField) {
-            videoField.changeVideo(videoField.options.defaults);
-            if (videoField.$el.find('.edit-video').hasClass('empty')) {
-                videoField.$el.find('.edit-video').removeClass('empty');
-            }
         },
         "icon": ""
     }, {
@@ -399,6 +390,16 @@ QoobWordpressDriver.prototype.fieldVideoActions = function(actions) {
                     }
                 }
             });
+        },
+        "icon": ""
+    }, {
+        "id": "reset",
+        "label": "Reset to default",
+        "action": function(videoField) {
+            videoField.changeVideo(videoField.options.defaults);
+            if (videoField.$el.find('.edit-video').hasClass('empty')) {
+                videoField.$el.find('.edit-video').removeClass('empty');
+            }
         },
         "icon": ""
     }];
@@ -417,6 +418,21 @@ QoobWordpressDriver.prototype.uploadImage = function(dataFile, cb) {
     var formData = new FormData();
     formData.append('image', dataFile[0]);
     formData.append("action", "qoob_add_new_image");
+
+    this.upload(formData, function(error, url) {
+        cb(error, url);
+    });
+};
+
+/**
+ * Upload video
+ * @param {Array} dataFile
+ * @param {uploadCallback} cb - A callback to run.
+ */
+QoobWordpressDriver.prototype.uploadVideo = function(dataFile, cb) {
+    var formData = new FormData();
+    formData.append('video', dataFile[0], dataFile[0].name);
+    formData.append("action", "qoob_add_new_video");
 
     this.upload(formData, function(error, url) {
         cb(error, url);
