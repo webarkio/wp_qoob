@@ -18,7 +18,7 @@ Author URI: http://webark.com/
  *
  * @author     webark.com <qoob@webark.com>
  * @link       http://webark.com/qoob/
- * @copyright  2015-2017 WebArk.com
+ * @copyright  2015-2018 WebArk.com
  * @license    http://webark.com/qoob/LISENCE
  */
 
@@ -174,7 +174,7 @@ class Qoob {
 		if ( empty( $post ) ) {
 			wp_die( 'Post not found' );
 		}
-		return '<script type="text/javascript" src="' . plugins_url( 'qoob-wordpress-driver.js', __FILE__ ) . '"></script><script type="text/javascript"> var starter = new QoobStarter({"mode": "' . $this->mode . '", "skip":["jquery","underscore","backbone"],"qoobUrl": "' . plugins_url( 'qoob/', __FILE__ ) . '", "driver": new QoobWordpressDriver({"ajaxUrl": "' . admin_url( 'admin-ajax.php' ) . '", "iframeUrl": "' . add_query_arg( 'qoob', 'true', get_permalink( $post->ID ) ) . '", "pageId": ' . $post->ID . ' }) });</script>';
+		return '<script type="text/javascript" src="' . plugins_url( 'qoob-wordpress-driver.js', __FILE__ ) . '"></script><script type="text/javascript"> var starter = new QoobStarter({"mode": "' . $this->mode . '", "skip":["jquery","underscore","backbone"],"qoobUrl": "' . plugins_url( 'qoob/', __FILE__ ) . '", "driver": new QoobWordpressDriver({"ajaxUrl": "' . admin_url( 'admin-ajax.php' ) . '", "iframeUrl": "' . add_query_arg( 'qoob', 'true', get_permalink( $post->ID ) ) . '", "pageId": ' . $post->ID . ', "pages": ' . $this->getQoobPages() . ', "page": "' . $post->post_title . '" }) });</script>';
 	}
 
 	/**
@@ -978,5 +978,34 @@ class Qoob {
 	    $dirs['url'] = $dirs['baseurl'] . '/qoob';
 	    return $dirs;
 	}
+
+	/**
+	 * Get qoob pages
+	 * @return (array) json pages
+	 */
+	private function getQoobPages() {
+		global $post;
+
+		$args = array(
+			'post_type'      => 'page',
+			'order'            => 'ASC',
+			'meta_query' => array(
+					array(
+						'key' => 'qoob_data'
+					)
+				)
+		);
+		// all qoob page
+		$qoob_pages = get_posts( $args );
+
+		$pages = array();
+		foreach ($qoob_pages as $value) {
+			if ($post->ID !== $value->ID) {
+				$pages[] = array('title' => $value->post_title, 'url' => $this->getEditWithQoobUrl( $value->ID ));
+			}
+		}
+
+		return json_encode($pages, true);
+	}
 }
-$qoob = new Qoob( 'dev' );
+$qoob = new Qoob( );

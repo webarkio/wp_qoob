@@ -1,12 +1,14 @@
 /**
  * Class for work with ajax methods
  *  
- * @version 0.0.2
+ * @version 0.0.3
  * @class  QoobWordpressDriver
  */
 //module.exports.QoobWordpressDriver = QoobWordpressDriver;
 function QoobWordpressDriver(options) {
-    this.options = options;
+    this.options = options || {};
+    this.pages = this.options.pages || null;
+    this.page = this.options.page || '';
     //    this.assets = [{"type":"js","name":"media-models", "src":"/wp-includes/js/media-models.js"}];
 }
 
@@ -190,23 +192,23 @@ QoobWordpressDriver.prototype.loadPageTemplates = function(cb) {
  * @param {Array} staticMenu
  * @returns {Array}
  */
-QoobWordpressDriver.prototype.mainMenu = function(staticMenu) {
+QoobWordpressDriver.prototype.mainMenu = function() {
     var self = this;
     var customData = [{
         "id": "save-template",
-        "label": "Save as template",
+        "label": {"save_as_template": "Save as template"},
         "action": "",
         "icon": ""
     }, {
         "id": "show-frontend",
-        "label": "Show on frontend",
+        "label": {"showOnFrontend": "Show on frontend"},
         "action": function() {
             window.open(self.getIframePageUrl().replace('&qoob=true', '').replace('?qoob=true', ''), '_blank');
         },
         "icon": ""
     }];
 
-    return staticMenu.concat(customData);
+    return customData;
 };
 
 /**
@@ -273,7 +275,7 @@ QoobWordpressDriver.prototype.fieldImageActions = function(actions) {
     var self = this;
     var customActions = [{
         "id": "upload",
-        "label": "Upload",
+        "label": {"upload": "Upload"},
         "action": function(imageField) {
             imageField.$el.find('.input-file').remove();
             imageField.$el.append('<input type="file" class="input-file" name="image">');
@@ -310,7 +312,7 @@ QoobWordpressDriver.prototype.fieldImageActions = function(actions) {
         "icon": ""
     }, {
         "id": "wml",
-        "label": "WordPress Media library",
+        "label": {"WordPressMediaLibrary": "WordPress Media library"},
         "action": function(imageField) {
             self.openUploadDialog(function(error, url) {
                 if ('' !== url) {
@@ -324,7 +326,7 @@ QoobWordpressDriver.prototype.fieldImageActions = function(actions) {
         "icon": ""
     }, {
         "id": "reset",
-        "label": "Reset to default",
+        "label": {"resetToDefault": "Reset to default"},
         "action": function(imageField) {
             imageField.changeImage(imageField.options.defaults);
 
@@ -355,7 +357,7 @@ QoobWordpressDriver.prototype.fieldVideoActions = function(actions) {
     var self = this;
     var customActions = [{
         "id": "upload",
-        "label": "Upload",
+        "label": {"upload": "Upload"},
         "action": function(videoField) {
             videoField.$el.find('.input-file').remove();
             videoField.$el.append('<input type="file" class="input-file" name="video">');
@@ -397,7 +399,7 @@ QoobWordpressDriver.prototype.fieldVideoActions = function(actions) {
         "icon": ""
     }, {
         "id": "wml",
-        "label": "WordPress Media library",
+        "label": {"WordPressMediaLibrary": "WordPress Media library"},
         "action": function(videoField) {
             self.openUploadDialog(function(error, url) {
                 if ('' !== url) {
@@ -412,7 +414,7 @@ QoobWordpressDriver.prototype.fieldVideoActions = function(actions) {
         "icon": ""
     }, {
         "id": "reset",
-        "label": "Reset to default",
+        "label": {"resetToDefault": "Reset to default"},
         "action": function(videoField) {
             var container = videoField.$el.find('.field-video-container');
 
