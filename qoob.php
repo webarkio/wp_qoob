@@ -472,7 +472,7 @@ class Qoob {
 			$data = json_decode( get_post_meta( $post->ID, 'qoob_data', true ), true );
 
 			// If have blocks - use get_the_content() function. In other way - return basic content
-			if ( count( $data['blocks'] ) > 0 ) {
+			if ( !is_null( $data['blocks'] ) && count( $data['blocks'] ) ) {
 				$result = do_shortcode( stripslashes( get_the_content() ) );
 			} else {
 				$result = do_shortcode( $content );
@@ -498,7 +498,7 @@ class Qoob {
 			$id = $wp_query->post->ID;
 			$post_meta = json_decode( get_post_meta( $id, 'qoob_data', true ), true );
 
-			if ( is_singular() && count( $post_meta ) > 0 ) {
+			if ( is_singular() && ( !is_null( $post_meta ) && count( $post_meta ) ) ) {
 					$wp_admin_bar->add_menu(array(
 						'id' => 'qoob-admin-bar-link',
 						'title' => esc_html__( 'Edit with qoob', 'qoob' ),
@@ -567,8 +567,9 @@ class Qoob {
 	public function infoMetabox() {
 		global $post;
 		$post_meta = json_decode( get_post_meta( $post->ID, 'qoob_data', true ), true );
+
 		// If have blocks - remove tinymce editor
-		if ( count( $post_meta['blocks'] ) ) {
+		if ( !is_null($post_meta['blocks']) && count( $post_meta['blocks'] ) ) {
 			add_meta_box( 'qoob-page-info', esc_html__( 'Attention!', 'qoob' ), array( $this, 'infoMetaboxDisplay' ), 'page' );
 		}
 	}
@@ -593,7 +594,7 @@ class Qoob {
 			$data = json_decode( get_post_meta( $post_id, 'qoob_data', true ), true );
 
 			// If have blocks - remove tinymce editor
-			if ( count( $data['blocks'] ) ) {
+			if ( ! is_null($data['blocks']) && count( $data['blocks'] ) ) {
 				remove_post_type_support( 'page', 'editor' );
 			}
 		}
@@ -612,7 +613,7 @@ class Qoob {
 		// Check for qoob page
 		$post_meta = json_decode( get_post_meta( $id, 'qoob_data', true ), true );
 
-		if ( count( $post_meta ) > 0 ) {
+		if ( ! is_null($post_meta) && count( $post_meta ) ) {
 			$actions['edit_qoob'] = '<a href="' . $url . '">' . esc_html__( 'Edit with qoob', 'qoob' ) . '</a>';
 		}
 		return $actions;
