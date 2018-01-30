@@ -174,7 +174,7 @@ class Qoob {
 		if ( empty( $post ) ) {
 			wp_die( 'Post not found' );
 		}
-		return '<script type="text/javascript" src="' . plugins_url( 'qoob-wordpress-driver.js', __FILE__ ) . '"></script><script type="text/javascript"> var starter = new QoobStarter({"mode": "' . $this->mode . '", "skip":["jquery","underscore","backbone"],"qoobUrl": "' . plugins_url( 'qoob/', __FILE__ ) . '", "driver": new QoobWordpressDriver({"ajaxUrl": "' . admin_url( 'admin-ajax.php' ) . '", "iframeUrl": "' . add_query_arg( 'qoob', 'true', get_permalink( $post->ID ) ) . '", "pageId": ' . $post->ID . ', "pages": ' . $this->getQoobPages() . ', "page": "' . $post->post_title . '" }) });</script>';
+		return '<script type="text/javascript" src="' . plugins_url( 'qoob-wordpress-driver.js', __FILE__ ) . '"></script><script type="text/javascript"> var starter = new QoobStarter({"mode": "' . $this->mode . '", "skip":["jquery","underscore","backbone"],"qoobUrl": "' . plugins_url( 'qoob/', __FILE__ ) . '", "driver": new QoobWordpressDriver({"ajaxUrl": "' . admin_url( 'admin-ajax.php' ) . '", "iframeUrl": "' . add_query_arg( 'qoob', 'true', get_permalink( $post->ID ) ) . '", "pageId": ' . $post->ID . ', "pages": ' . $this->getQoobPages() . ', "page": "' . ( $post->post_title != '' ? $post->post_title : esc_html__( "No title", 'qoob' ) ) . '" }) });</script>';
 	}
 
 	/**
@@ -1002,7 +1002,7 @@ class Qoob {
 		$pages = array();
 		foreach ($qoob_pages as $value) {
 			if ($post->ID !== $value->ID) {
-				$pages[] = array('title' => $value->post_title, 'url' => $this->getEditWithQoobUrl( $value->ID ));
+				$pages[] = array('title' => ( $value->post_title != '' ? $value->post_title : esc_html__( "No title", 'qoob' ) ), 'url' => $this->getEditWithQoobUrl( $value->ID ));
 			}
 		}
 
