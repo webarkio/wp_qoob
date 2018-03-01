@@ -5,7 +5,7 @@ Plugin URI: http://webark.com/qoob/
 Text Domain: qoob
 Domain Path: /languages
 Description: Qoob - by far the easiest free page builder plugin for WP
-Version: 3.0.0
+Version: 3.0.1
 Author: webark.com
 Author URI: http://webark.com/
 */
@@ -29,7 +29,7 @@ class Qoob {
 	 *
 	 * @var string
 	 */
-	private $version = '3.0.0';
+	private $version = '3.0.1';
 	/**
 	 * Register actions for plugin
 	 */
@@ -208,9 +208,10 @@ class Qoob {
 		do_action( 'admin_enqueue_scripts', $hook_suffix );
 		do_action( 'admin_print_styles' );
 		do_action( 'admin_print_scripts' );
+		echo '<script type="text/javascript">var ajaxurl = "' . admin_url( 'admin-ajax.php', 'relative' ) . '";</script>';
+		echo $this->getDriverHtml();
 		add_filter( 'admin_footer_text', '__return_empty_string', 11 );
 		add_filter( 'update_footer', '__return_empty_string', 11 );
-		echo $this->getDriverHtml();
 		echo '</head><body>';
 		include( ABSPATH . 'wp-admin/admin-footer.php' );
 		die();
@@ -255,6 +256,7 @@ class Qoob {
 						$lib['blocks'][ $index ]['url'] = str_replace( '%theme_url%/blocks/', '', $block['url'] );
 					}
 
+					// @deprecated 3.0.0
 					if ( isset($lib['res']) ) {
 						foreach ( $lib['res'] as $key => $val ) {
 							if ( 'js' === $key || 'css' === $key ) {

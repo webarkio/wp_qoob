@@ -1,8 +1,7 @@
 {
   "name": "qoob.wordpress",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "qoob for WordPress",
-  "main": "index.js",
   "plugin_name": "qoob",
   "directories": {
     "doc": "docs"
@@ -17,23 +16,23 @@
   "author": "Webark Systems",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/maxazan/qoob.wordpress/issues"
+    "url": "https://github.com/webarkio/wp_qoob/issues"
   },
-  "homepage": "https://github.com/maxazan/qoob.wordpress",
+  "homepage": "https://github.com/webarkio/wp_qoob",
   "devDependencies": {
-    "grunt": "^0.4.5",
+    "grunt": "^1.0.2",
     "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-compress": "^0.13.0",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-compress": "^1.4.3",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
-    "grunt-exec": "^0.4.6",
-    "grunt-mkdir": "^0.1.2",
+    "grunt-exec": "^3.0.0",
+    "grunt-mkdir": "^1.0.0",
     "grunt-phpunit": "^0.3.6",
     "grunt-push-svn": "^0.2.2",
-    "grunt-shell": "^1.1.2",
+    "grunt-shell": "^2.1.0",
     "grunt-svn-checkout": "^0.3.0",
-    "load-grunt-tasks": "^3.2.0"
+    "load-grunt-tasks": "^3.5.2"
   },
   "dependencies": {
     "jsdoc": "^3.3.2"
