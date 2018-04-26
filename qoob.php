@@ -225,7 +225,7 @@ class Qoob {
 
 		$response = array(
 			'success' => true,
-			'libs' => (isset( $libs ) ? $libs : []),
+			'libs' => (isset( $libs ) ? $libs : array()),
 		);
 
 		wp_send_json( $response );

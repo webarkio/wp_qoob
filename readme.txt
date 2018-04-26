@@ -62,7 +62,7 @@ With Qoob it’s possible to create not only bespoke and feature-rich websites b
 * [Spring](https://themeforest.net/item/spring-creative-one-page-wordpress-theme/8751334) - its name speaks for itself, fresh and brisk design, cute animation makes it a good option for any project or business
 * [Birva](https://themeforest.net/item/birva-creative-one-page-wordpress-theme/8433790) - fast, laconic and original template that can serve for different kinds of online businesses
 * [KEO](https://themeforest.net/item/keo-complex-multipurpose-wordpress-theme/19706582) - truly multipurpose template with several demos inside, can be the right choice for photographers, web studios, design agencies, personal blogs etc.
-
+* [Happy Seniors](https://themeforest.net/item/happy-seniors-senior-medical-care-wordpress-theme/20188028) - Light theme crafted for medical-related websites Senior or Elderly Care projects, in particular
 == Installation ==
 
 = INSTALLING THROUGH THE WORDPRESS ADMIN PANEL =
@@ -142,6 +142,9 @@ Qoob is truly an open source and it was created by a team of professional and ex
 13. Editor on mobile device
 
 == Changelog ==
+
+= 3.0.2 =
+* Bugs fixed
 
 = 3.0.1 =
 * Conflict with Polylang fixed
