@@ -38,7 +38,7 @@ Websites created on Qoob look attractive on any device be it a desktop, laptop o
 = User-friendly interface =
 Clean and uncluttered interface is so easy to deal with, that even a child can make a simple website. All the interface elements (frames, buttons, lists and fields) are intuitive and unobtrusive, so you need a little time to get to know how to deal with them. Creating a website with Qoob is really enjoyable and pleasant.
 
-[youtube https://www.youtube.com/watch?v=7vOVJEZQnO8]
+[youtube https://www.youtube.com/watch?v=KxBOSWC77cM]
 
 = Mobile editing =
 Imagine that all of a sudden you’re struck with inspiration and you want to share a new post or, for instance, you need a very quick price update but you’re away from the computer. Qoob is your go-to in case of a need for instant updating, formatting or even making a website. It’s unprecedentedly easy and fast to create pages, insert images and videos, change the layout and edit texts right from your mobile device. No matter where you’re you can always keep your website up-to-date!
