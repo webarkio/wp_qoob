@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: qoob
-Plugin URI: http://webark.com/qoob/
+Plugin URI: http://qoob-builder.com/
 Text Domain: qoob
 Domain Path: /languages
 Description: Qoob - by far the easiest free page builder plugin for WP
-Version: 3.0.1
+Version: 3.0.2
 Author: webark.com
 Author URI: http://webark.com/
 */
@@ -17,9 +17,9 @@ Author URI: http://webark.com/
  * file that was distributed with this source code.
  *
  * @author     webark.com <qoob@webark.com>
- * @link       http://webark.com/qoob/
+ * @link       http://qoob-builder.com/
  * @copyright  2015-2018 WebArk.com
- * @license    http://webark.com/qoob/LISENCE
+ * @license    http://qoob-builder.com/licenses/
  */
 
 class Qoob {
@@ -29,7 +29,7 @@ class Qoob {
 	 *
 	 * @var string
 	 */
-	private $version = '3.0.1';
+	private $version = '3.0.2';
 	/**
 	 * Register actions for plugin
 	 */

@@ -3,7 +3,7 @@ Contributors: webarkio
 Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder, drag-and-drop, editor, landing page
 Requires at least: 4.1
 Tested up to: 4.9.2
-Stable tag: 3.0.1
+Stable tag: 3.0.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -15,7 +15,7 @@ Qoob is a super powerful and simple-to-use page builder. Create your website fas
 Qoob is a truly DIY website builder!
 Creating, running and updating websites shouldn’t be expensive, difficult or time-consuming. Bearing this in mind, we’ve created a simple, powerful and absolutely free Qoob site builder that will become a great helper and time-saver for you! Qoob is so intuitive and easy-to-use that you can proceed with building your website even without going through the documentation. The first page of your brand-new site is about to appear. To get it done make some baby steps: add ready-made blocks, arrange them, configure settings, insert media elements and add your content. What is more - you can start, run and update your website right from your smartphone!
 
-**[Try Demo](http://webark.com/qoob/demo/)**
+**[Try Demo](http://qoob-builder.com:8000/qoob)**
 
 = Why use Qoob? =
 
@@ -82,7 +82,7 @@ With Qoob it’s possible to create not only bespoke and feature-rich websites b
 
 == Documentation ==
 
-Documentation on Qoob can be found [here](http://webark.com/qoob/docs)
+Documentation on Qoob can be found [here](http://qoob-builder.com/docs)
 
 == Frequently Asked Questions ==
 
@@ -145,6 +145,7 @@ Qoob is truly an open source and it was created by a team of professional and ex
 
 = 3.0.2 =
 * Bugs fixed
+* Icon presets fixed
 
 = 3.0.1 =
 * Conflict with Polylang fixed

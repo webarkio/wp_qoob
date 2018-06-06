@@ -5,8 +5,8 @@
  *
  * @package   qoob
  * @author    webark.com
- * @link      http://webark.com/qoob/
- * @license   http://webark.com/qoob/LISENCE
+ * @link      http://qoob-builder.com/
+ * @license   http://qoob-builder.com/licenses/
  * @version   @package_version@
  */
 /* if uninstall not called from WordPress exit */

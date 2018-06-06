@@ -8,7 +8,7 @@ It offers a huge amount of tools and features absolutely FREE.
 Description
 -----------
 
-It is the easiest and the fastest website builder for WordPress. No need for coding skills. It is a perfect solution, that save you from any prior design and let you handle it without hiring a professional. Just upload your content and get a working cross-platform website, fully adjusted to all devices available on the market. Our [qoob](http://webark.com/qoob/) website was built with the help of "qoob" plugin.
+It is the easiest and the fastest website builder for WordPress. No need for coding skills. It is a perfect solution, that save you from any prior design and let you handle it without hiring a professional. Just upload your content and get a working cross-platform website, fully adjusted to all devices available on the market. Our [qoob](http://qoob-builder.com/) website was built with the help of "qoob" plugin.
 
 ### Advantages of Qoob
 
@@ -42,7 +42,7 @@ Installation
 Documentation
 -------------
 
-[Documentation](http://webark.com/qoob/docs) is available on qoob.
+[Documentation](http://qoob-builder.com/docs) is available on qoob.
 
 Frequently Asked Questions
 --------------------------
