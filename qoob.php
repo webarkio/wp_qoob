@@ -5,7 +5,7 @@ Plugin URI: http://qoob-builder.com/
 Text Domain: qoob
 Domain Path: /languages
 Description: Qoob - by far the easiest free page builder plugin for WP
-Version: 3.0.2
+Version: 3.0.3
 Author: webark.com
 Author URI: http://webark.com/
 */
@@ -29,7 +29,7 @@ class Qoob {
 	 *
 	 * @var string
 	 */
-	private $version = '3.0.2';
+	private $version = '3.0.3';
 	/**
 	 * Register actions for plugin
 	 */
@@ -252,13 +252,31 @@ class Qoob {
 					// Set current version
 					$lib['version'] = $this->version;
 
+					// masks from assets
+					if ( isset($lib['assets']) ) {
+						$themeUrl = get_template_directory_uri();
+						foreach ( $lib['assets'] as $k => $v ) {
+							if ( is_array( $lib['assets'][ $k ]['src'] ) ) {
+								$lib['assets'][ $k ]['src']['url'] = str_replace( '%theme_url%', $themeUrl, $lib['assets'][ $k ]['src']['url'] );
+								if ( isset( $lib['assets'][ $k ]['src']['preview'] ) ) {
+									$lib['assets'][ $k ]['src']['preview'] = str_replace( '%theme_url%', $themeUrl, $lib['assets'][ $k ]['src']['preview'] );
+								}
+							} else {
+								$lib['assets'][ $k ]['src'] = str_replace( '%theme_url%', $themeUrl, $lib['assets'][ $k ]['src'] );
+								if ( isset( $lib['assets'][ $k ]['preview'] ) ) {
+									$lib['assets'][ $k ]['preview'] = str_replace( '%theme_url%', $themeUrl, $lib['assets'][ $k ]['preview'] );
+								}
+							}
+						}
+					}
+
 					foreach ( $lib['blocks'] as $index => $block ) {
 						$lib['blocks'][ $index ]['url'] = str_replace( '%theme_url%/blocks/', '', $block['url'] );
 					}
-
-					// @deprecated 3.0.0
+					
 					if ( isset($lib['res']) ) {
 						foreach ( $lib['res'] as $key => $val ) {
+							// @deprecated 3.0.0
 							if ( 'js' === $key || 'css' === $key ) {
 								foreach ( $val as $v ) {
 									$temp = array(
@@ -275,6 +293,9 @@ class Qoob {
 
 									unset( $temp );
 								}
+							} else {
+								// from version 3.0.0 and high
+								$lib['res'][$key]['src'] = str_replace( '%theme_url%/blocks/', '', $lib['res'][$key]['src'] );
 							}
 						}
 
