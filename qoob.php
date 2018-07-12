@@ -5,7 +5,7 @@ Plugin URI: http://qoob-builder.com/
 Text Domain: qoob
 Domain Path: /languages
 Description: Qoob - by far the easiest free page builder plugin for WP
-Version: 3.0.3
+Version: 3.0.4
 Author: webark.com
 Author URI: http://webark.com/
 */
@@ -29,7 +29,7 @@ class Qoob {
 	 *
 	 * @var string
 	 */
-	private $version = '3.0.3';
+	private $version = '3.0.4';
 	/**
 	 * Register actions for plugin
 	 */
@@ -174,7 +174,7 @@ class Qoob {
 		if ( empty( $post ) ) {
 			wp_die( 'Post not found' );
 		}
-		return '<script type="text/javascript" src="' . plugins_url( 'qoob-wordpress-driver.js', __FILE__ ) . '"></script><script type="text/javascript"> var starter = new QoobStarter({"mode": "' . $this->mode . '", "skip":["jquery","underscore","backbone"],"qoobUrl": "' . plugins_url( 'qoob/', __FILE__ ) . '", "driver": new QoobWordpressDriver({"ajaxUrl": "' . admin_url( 'admin-ajax.php' ) . '", "iframeUrl": "' . add_query_arg( 'qoob', 'true', get_permalink( $post->ID ) ) . '", "pageId": ' . $post->ID . ', "pages": ' . $this->getQoobPages() . ', "page": "' . ( $post->post_title != '' ? $post->post_title : esc_html__( "No title", 'qoob' ) ) . '" }) });</script>';
+		return '<script type="text/javascript" src="' . plugins_url( 'qoob-wordpress-driver.js', __FILE__ ) . '"></script><script type="text/javascript"> var starter = new QoobStarter({"mode": "' . $this->mode . '", "skip":["jquery","underscore","backbone"],"qoobUrl": "' . plugins_url( 'qoob/', __FILE__ ) . '", "driver": new QoobWordpressDriver({"ajaxUrl": "' . admin_url( 'admin-ajax.php' ) . '", "iframeUrl": "' . add_query_arg( 'qoob', 'true', get_permalink( $post->ID ) ) . '", "pageId": ' . $post->ID . ', "pages": ' . $this->getQoobPages() . ', "page": "' . ( $post->post_title != '' ? wp_slash( $post->post_title ) : esc_html__( "No title", 'qoob' ) ) . '" }) });</script>';
 	}
 
 	/**
