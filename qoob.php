@@ -243,12 +243,12 @@ class Qoob {
 		foreach ( $libs as $value ) {
 			if ( file_exists( $value ) ) {
 				$lib = json_decode( file_get_contents( $value ), true );
-				if ( ! array_key_exists( 'url', $lib ) ) {
+				if ( is_array( $lib ) && ! array_key_exists( 'url', $lib ) ) {
 					$lib['url'] = $this->getUrlFromPath( str_replace( '/lib.json', '', $value ) );
 				}
 
 				// if old version lib
-				if ( ! array_key_exists( 'version', $lib ) ) {
+				if (is_array( $lib ) && ! array_key_exists( 'version', $lib ) ) {
 					// Set current version
 					$lib['version'] = $this->version;
 
