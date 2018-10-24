@@ -2,8 +2,8 @@
 Contributors: webarkio
 Tags: page builder, builder, page, pages, visual, responsive, qoob, content, layout, realtime, frontend, frontend builder, drag-and-drop, editor, landing page
 Requires at least: 4.1
-Tested up to: 4.9.7
-Stable tag: 3.0.5
+Tested up to: 4.9.8
+Stable tag: 3.0.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -142,6 +142,10 @@ Qoob is truly an open source and it was created by a team of professional and ex
 13. Editor on mobile device
 
 == Changelog ==
+
+= 3.0.6 =
+* Bugs fixed
+* Fixed styles
 
 = 3.0.5 =
 * Fixed field colorpicker
